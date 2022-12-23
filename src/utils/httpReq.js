@@ -3,7 +3,7 @@
   其中对错误进行了统一处理
 */
 import axios from 'axios'
-import { message } from 'antd'
+import { message } from 'antd-mobile'
 import { baseURL } from './baseUrl'
 // 给请求地址前加一个"/api"
 const instance = axios.create({

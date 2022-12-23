@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  pages: ['pages/repairReport/index'],
+  pages: ['pages/login/index'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
@@ -7,3 +7,4 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black',
   },
 });
+

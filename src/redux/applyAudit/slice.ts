@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { message } from "antd";
+import { message } from "antd-mobile";
 import httpUtil from "../../utils/httpUtil";
 
 export interface QuestionApprovalType {

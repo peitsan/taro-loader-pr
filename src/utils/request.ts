@@ -21,7 +21,7 @@ interface Options {
 }
 
 const options: DefaultRequestOptions = {
-  baseUrl: '',
+  baseUrl: 'https://sgcc.torcher.team',
   method: Method.GET,
   timeout: 5000,
 };
