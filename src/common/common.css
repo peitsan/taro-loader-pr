@@ -131,7 +131,9 @@
 .ant-badge-status-processing::after {
   border: 1px solid var(--warning-color) !important;
 }
-
+.ant-btn {
+  border-color: var(--first-theme-color);
+}
 .ant-btn:hover {
   border-color: var(--first-theme-color) !important;
 }
@@ -142,8 +144,19 @@
 .ant-tabs-ink-bar {
   background: var(--first-theme-color) !important;
 }
-
+.ant-btn-dashed {
+  border-color: var(--first-theme-color) !important;
+  color: var(--first-theme-color) !important;
+}
 .ant-btn-dangerous .ant-btn-primary {
   border-color: #ff4d4f !important;
   background: #ff4d4f !important;
+}
+.ant-btn-dangerous:hover,
+.ant-btn-dangerous:focus {
+  border-color: #ff4d4f !important;
+}
+/* 去除form表单必填字段前面的红色星号 */
+.ant-form-item-required::before {
+  content: "" !important;
 }

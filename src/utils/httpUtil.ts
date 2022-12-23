@@ -42,8 +42,7 @@ import {
   downloadFile,
   uploadAttachment,
   updateSheet,
-  questionTimeApply,
-  projectTimeApply,
+  timeApply,
   managerTimeApply,
   managerSubmitProjectProgressPlanTimeApply,
   managerCheckMidContent,
@@ -84,6 +83,9 @@ import {
   specialReport,
   checkAdjustTime,
   checkReply,
+  deleteOneCase,
+  downLoadCaseFile,
+  createClassicCase,
 } from "./params";
 
 class HttpUtil {
@@ -150,29 +152,23 @@ class HttpUtil {
 
   // 获取大小项目上报审核列表
   workerGetProjectTimeApplyList = () =>
-    httpReq("get", `/worker/projectAdjust/unchecked`);
+    httpReq("get", `/worker/ProjectTimeApproval/unchecked`);
 
-  // 通过问题上报审核
-  workerApproveQuestionTimeApply = (params: questionTimeApply) =>
+  // 通过问题计划完成时间上报审核
+  workerApproveQuestionTimeApply = (params: timeApply) =>
     httpReq("put", `/worker/timeApproval/${params.approvalId}/approve`);
 
-  // 驳回问题上报审核
-  workerRejectQuestionTimeApply = (params: questionTimeApply) =>
+  // 驳回问题计划完成时间上报审核
+  workerRejectQuestionTimeApply = (params: timeApply) =>
     httpReq("put", `/worker/timeApproval/${params.approvalId}/reject`);
 
-  // 通过问题上报审核
-  workerApproveProjectTimeApply = (params: projectTimeApply) =>
-    httpReq(
-      "put",
-      `/manager/project/${params.projectId}/${params.progressId}/adjust/approve`
-    );
+  // 通过大小项目节点计划完成时间上报审核
+  workerApproveProjectTimeApply = (params: timeApply) =>
+    httpReq("put", `/worker/timeApproval/${params.approvalId}/approve`);
 
-  // 驳回问题上报审核
-  workerRejectProjectTimeApply = (params: projectTimeApply) =>
-    httpReq(
-      "put",
-      `/manager/project/${params.projectId}/${params.progressId}/adjust/reject`
-    );
+  // 驳回大小项目节点计划完成时间上报审核
+  workerRejectProjectTimeApply = (params: timeApply) =>
+    httpReq("put", `/worker/timeApproval/${params.approvalId}/reject`);
 
   //中间检查节点
   mediateInspection = (params: mediateInspection) =>
@@ -222,7 +218,8 @@ class HttpUtil {
   specialReport = (params: specialReport) =>
     httpReq(
       "put",
-      `/manager/project/${params.projectId}/SpecialEvaluation/${params.questionId}/adjust/submit`, params
+      `/manager/project/${params.projectId}/SpecialEvaluation/${params.questionId}/adjust/submit`,
+      params
     );
 
   //查看申请调整时间回复
@@ -231,14 +228,32 @@ class HttpUtil {
       "get",
       `/manager/project/${params.projectId}/SpecialEvaluation/${params.zxpgId}/adjust`
     );
-  
+
   //查看回复
-  specialCheckReply = (params: checkReply) => 
-    httpReq('get', `/manager/project/${params.projectId}/SpecialEvaluation/${params.zxpgId}/reply`)
+  specialCheckReply = (params: checkReply) =>
+    httpReq(
+      "get",
+      `/manager/project/${params.projectId}/SpecialEvaluation/${params.zxpgId}/reply`
+    );
+
+  //查询所有典型经验
+  getAllCase = () => httpReq("get", `/worker/case/caseDetail/all`);
+
+  //下载指定典型经验的附件
+  downLoadCaseFile = (params: downLoadCaseFile) =>
+    httpReq("post", `/worker/case/download`, params);
 
   /* 
     项目经理
   */
+  //新建父项目
+  fatherProjectNewAdd = (params: fatherProjectNewAdd) =>
+    httpReq("post", `/manager/fatherProject`, params);
+
+  //新建项目
+  projectNewAdd = (params: projectNewAdd) =>
+    httpReq("post", `/manager/project`, params);
+
   // 获取自己所管理的所有项目
   getManagerProjects = () => httpReq("get", `/manager/project`);
 
@@ -278,7 +293,7 @@ class HttpUtil {
   pushProjectToNextProgress = (params: pushProjectToNextProgress) =>
     httpReq("put", `/manager/project/${params.project_id}/progress/next`);
 
-  // 选择项目节点时间
+  // 选择大/小项目节点开始时间
   selectProjectProgressStartTime = (params: selectProjectProgressStartTime) =>
     httpReq(
       "put",
@@ -294,7 +309,7 @@ class HttpUtil {
       params
     );
 
-  // 选择项目节点实际完成时间
+  // 选择父/子项目节点实际完成时间
   selectProjectProgressFinishTime = (params: selectProjectProgressFinishTime) =>
     httpReq(
       "put",
@@ -317,9 +332,11 @@ class HttpUtil {
     );
   //修改可研技术收口数据
   updateTechnologyList = (params: updateTechnologyList) => httpReq("");
+
   // 下载文件
   downloadFile = (params: downloadFile) =>
     httpReq("get", `${params.replyFile}`, null, "blob");
+
   // 获取上报审核列表
   getTimeApplyList = () => httpReq("get", `/worker/timeApproval/unchecked`);
 
@@ -444,21 +461,19 @@ class HttpUtil {
       `/manager/project/${params.projectId}/SpecialEvaluation/${params.zxpgId}/reply/reject`
     );
 
-  //专项评估驳回
+  //创建典型经验
+  createClassicCase = (params: createClassicCase) =>
+    httpReq("post", `/manager/case/createClassicCase`, params);
+
+  //删除指定典型经验
+  deleteOneCase = (params: deleteOneCase) =>
+    httpReq("delete", `/manager/case/deleteCase/${params.caseId}`);
 
   /*
     管理员
   */
   //获取所有员工
   adminGetAllWorker = () => httpReq("get", `/admin/worker/detail`);
-
-  //新建父项目
-  fatherProjectNewAdd = (params: fatherProjectNewAdd) =>
-    httpReq("post", `/manager/fatherProject`, params);
-
-  //新建项目
-  projectNewAdd = (params: projectNewAdd) =>
-    httpReq("post", `/manager/project`, params);
 
   //获取所有单位
   getUnit = () => httpReq("get", `/admin/unit`);

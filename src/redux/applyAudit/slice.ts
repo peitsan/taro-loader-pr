@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { message } from "antd";
 import httpUtil from "../../utils/httpUtil";
 
 export interface QuestionApprovalType {
+  createTime: string;
   id: number;
   progressName: string;
   projectName: string;
@@ -10,21 +12,24 @@ export interface QuestionApprovalType {
   typeAdjustReason: string;
   typeAdjustTime: string;
   typePlanTime: string;
+  manager: {
+    nickName: string;
+  };
 }
 
 export interface ProjectApprovalType {
   createTime: string;
   fatherName: string;
   id: number;
-  managerName: string;
+  manager: {
+    nickName: string;
+  };
   progressName: string;
   projectName: string;
-  superTypeName: string;
   type: string;
-  typeAdjustReason: string;
-  typeAdjustTime: string;
-  typeName: string;
-  typePlanTime: string;
+  adjustReason: string;
+  adjustTime: string;
+  planTime: string;
 }
 
 interface ApplyAuditType {
@@ -41,16 +46,22 @@ const initialState: ApplyAuditType = {
 
 export const getApplyListAC = createAsyncThunk(
   "applyAudit/getApplyListAC",
-  async () => {
+  async (isFirst?: boolean) => {
+    let hideLoading = () => {};
+    if (isFirst) {
+      hideLoading = message.loading("请求中");
+    }
     const questionTimeApply = await httpUtil.workerGetQuestionTimeApplyList();
     const projectTimeApply = await httpUtil.workerGetProjectTimeApplyList();
     const {
       data: { approvals: questionApprovals },
     } = questionTimeApply;
     const {
-      data: { list: projectApprovals },
+      data: { approvals: projectApprovals },
     } = projectTimeApply;
-
+    if (isFirst) {
+      hideLoading();
+    }
     return { questionApprovals, projectApprovals };
   }
 );

@@ -82,7 +82,7 @@ export interface specialReply {
 export interface specialReport {
   projectId: number;
   questionId: number;
-  responsibleId:number;
+  responsibleId: number;
 }
 
 export interface checkAdjustTime {
@@ -93,6 +93,14 @@ export interface checkAdjustTime {
 export interface checkReply {
   projectId: number;
   zxpgId: number;
+}
+
+export interface deleteOneCase {
+  caseId: number;
+}
+
+export interface downLoadCaseFile {
+  url: string;
 }
 /* 
   项目经理
@@ -151,12 +159,8 @@ export interface lookAllListReply {
 export interface downloadFile {
   replyFile: string;
 }
-export interface questionTimeApply {
+export interface timeApply {
   approvalId: string;
-}
-export interface projectTimeApply {
-  projectId: number;
-  progressId: number;
 }
 export interface managerTimeApply {
   project_id: string;
@@ -349,3 +353,5 @@ export type addManager = number[];
 export interface deleteManager {
   userId: number;
 }
+
+export interface createClassicCase {}

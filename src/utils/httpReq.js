@@ -41,7 +41,7 @@ export const httpReq = (method, url, data, resType) => {
       data: data,
       responseType: resType,
     }).then(
-      (data) => {
+        (data) => {
         resolve(data)
       },
       (err) => {
