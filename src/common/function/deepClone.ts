@@ -1,18 +1,18 @@
 // 判断是否为数组
 const isArr = (origin: any): boolean => {
-  let str = "[object Array]";
+  let str = '[object Array]';
   return Object.prototype.toString.call(origin) == str ? true : false;
 };
 
 export const deepClone = <T>(
   origin: T,
-  target?: Record<string, any> | T
+  target?: Record<string, any> | T,
 ): T => {
   let tar = target || (isArr(origin) ? [] : {});
 
   for (const key in origin) {
     if (Object.prototype.hasOwnProperty.call(origin, key)) {
-      if (typeof origin[key] === "object" && origin[key] !== null) {
+      if (typeof origin[key] === 'object' && origin[key] !== null) {
         tar[key] = isArr(origin[key]) ? [] : {};
         deepClone(origin[key], tar[key]);
       } else {
