@@ -1,5 +1,6 @@
-import { Component, PropsWithChildren } from 'react';
+import React, { Component, PropsWithChildren } from 'react';
 import 'taro-ui/dist/style/index.scss';
+import 'antd-mobile/es/global';
 import './styles/global.less';
 
 class App extends Component<PropsWithChildren> {
