@@ -1,0 +1,20 @@
+.btn{
+    background-color: var(--first-theme-color) !important;
+    color: white !important;
+}
+
+.btn-choose{
+    background-color: var(--first-theme-color) !important;
+    color: white !important;
+    margin-left: 20px;
+}
+
+.num-color{
+  color: var(--success-color);
+  font-size: var(--emphasize-font-size);
+}
+
+.num1-color{
+  color: var(--warning-color);
+  font-size: var(--emphasize-font-size);
+}

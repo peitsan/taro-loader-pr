@@ -1,0 +1,10 @@
+.ant-btn-primary{
+    background-color: var(--first-theme-color)!important;
+    border:'none';
+    position: absolute;
+    top: -60px;
+}
+.ant-btn-primary:hover{
+    background-color: var(--first-theme-color)!important;
+    border:'none';
+}

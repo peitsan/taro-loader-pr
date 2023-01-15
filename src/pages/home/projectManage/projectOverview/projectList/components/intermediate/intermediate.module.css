@@ -1,0 +1,6 @@
+.checked{
+    color: var(--success-color);
+}
+.noCheck{
+    color: var(--warning-color);
+}

@@ -1,0 +1,17 @@
+.btn-background {
+  background-color: var(--first-theme-color) !important;
+  border-color: var(--first-theme-color) !important ;
+  margin-left: 10px;
+}
+
+.reply{
+  color: var(--warning-color);
+}
+
+.approval{
+  color: var(--warning-color);
+}
+
+.solve{
+  color: var(--success-color);
+}
