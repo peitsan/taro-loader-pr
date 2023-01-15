@@ -4,7 +4,6 @@ import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { AtMessage, AtForm, AtInput, AtButton } from 'taro-ui';
 import { useState } from 'react';
-import { userLogin } from '../../utils/params';
 import httpUtil from '../../utils/httpUtil';
 import { useDispatch } from '../../redux/hooks';
 import { updateUserInfoAC } from '../../redux/actionCreators';
@@ -31,9 +30,7 @@ const Login: React.FC = () => {
       </View>
     );
   };
-
   const FormLogin = () => {
-    const [loginLoading, setLoginLoading] = useState(false);
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const navigate = (path: string) => {
@@ -41,22 +38,26 @@ const Login: React.FC = () => {
         url: path,
       });
     };
+    const onReset = () => {
+      setPassword('');
+      setUsername('');
+    };
     const onFinish = async () => {
       const values = {
         username: username,
         password: password,
       };
       try {
-        setLoginLoading(true);
-        const res = await httpUtil.userLogin(values);
+        const res: any = await httpUtil.userLogin(values);
+        console.log(res);
         const user: IdentityType = res.data?.user;
         const token: string = res.data?.token;
         const { permission, teams, id } = user;
-        sessionStorage.setItem('user', JSON.stringify(user));
-        sessionStorage.setItem('permission', permission);
-        sessionStorage.setItem('id', String(id));
-        sessionStorage.setItem('teams', JSON.stringify(teams));
-        sessionStorage.setItem('token', token);
+        Taro.setStorageSync('user', JSON.stringify(user));
+        Taro.setStorageSync('permission', permission);
+        Taro.setStorageSync('id', String(id));
+        Taro.setStorageSync('teams', JSON.stringify(teams));
+        Taro.setStorageSync('token', token);
         dispatch(updateUserInfoAC(user));
         Taro.message({
           message: `欢迎您，${user.nickname || '用户'}`,
@@ -66,12 +67,9 @@ const Login: React.FC = () => {
           ? navigate('/home/managerManage')
           : navigate('/home/projectManage/projectOverview');
       } finally {
-        setLoginLoading(false);
+        onReset();
       }
     };
-
-    const onReset = () => {};
-
     return (
       <>
         <AtForm name='basic' onSubmit={onFinish} onReset={onReset}>
@@ -81,23 +79,30 @@ const Login: React.FC = () => {
             name='username'
             type='text'
             placeholder='请输入账号'
-            onInput={e => setUsername(e.detail.value)}
+            value={username}
+            onChange={e => setUsername(e as string)}
           />
           <AtInput
             required
             title='密码'
             name='password'
-            type='text'
+            type='password'
             placeholder='请输入密码'
-            onInput={e => setPassword(e.detail.value)}
+            value={password}
+            onChange={e => setPassword(e as string)}
           />
           <AtButton
             type='primary'
-            htmlType='submit'
+            onClick={onFinish}
             style={{ marginRight: 20 }}>
-            登录
+            登 录
           </AtButton>
-          <AtButton onClick={onReset}>重置</AtButton>
+          {/* <AtLoadMore
+            moreText='登录'
+            loadingText='登陆中...'
+            status={loginLoading}
+          /> */}
+          <AtButton onClick={onReset}>重 置</AtButton>
         </AtForm>
         <AtMessage />
       </>
