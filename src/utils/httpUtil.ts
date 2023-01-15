@@ -93,9 +93,8 @@ class HttpUtil {
       访问接口
   */
   // 用户登录
-  userLogin = (params: userLogin) => {
-    httpReq('post', `/user/login`, params);
-  };
+  userLogin = (params: userLogin) => httpReq('post', `/user/login`, params);
+
   /* 
     员工
   */

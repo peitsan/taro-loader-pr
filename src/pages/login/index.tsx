@@ -1,10 +1,10 @@
 // import { Component, PropsWithChildren } from 'react';
-
 import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { AtMessage, AtForm, AtInput, AtButton } from 'taro-ui';
 import { useState } from 'react';
 import httpUtil from '../../utils/httpUtil';
+import { navigateTo } from '../../utils/router';
 import { useDispatch } from '../../redux/hooks';
 import { updateUserInfoAC } from '../../redux/actionCreators';
 import logo from '../../assets/logo.png';
@@ -33,11 +33,7 @@ const Login: React.FC = () => {
   const FormLogin = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const navigate = (path: string) => {
-      return Taro.navigateTo({
-        url: path,
-      });
-    };
+
     const onReset = () => {
       setPassword('');
       setUsername('');
@@ -48,10 +44,10 @@ const Login: React.FC = () => {
         password: password,
       };
       try {
-        const res: any = await httpUtil.userLogin(values);
-        console.log(res);
+        const res = await httpUtil.userLogin(values);
         const user: IdentityType = res.data?.user;
         const token: string = res.data?.token;
+        console.log(user);
         const { permission, teams, id } = user;
         Taro.setStorageSync('user', JSON.stringify(user));
         Taro.setStorageSync('permission', permission);
@@ -59,13 +55,13 @@ const Login: React.FC = () => {
         Taro.setStorageSync('teams', JSON.stringify(teams));
         Taro.setStorageSync('token', token);
         dispatch(updateUserInfoAC(user));
-        Taro.message({
+        Taro.atMessage({
           message: `欢迎您，${user.nickname || '用户'}`,
           type: `success`,
         });
         permission === 'admin'
-          ? navigate('/home/managerManage')
-          : navigate('/home/projectManage/projectOverview');
+          ? navigateTo('/home/managerManage')
+          : navigateTo('/home/projectManage/projectOverview');
       } finally {
         onReset();
       }
@@ -97,11 +93,6 @@ const Login: React.FC = () => {
             style={{ marginRight: 20 }}>
             登 录
           </AtButton>
-          {/* <AtLoadMore
-            moreText='登录'
-            loadingText='登陆中...'
-            status={loginLoading}
-          /> */}
           <AtButton onClick={onReset}>重 置</AtButton>
         </AtForm>
         <AtMessage />

@@ -70,7 +70,6 @@ interceptors.forEach(interceptorItem => Taro.addInterceptor(interceptorItem));
 
 const request = function (params) {
   const { url, data, method, headers } = params;
-  console.log(params);
   // let contentType = "application/x-www-form-urlencoded";
   let contentType = 'application/json';
   contentType = headers?.contentType || contentType;
@@ -94,11 +93,10 @@ export const httpReq = (method, url, form, resType) => {
       method: method,
       url: url,
       data: form,
-      responseType: resType,
+      responseTypwe: resType,
     }).then(
-      res => {
-        console.log(res);
-        resolve(res);
+      data => {
+        resolve(data);
       },
       err => {
         // 错误在这统一处理
@@ -136,4 +134,5 @@ export const httpReq = (method, url, form, resType) => {
       },
     );
   });
+   
 };
