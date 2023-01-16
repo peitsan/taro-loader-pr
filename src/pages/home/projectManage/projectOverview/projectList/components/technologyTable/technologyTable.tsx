@@ -1,19 +1,15 @@
-import {
-  Empty,
-  SpinLoading,
-  Modal,
-  Input,
-  Form,
-  Button,
-  message,
-  TextArea,
-} from 'antd-mobile';
-import React, { useEffect, useState } from 'react';
-import styles from './technologyTable.module.css';
+import Taro from '@tarojs/taro';
+import { useEffect, useState } from 'react';
+import { View, Button } from '@tarojs/components';
+import { AtMessage, AtIcon, AtInput, AtForm, AtModal } from 'taro-ui';
+import { message } from '../../../../../../../common/index';
 import httpUtil from '../../../../../../../utils/httpUtil';
-import { technologyList, technologyItem } from './technologyTableType';
+import { technologyItem } from './technologyTableType';
+import './technologyTable.module.css';
 
 export const TechnologyTable: React.FC = () => {
+  const Modal = AtModal;
+  const Input = AtInput;
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [recordList, setRecordList] = useState<technologyItem[]>([]);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -50,7 +46,7 @@ export const TechnologyTable: React.FC = () => {
   };
 
   const showModal = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    e: React.MouseEvent<HTMLViewElement, MouseEvent>,
     id: number | null,
   ) => {
     setCurrentTab(e.currentTarget.tabIndex);
@@ -61,7 +57,7 @@ export const TechnologyTable: React.FC = () => {
   };
 
   const onFinish = async (values: any) => {
-    message.loading('请求中');
+    message('请求中', 'warning');
     try {
       const res = await httpUtil.updateSheet({
         progressId: Number(progressId),
@@ -72,8 +68,7 @@ export const TechnologyTable: React.FC = () => {
       if (res.code === 200) {
         getTechnologyList();
         handleOk();
-        message.destroy();
-        message.success('填写成功');
+        message('填写成功', 'success');
       }
     } finally {
     }
@@ -86,37 +81,40 @@ export const TechnologyTable: React.FC = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-
+  const setValue = (value: string, type: string) => {
+    switch (type) {
+      case 'opinion':
+        setOpinion(value);
+        break;
+      case 'situation':
+        setSituation(value);
+        break;
+      case 'mainAdviceOpinion':
+        setOpinion(value);
+        break;
+      case 'questionExecute':
+        setSituation(value);
+        break;
+    }
+  };
   const ModalForm = () => {
     return (
       <Modal
         title={'填写' + titleList[currentTab!]}
-        footer={null}
-        visible={isModalVisible}
-        onOk={handleOk}
+        isOpened={isModalVisible}
+        onConfirm={handleOk}
         onCancel={handleCancel}>
-        <Form onFinish={onFinish} autoComplete='off'>
-          <Form.Item
-            label={titleList[currentTab!]}
+        <AtForm onSubmit={onFinish}>
+          <Input
+            title={titleList[currentTab!]}
             name={parameterList[currentTab!]}
-            rules={[
-              {
-                required: true,
-                message: `请输入${titleList[currentTab!]}`,
-              },
-            ]}>
-            <Input></Input>
-          </Form.Item>
-          <Form.Item>
-            <Button
-              className={styles['btn-background']}
-              htmlType='submit'
-              block
-              type='primary'>
-              确定
-            </Button>
-          </Form.Item>
-        </Form>
+            placeholder={`请输入${titleList[currentTab!]}`}
+            value={parameterList[currentTab!]}
+            onChange={e => setValue(parameterList[currentTab!], e)}></Input>
+          <Button className='btn-background' formType='submit' type='primary'>
+            确定
+          </Button>
+        </AtForm>
       </Modal>
     );
   };
@@ -126,81 +124,78 @@ export const TechnologyTable: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles['technologyTable-container']}>
+    <View className='technologyTable-container'>
       <ModalForm />
-      <div className={styles['technologyTable-table']}>
-        <div className={styles['technologyTable-header']}>
-          <div>序号</div>
-          <div>审核内容</div>
-          <div>依据</div>
-          <div>审核意见(可研内审后填写)</div>
-          <div>闭环情况(可研批复会签前填写)</div>
-        </div>
+      <View className='technologyTable-table'>
+        <View className='technologyTable-header'>
+          <View>序号</View>
+          <View>审核内容</View>
+          <View>依据</View>
+          <View>审核意见(可研内审后填写)</View>
+          <View>闭环情况(可研批复会签前填写)</View>
+        </View>
         {isLoading ? (
-          <div className={styles['example']}>
-            <SpinLoading />
-          </div>
+          <View className='example'>{/* <SpinLoading /> */}</View>
         ) : recordList.length === 0 ? (
-          <div className={styles['technologyTable-empty']}>
-            <Empty />
-          </div>
+          <View className='technologyTable-empty'>{/* <Empty /> */}</View>
         ) : (
           <>
             {recordList.map((item, index) => {
               return (
-                <div className={styles['technologyTable-item']} key={index}>
-                  <div>{index + 1}</div>
-                  <div>{item.审核内容}</div>
-                  <div>{item.依据}</div>
-                  <div
+                <View className='technologyTable-item' key={index}>
+                  <View>{index + 1}</View>
+                  <View>{item.审核内容}</View>
+                  <View>{item.依据}</View>
+                  <View
                     style={{
                       color: item.审核意见 === null ? '#cfcfcf' : 'black',
                     }}>
                     {item.审核意见 === null ? '暂未填写' : item.审核意见}
-                  </div>
-                  <div
+                  </View>
+                  <View
                     style={{
                       color: item.闭环情况 === null ? '#cfcfcf' : 'black',
                     }}>
                     {item.闭环情况 === null ? '暂未填写' : item.闭环情况}
-                  </div>
-                </div>
+                  </View>
+                </View>
               );
             })}
-            <div className={styles['signature-container']}>
-              <div className={styles['signature-title']}>
-                <div>建管单位(部门)建议意见</div>
-              </div>
-              <div className={styles['signature-input']}>
-                <div className={styles['opinion']}>
+            <View className='signature-container'>
+              <View className='signature-title'>
+                <View>建管单位(部门)建议意见</View>
+              </View>
+              <View className='signature-input'>
+                <View className='opinion'>
                   {/* <TextArea placeholder='主要建议意见：'></TextArea> */}
-                  <div className={styles['title']}>主要建议意见：</div>
-                  <div className={styles['content']}>
-                    <div
-                      className={styles['all-content']}
+                  <View className='title'>主要建议意见：</View>
+                  <View className='content'>
+                    <View
+                      className='all-content'
                       style={{ color: opinion === null ? '#cfcfcf' : 'black' }}>
                       {opinion === null ? '暂未填写' : opinion}
-                    </div>
-                  </div>
-                </div>
-                <div className={styles['opinion']}>
-                  <div className={styles['title']}>问题处置：</div>
-                  <div className={styles['content']}>
-                    <div
-                      className={styles['all-content']}
+                    </View>
+                  </View>
+                </View>
+                <View className='opinion'>
+                  <View className='title'>问题处置：</View>
+                  <View className='content'>
+                    <View
+                      className='all-content'
                       style={{
                         color: situation === null ? '#cfcfcf' : 'black',
                       }}>
                       {situation === null ? '暂未填写' : situation}
-                    </div>
-                  </div>
+                    </View>
+                  </View>
                   {/* <TextArea placeholder='问题处置：'></TextArea> */}
-                </div>
-              </div>
-            </div>
+                </View>
+              </View>
+            </View>
           </>
         )}
-      </div>
-    </div>
+      </View>
+      <AtMessage />
+    </View>
   );
 };

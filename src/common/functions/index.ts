@@ -5,3 +5,4 @@ export * from './transPermissionToIdentity';
 export * from './transPermission';
 export * from './canCheckOtherReply';
 export * from './getNumberTime';
+export * from './taroUIFun';

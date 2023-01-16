@@ -1,7 +1,8 @@
-import Taro, { TarBarList } from '@tarojs/taro';
+import Taro from '@tarojs/taro';
 import { useState, useEffect } from 'react';
+import { AtTabs, AtTabsPane, AtLoadMore } from 'taro-ui';
 import { View } from '@tarojs/components';
-// import { Tabs, SpinLoading } from 'antd-mobile';
+// import { AtTabs, SpinLoading } from 'antd-mobile';
 // import {
 //   AllIssueList,
 //   TechnologyTable,
@@ -9,7 +10,7 @@ import { View } from '@tarojs/components';
 //   Intermediate,
 //   SpecialAssessment,
 // } from './components';
-import { AtTabs, AtTabsPane, AtLoadMore } from 'taro-ui';
+import { TechnologyTable } from './components';
 import httpUtil from '../../../../../utils/httpUtil';
 import {
   issuesItem,
@@ -19,9 +20,6 @@ import {
 } from './projectListType/projectListType';
 import { BackPrePage } from '../../../../../common/index';
 import './index.less';
-
-const Tabs = AtTabs;
-const Tab = AtTabsPane;
 
 function ProjectList() {
   const projectName = Taro.getStorageSync('projectName');
@@ -36,6 +34,7 @@ function ProjectList() {
   const [fresh, setFresh] = useState<boolean>(false);
   const [flag, setFlag] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const [selectTab, setSelectTab] = useState<number>(type);
   // setFresh(false);
   const typeName = [
     '可研启动会',
@@ -79,7 +78,6 @@ function ProjectList() {
     { title: '问题清单' },
     { title: '协议清单' },
     { title: '手续清单' },
-    { title: '协议清单' },
     { title: '初设第一阶段中间检查要点' },
     { title: '初设第二阶段中间检查要点' },
     { title: '建设专业可研反馈记录表' },
@@ -114,8 +112,12 @@ function ProjectList() {
   const flush = (flsh: boolean) => {
     setFlag(flsh);
   };
+  const tabSwitchHandle = (val: number) => {
+    setSelectTab(val);
+  };
   useEffect(() => {
     getTimeDetail();
+    console.log(type);
   }, [flag, fresh]);
 
   return (
@@ -143,7 +145,7 @@ function ProjectList() {
       {loading ? (
         <View
           style={{
-            margin: '20px 0',
+            margin: '2px 0',
             marginBottom: '20px',
             padding: '30px 50px',
             textAlign: 'center',
@@ -152,65 +154,94 @@ function ProjectList() {
           <AtLoadMore style={{ marginTop: 150 }} />
         </View>
       ) : (
-        <Tabs scroll={true} current={type} tabList={TabList} onChange={onChange}>
-          {noUnifiedList.includes(type) ? null : (
-            <Tab current={type} index={1}>
-              {/* <AllIssueList
-                issuesItems={issues}
-                index={4}
-                fresh={getTimeDetail}
-              /> */}
-            </Tab>
-          )}
-          {noTwoType.includes(type) ? null : (
-            <Tab current={type} index={2}>
-              {/* <AllIssueList
+        <View>
+          <AtTabs
+            scroll
+            current={selectTab}
+            tabList={TabList}
+            onClick={e => tabSwitchHandle(e)}>
+            {noUnifiedList.includes(type) ? null : (
+              <AtTabsPane current={selectTab} index={0}>
+                <View style='width:750rpx; height:200px;padding: 200px 50px;background-color: #FAFBFC;text-align: center;'>
+                  统一任务
+                </View>
+              </AtTabsPane>
+            )}
+            {noTwoType.includes(type) ? null : (
+              <AtTabsPane current={selectTab} index={1}>
+                <View style='padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
+                  问题清单
+                </View>
+                {/* 问题清单 */}
+                {/* <AllIssueList
                 problemsItem={problems}
                 index={1}
                 fresh={getTimeDetail}
               /> */}
-            </Tab>
-          )}
-          {noTwoType.includes(type) ? null : (
-            <Tab current={type} index={3}>
-              {/* <AllIssueList
+              </AtTabsPane>
+            )}
+            {noTwoType.includes(type) ? null : (
+              <AtTabsPane current={selectTab} index={2}>
+                <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
+                  协议清单
+                </View>
+                {/* 协议清单 */}
+                {/* <AllIssueList
                 protocolsItem={protocols}
                 index={2}
                 fresh={getTimeDetail}
               /> */}
-            </Tab>
-          )}
-          {type === 0 ? null : (
-            <Tab current={type} index={4}>
-              {/* <AllIssueList
+              </AtTabsPane>
+            )}
+            {type === 0 ? null : (
+              <AtTabsPane current={selectTab} index={3}>
+                <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
+                  手续清单
+                </View>
+                {/* 手续清单 */}
+                {/* <AllIssueList
                 proceduresItem={procedures}
                 index={3}
                 fresh={getTimeDetail}
               /> */}
-            </Tab>
-          )}
-          {type === 2 ? (
-            <Tab current={type} index={7}>
-              {/* <Intermediate /> */}{' '}
-            </Tab>
-          ) : null}
-          {type === 3 || type === 2 ?({
-          (type === 2)?(
-              <Tab current={type} index={6}>
-              {/* <Intermediate /> */}{' '}
-              </Tab>
-            ):(
-              <Tab current={type} index={5}>
-              {/* <Intermediate /> */}{' '}
-        </Tab>
-            )
-          } ): null}
-          {specialList.includes(type) ? (
-            <Tab current={type} index={8}>
-              {/* <SpecialAssessment Type={type} /> */}
-            </Tab>
-          ) : null}
-        </Tabs>
+              </AtTabsPane>
+            )}
+            {type === 3 || type === 2 ? (
+              type === 2 ? (
+                // 初设第一阶段中间检查要点
+                <AtTabsPane current={selectTab} index={4}>
+                  <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
+                    统一任务
+                  </View>
+                  {/* <Intermediate /> */}{' '}
+                </AtTabsPane>
+              ) : (
+                // 初设第一阶段中间检查要点
+                <AtTabsPane current={selectTab} index={5}>
+                  <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
+                    统一任务
+                  </View>
+                  {/* <Intermediate /> */}{' '}
+                </AtTabsPane>
+              )
+            ) : null}
+            {type === 0 ? (
+              //建设专业可研反馈记录表
+              <AtTabsPane current={selectTab} index={6}>
+                <View style='50px;background-color: #FAFBFC;'>
+                  {/* <TechnologyTable /> */}
+                </View>
+              </AtTabsPane>
+            ) : null}
+            {specialList.includes(type) ? (
+              //专项评估
+              <AtTabsPane current={selectTab} index={7}>
+                <View style='50px;background-color: #FAFBFC;'></View>
+                {/* <SpecialAssessment Type={type} /> */}
+              </AtTabsPane>
+            ) : null}
+          </AtTabs>
+        </View>
       )}
     </View>
   );
