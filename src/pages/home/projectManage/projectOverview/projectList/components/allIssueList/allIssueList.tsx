@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
-import type { ColumnsType } from "antd/lib/table";
+import { Table } from "antd-mobile";
+import type { ColumnsType } from "antd-mobile/lib/table";
 import { ChildrenTable } from "./childrenTable/childrenTable";
 import { IProps, DataType, ExpandedDataType } from "./allIssueType";
 import {
@@ -61,7 +61,7 @@ export const AllIssueList: React.FC<IProps> = ({
         let len = 0;
         for (let i = 0; i < item.length; i++) {
           const { manageId, code } = item[i];
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           if (manageId.includes(id) && code === 1) {
             len++;
           }

@@ -3,7 +3,7 @@ export default defineAppConfig({
     // 系统登录
     'pages/login/index',
     // 主页
-    'pages/home/index',
+    'pages/home/index/index',
     /* 
     工程管理
   */
@@ -26,6 +26,8 @@ export default defineAppConfig({
   */
     'pages/home/managerManage/index',
   ],
+  // entryPagePath: 'pages/home/projectManage/projectOverview/projectList/index',
+  entryPagePath: 'pages/login/index',
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

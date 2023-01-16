@@ -1,42 +1,42 @@
-import React, { useEffect, useState } from "react";
-import { ChildrenTable } from "./childrenTable/childrenTable";
-import httpUtil from "../../../../../../../utils/httpUtil";
-import { IProps, dataItem } from "./specialAssessmentType";
-import styles from "./specialAssessment.module.css";
-import { Table } from "antd";
+import React, { useEffect, useState } from 'react';
+import { ChildrenTable } from './childrenTable/childrenTable';
+import httpUtil from '../../../../../../../utils/httpUtil';
+import { IProps, dataItem } from './specialAssessmentType';
+import styles from './specialAssessment.module.css';
+import { Table } from 'antd-mobile';
 
 export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
-  const progressId = localStorage.getItem("progressId")!;
+  const progressId = Taro.getStorageSync('progressId')!;
   const [specialList, setSpecialList] = useState<dataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const columns = [
     {
       title: `标题`,
-      dataIndex: "single",
-      key: "single",
+      dataIndex: 'single',
+      key: 'single',
     },
     {
-      title: "需解决问题数",
-      key: "number",
+      title: '需解决问题数',
+      key: 'number',
       render: (_: any, record: any) => {
         console.log(record);
-        const { responsibles, status } = record
-        let manageId = []
+        const { responsibles, status } = record;
+        let manageId = [];
         if (responsibles) {
-          manageId = responsibles.map((item:any) => {
-            return item.id
-          })
+          manageId = responsibles.map((item: any) => {
+            return item.id;
+          });
         }
-        const { id } = JSON.parse(sessionStorage.getItem("user")!);
+        const { id } = JSON.parse(Taro.getStorageSync('user')!);
         let len = 0;
         if (manageId.includes(id) && status === 1) {
-          len = 1
+          len = 1;
         }
-        const className = len > 0 ? "num1-color" : "num-color";
+        const className = len > 0 ? 'num1-color' : 'num-color';
         return <span className={styles[className]}>{len}</span>;
       },
-      sorter: (a:any, b: any) => b.len - a.len,
+      sorter: (a: any, b: any) => b.len - a.len,
     },
   ];
 
@@ -126,10 +126,10 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
   return (
     <div>
       <Table
-        className="components-table-demo-nested"
+        className='components-table-demo-nested'
         loading={loading}
         columns={columns}
-        expandable={{ expandedRowRender: (e) => expandedRowRender(e) }}
+        expandable={{ expandedRowRender: e => expandedRowRender(e) }}
         dataSource={specialList}
         pagination={false}
       />

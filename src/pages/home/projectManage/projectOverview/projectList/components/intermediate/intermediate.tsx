@@ -1,5 +1,5 @@
-import { Badge, Table } from "antd";
-import type { ColumnsType } from "antd/lib/table";
+import { Badge, Table } from "antd-mobile";
+import type { ColumnsType } from "antd-mobile/lib/table";
 import React, { useEffect, useState } from "react";
 import { DataType, ExpandedDataType, resType, res } from "./intermediateType";
 import httpUtil from "../../../../../../../utils/httpUtil";
@@ -7,8 +7,8 @@ import styles from './intermediate.module.css'
 
 export const Intermediate: React.FC = () => {
   const [mediateList, setMediateList] = useState<any[]>([]);
-  const projectId = localStorage.getItem("projectId");
-  const progressId = localStorage.getItem("progressId");
+  const projectId = Taro.getStorageSync("projectId");
+  const progressId = Taro.getStorageSync("progressId");
   // 列表loading
   const [loading, setLoading] = useState(true);
 

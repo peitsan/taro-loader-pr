@@ -7,10 +7,10 @@ import {
   Modal,
   Space,
   Table,
-} from "antd";
-import TextArea from "antd/lib/input/TextArea";
+  TextArea,
+} from "antd-mobile";
 import moment from "moment";
-import { FileTextOutlined } from '@ant-design/icons'
+import { AtIcon } from 'taro-ui';
 import React, { useState } from "react";
 import { canCheckOtherReply, UploadBtn } from "../../../../../../../../common";
 import httpUtil from "../../../../../../../../utils/httpUtil";
@@ -23,7 +23,7 @@ export const ChildrenTable: React.FC<IProps> = ({
   getSpecial,
 }: IProps) => {
 
-  const progressId = localStorage.getItem("progressId")!;
+  const progressId = Taro.getStorageSync("progressId")!;
 
   const renderResponse = (text: any) => {
     return text ? (
@@ -111,7 +111,7 @@ export const ChildrenTable: React.FC<IProps> = ({
               return item.id
             })
           }
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           return status === 1 && responsibleId?.includes(id) ? (
             <>
               <Space size="middle">
@@ -137,7 +137,7 @@ export const ChildrenTable: React.FC<IProps> = ({
             </>
           ) : ((status === 2 || status === 3) && responsibleId?.includes(id)) ||
             (status === 3 &&
-              canCheckOtherReply(Number(localStorage.getItem("fatherId")))) ? (
+              canCheckOtherReply(Number(Taro.getStorageSync("fatherId")))) ? (
             <Space size="middle">
               <Button
                 size="small"
@@ -205,7 +205,7 @@ export const ChildrenTable: React.FC<IProps> = ({
               return item.id
             })
           }
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           return status === 1 && responsibleId.includes(id) ? (
             <>
               <Space size="middle">
@@ -231,7 +231,7 @@ export const ChildrenTable: React.FC<IProps> = ({
             </>
           ) : ((status === 2 || status === 3) && responsibleId.includes(id)) ||
             (status === 3 &&
-              canCheckOtherReply(Number(localStorage.getItem("fatherId")))) ? (
+              canCheckOtherReply(Number(Taro.getStorageSync("fatherId")))) ? (
             <Space size="middle">
               <Button
                 size="small"
@@ -290,7 +290,7 @@ export const ChildrenTable: React.FC<IProps> = ({
               return item.id
             })
           }
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           return status === 1 && responsibleId.includes(id) ? (
             <>
               <Space size="middle">
@@ -316,7 +316,7 @@ export const ChildrenTable: React.FC<IProps> = ({
             </>
           ) : ((status === 2 || status === 3) && responsibleId.includes(id)) ||
             (status === 3 &&
-              canCheckOtherReply(Number(localStorage.getItem("fatherId")))) ? (
+              canCheckOtherReply(Number(Taro.getStorageSync("fatherId")))) ? (
             <Space size="middle">
               <Button
                 size="small"
@@ -384,7 +384,7 @@ export const ChildrenTable: React.FC<IProps> = ({
               return item.id
             })
           }
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           return status === 1 && responsibleId.includes(id) ? (
             <>
               <Space size="middle">
@@ -410,7 +410,7 @@ export const ChildrenTable: React.FC<IProps> = ({
             </>
           ) : ((status === 2 || status === 3) && responsibleId.includes(id)) ||
             (status === 3 &&
-              canCheckOtherReply(Number(localStorage.getItem("fatherId")))) ? (
+              canCheckOtherReply(Number(Taro.getStorageSync("fatherId")))) ? (
             <Space size="middle">
               <Button
                 size="small"
@@ -472,7 +472,7 @@ export const ChildrenTable: React.FC<IProps> = ({
               return item.id
             })
           }
-          const { id } = JSON.parse(sessionStorage.getItem("user")!);
+          const { id } = JSON.parse(Taro.getStorageSync("user")!);
           return status === 1 && responsibleId.includes(id) ? (
             <>
               <Space size="middle">
@@ -498,7 +498,7 @@ export const ChildrenTable: React.FC<IProps> = ({
             </>
           ) : ((status === 2 || status === 3) && responsibleId.includes(id)) ||
             (status === 3 &&
-              canCheckOtherReply(Number(localStorage.getItem("fatherId")))) ? (
+              canCheckOtherReply(Number(Taro.getStorageSync("fatherId")))) ? (
             <Space size="middle">
               <Button
                 size="small"
@@ -632,18 +632,18 @@ export const ChildrenTable: React.FC<IProps> = ({
             {attachment !== "" ? (
               canDownload ? (
                 <a href={downloadURL} download={downloadName}>
-                  <FileTextOutlined />
+                  <AtIcon value='file-generic' size='30' color='#F00' /> 
                   下载成功，点击查看
                 </a>
               ) : (
                 <a onClick={downloadFile}>
-                  <FileTextOutlined />
+                  <AtIcon value='file-generic' size='30' color='#F00' /> 
                   下载附件
                 </a>
               )
             ) : (
               <a style={{ color: "silver" }}>
-                <FileTextOutlined />
+                <AtIcon value='file-generic' size='30' color='#F00' /> 
                 无附件
               </a>
             )}

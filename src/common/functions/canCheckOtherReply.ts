@@ -5,8 +5,8 @@ interface team {
   projectId: number;
 }
 export const canCheckOtherReply = (fatherProjectId: number): boolean => {
-  const teams: team[] = JSON.parse(sessionStorage.getItem("teams")!);
-  const permission: string = sessionStorage.getItem("permission")!;
+  const teams: team[] = JSON.parse(Taro.getStorageSync("teams")!);
+  const permission: string = Taro.getStorageSync("permission")!;
   let canCheck = false;
   if (teams.length) {
     for (let team of teams) {

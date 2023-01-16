@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { Form, Input, Button, message, DatePicker } from "antd";
-import httpUtil from "../../../../../../../../../utils/httpUtil";
-import styles from "./adjustTimeForm.module.css";
-import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, message, DatePicker } from 'antd-mobile';
+import httpUtil from '../../../../../../../../../utils/httpUtil';
+import styles from './adjustTimeForm.module.css';
+import moment from 'moment';
 
 interface IProps {
   reasonId: number;
@@ -24,18 +24,18 @@ export const AdjustTimeForm: React.FC<IProps> = ({
   PlanTime,
 }: IProps) => {
   const [form] = Form.useForm();
-  const reply = ["reason", "opinion", "condition", "question"];
+  const reply = ['reason', 'opinion', 'condition', 'question'];
 
   let timer: NodeJS.Timer;
   const onFinish = (values: any) => {
     console.log(values);
     const { reason, time } = values;
-    const date = String(new Date(time?.format("YYYY-MM-DD")!).getTime());
+    const date = String(new Date(time?.format('YYYY-MM-DD')!).getTime());
     if (timer) {
       clearTimeout(timer);
     }
     timer = setTimeout(async () => {
-      message.loading("请求中");
+      message.loading('请求中');
       try {
         const res = await httpUtil.applyAdjust({
           adjustType: reply[index - 1],
@@ -49,7 +49,7 @@ export const AdjustTimeForm: React.FC<IProps> = ({
           TimeClose();
           form.resetFields();
           message.destroy();
-          message.success("申请成功");
+          message.success('申请成功');
         }
       } finally {
       }
@@ -64,31 +64,30 @@ export const AdjustTimeForm: React.FC<IProps> = ({
   return (
     <Form
       form={form}
-      name="dynamic_form_nest_item"
+      name='dynamic_form_nest_item'
       onFinish={onFinish}
-      autoComplete="off"
-    >
+      autoComplete='off'>
       <Form.Item
-        name="reason"
-        label="申请原因"
-        rules={[{ required: true, message: "申请原因不能为空" }]}
-      >
-        <Input placeholder="填写申请原因"></Input>
+        name='reason'
+        label='申请原因'
+        rules={[{ required: true, message: '申请原因不能为空' }]}>
+        <Input placeholder='填写申请原因'></Input>
       </Form.Item>
       <Form.Item
-        name="time"
-        label="调整时间"
-        rules={[{ required: true, message: "调整时间不能为空" }]}
-      >
-        <DatePicker placeholder="选择时间" disabledDate={(e) => disabledDate(e)} />
+        name='time'
+        label='调整时间'
+        rules={[{ required: true, message: '调整时间不能为空' }]}>
+        <DatePicker
+          placeholder='选择时间'
+          disabledDate={e => disabledDate(e)}
+        />
       </Form.Item>
       <Form.Item>
         <Button
-          type="primary"
-          htmlType="submit"
+          type='primary'
+          htmlType='submit'
           block
-          className={styles["btn-background"]}
-        >
+          className={styles['btn-background']}>
           确定
         </Button>
       </Form.Item>

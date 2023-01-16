@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button, message } from 'antd-mobile';
 import { UploadBtn } from '../../../../../../../../../common'
 import httpUtil from '../../../../../../../../../utils/httpUtil'
 import styles from './projectForm.module.css'
