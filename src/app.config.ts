@@ -1,5 +1,7 @@
 export default defineAppConfig({
-  pages: ['pages/login/index'],
+  pages: [
+    'pages/home/projectManage/projectOverview/index'
+  ],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

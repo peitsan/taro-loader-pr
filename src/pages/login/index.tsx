@@ -70,7 +70,6 @@ const Login: React.FC = () => {
       }
     };
 
-    const onReset = () => {};
 
     return (
       <>
@@ -95,9 +94,10 @@ const Login: React.FC = () => {
             type='primary'
             htmlType='submit'
             style={{ marginRight: 20 }}>
+
             登录
           </AtButton>
-          <AtButton onClick={onReset}>重置</AtButton>
+          <AtButton>重置</AtButton>
         </AtForm>
         <AtMessage />
       </>
