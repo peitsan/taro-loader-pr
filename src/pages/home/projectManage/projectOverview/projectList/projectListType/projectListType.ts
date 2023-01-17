@@ -87,3 +87,7 @@ export interface proceduresItem {
   reasons: conditions[];
   progress: progress;
 }
+
+export interface tabListItem {
+  title: string;
+}

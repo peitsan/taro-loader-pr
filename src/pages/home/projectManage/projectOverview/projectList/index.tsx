@@ -1,8 +1,7 @@
 import Taro from '@tarojs/taro';
 import { useState, useEffect } from 'react';
-import { AtTabs, AtTabsPane, AtLoadMore } from 'taro-ui';
+import { AtLoadMore, AtTabs, AtTabsPane } from 'taro-ui';
 import { View } from '@tarojs/components';
-// import { AtTabs, SpinLoading } from 'antd-mobile';
 // import {
 //   AllIssueList,
 //   TechnologyTable,
@@ -17,6 +16,7 @@ import {
   problemsItem,
   proceduresItem,
   protocolsItem,
+  tabListItem,
 } from './projectListType/projectListType';
 import { BackPrePage } from '../../../../../common/index';
 import './index.less';
@@ -35,6 +35,7 @@ function ProjectList() {
   const [flag, setFlag] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectTab, setSelectTab] = useState<number>(type);
+  const [tabList, setTableList] = useState<tabListItem[]>([]);
   // setFresh(false);
   const typeName = [
     '可研启动会',
@@ -73,16 +74,6 @@ function ProjectList() {
     '1',
     '1',
   ];
-  const TabList = [
-    { title: '统一任务' },
-    { title: '问题清单' },
-    { title: '协议清单' },
-    { title: '手续清单' },
-    { title: '初设第一阶段中间检查要点' },
-    { title: '初设第二阶段中间检查要点' },
-    { title: '建设专业可研反馈记录表' },
-    { title: '专项评估' },
-  ];
   //专项评估
   const specialList = [1, 2, 3, 4, 8];
   const onChange = (key: string) => {
@@ -115,9 +106,85 @@ function ProjectList() {
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
   };
+  const effectTabList = () => {
+    var TabList: tabListItem[] = [
+      { title: '统一任务' },
+      { title: '问题清单' },
+      { title: '协议清单' },
+      { title: '手续清单' },
+      { title: '初设第一阶段中间检查要点' },
+      { title: '初设第二阶段中间检查要点' },
+      { title: '建设专业可研反馈记录表' },
+      { title: '专项评估' },
+    ];
+    // 无统一任务
+    if (noUnifiedList.includes(type)) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '统一任务'),
+        1,
+      );
+      console.log(TabList);
+    }
+    //无科研技术收口和专项评估 问题清单
+    if (noTwoType.includes(type)) {
+      // 一行删除一个元素
+      TabList.splice(
+        TabList.findIndex(val => val.title === '问题清单'),
+        1,
+      );
+      TabList.splice(
+        TabList.findIndex(val => val.title === '协议清单'),
+        1,
+      );
+    }
+    // 无手续清单
+    if (type === 0) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '手续清单'),
+        1,
+      );
+    }
+    if (type === 2) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '初设第二阶段中间检查要点'),
+        1,
+      );
+    } else if (type === 3) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '初设第一阶段中间检查要点'),
+        1,
+      );
+    } else {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '初设第一阶段中间检查要点'),
+        1,
+      );
+      TabList.splice(
+        TabList.findIndex(val => val.title === '初设第二阶段中间检查要点'),
+        1,
+      );
+    }
+    // 无初设第一阶段中间检查要点
+    if (type > 0) {
+      //无建设专业可研反馈记录表
+      TabList.splice(
+        TabList.findIndex(val => val.title === '建设专业可研反馈记录表'),
+        1,
+      );
+    }
+    if (!specialList.includes(type)) {
+      //无专项评估
+      TabList.splice(
+        TabList.findIndex(val => val.title === '专项评估'),
+        1,
+      );
+    }
+    setTableList(TabList);
+  };
   useEffect(() => {
     getTimeDetail();
-    console.log(type);
+    // 生成tabList
+    effectTabList();
   }, [flag, fresh]);
 
   return (
@@ -158,17 +225,21 @@ function ProjectList() {
           <AtTabs
             scroll
             current={selectTab}
-            tabList={TabList}
+            tabList={tabList}
             onClick={e => tabSwitchHandle(e)}>
             {noUnifiedList.includes(type) ? null : (
-              <AtTabsPane current={selectTab} index={0}>
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '统一任务')}>
                 <View style='width:750rpx; height:200px;padding: 200px 50px;background-color: #FAFBFC;text-align: center;'>
                   统一任务
                 </View>
               </AtTabsPane>
             )}
             {noTwoType.includes(type) ? null : (
-              <AtTabsPane current={selectTab} index={1}>
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '问题清单')}>
                 <View style='padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
                   问题清单
                 </View>
@@ -181,7 +252,9 @@ function ProjectList() {
               </AtTabsPane>
             )}
             {noTwoType.includes(type) ? null : (
-              <AtTabsPane current={selectTab} index={2}>
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '协议清单')}>
                 <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
                   协议清单
                 </View>
@@ -194,7 +267,9 @@ function ProjectList() {
               </AtTabsPane>
             )}
             {type === 0 ? null : (
-              <AtTabsPane current={selectTab} index={3}>
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '手续清单')}>
                 <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
                   手续清单
                 </View>
@@ -209,17 +284,25 @@ function ProjectList() {
             {type === 3 || type === 2 ? (
               type === 2 ? (
                 // 初设第一阶段中间检查要点
-                <AtTabsPane current={selectTab} index={4}>
+                <AtTabsPane
+                  current={selectTab}
+                  index={tabList.findIndex(
+                    val => val.title === '初设第一阶段中间检查要点',
+                  )}>
                   <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                    统一任务
+                    初设第一阶段中间检查要点
                   </View>
                   {/* <Intermediate /> */}{' '}
                 </AtTabsPane>
               ) : (
-                // 初设第一阶段中间检查要点
-                <AtTabsPane current={selectTab} index={5}>
+                // 初设第二阶段中间检查要点
+                <AtTabsPane
+                  current={selectTab}
+                  index={tabList.findIndex(
+                    val => val.title === '初设第二阶段中间检查要点',
+                  )}>
                   <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                    统一任务
+                    初设第二阶段中间检查要点
                   </View>
                   {/* <Intermediate /> */}{' '}
                 </AtTabsPane>
@@ -227,15 +310,21 @@ function ProjectList() {
             ) : null}
             {type === 0 ? (
               //建设专业可研反馈记录表
-              <AtTabsPane current={selectTab} index={6}>
-                <View style='50px;background-color: #FAFBFC;'>
-                  {/* <TechnologyTable /> */}
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(
+                  val => val.title === '建设专业可研反馈记录表',
+                )}>
+                <View style='height:600px;background-color: #FAFBFC;'>
+                  <TechnologyTable />
                 </View>
               </AtTabsPane>
             ) : null}
             {specialList.includes(type) ? (
               //专项评估
-              <AtTabsPane current={selectTab} index={7}>
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '专项评估')}>
                 <View style='50px;background-color: #FAFBFC;'></View>
                 {/* <SpecialAssessment Type={type} /> */}
               </AtTabsPane>
