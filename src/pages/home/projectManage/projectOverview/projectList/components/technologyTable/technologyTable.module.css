@@ -1,7 +1,10 @@
+.technologyTable-container{
+    height: 120%;
+}
 .technologyTable-header{
     display: flex;
 }
-.technologyTable-header div{
+.technologyTable-header{
     /* font-size: 16px; */
     border: 1px solid #F0F0F0;
     border-left: none;
@@ -10,30 +13,38 @@
     background-color: #FAFAFA;
     color: black;
 }
-.technologyTable-header div:nth-child(1){
+.technologyTable-header :nth-child(1){
     width: 10%;
 }
-.technologyTable-header div:nth-child(2){
+.technologyTable-header :nth-child(2){
     width: 20%;
 }
-.technologyTable-header div:nth-child(3){
+.technologyTable-header :nth-child(3){
     width: 20%;
 }
-.technologyTable-header div:nth-child(4){
+.technologyTable-header :nth-child(4){
     width: 25%;
 }
-.technologyTable-header div:nth-child(5){
+.technologyTable-header :nth-child(5){
     width: 25%;
     border-right: none;
 }
 .technologyTable-empty{
     box-shadow: 0 10px 5px rgb(211, 208, 208);
-    padding: 10px;
+    padding:10% 20%;
+}
+.technologyTable-empty-tip{
+    font-size:36rpx;
+    font-weight: 400;     
 }
 .example {
     padding: 30px 50px;
     text-align: center;
     border-radius: 4px;
+}
+.technologyTable-table{
+    height: 100%;
+    overflow-y: scroll;
 }
 .technologyTable-item{
     display: flex;
@@ -42,27 +53,27 @@
     border-top: 1px solid #F0F0F0;
     border-bottom: 1px solid #F0F0F0;
 }
-.technologyTable-item div{
-    border-right: 1px solid #F0F0F0;
+.technologyTable-item View{
+    border-right: 1px solid aliceblue;
     text-align: center;
     padding: 15px 5px;
     background-color: #FAFAFA;
     /* font-weight: 600; */
 }
 
-.technologyTable-item div:nth-child(1){
+.technologyTable-item View:nth-child(1){
     width: 10%;
 }
-.technologyTable-item div:nth-child(2){
+.technologyTable-item View:nth-child(2){
     width: 20%;
 }
-.technologyTable-item div:nth-child(3){
+.technologyTable-item View:nth-child(3){
     width: 20%;
 }
-.technologyTable-item div:nth-child(4){
+.technologyTable-item View:nth-child(4){
     width: 25%;
 }
-.technologyTable-item div:nth-child(5){
+.technologyTable-item View:nth-child(5){
     width: 25%;
     border-right: none;
 }
@@ -81,7 +92,7 @@
     justify-content: center;
     align-items: center
 }
-.signature-title div{
+.signature-title View{
     width: 10%;    
     font-size: 16px;
 }
@@ -107,21 +118,21 @@
 .all-content{
     padding: 0 10%;
 }
-/* .signature-input div TextArea{
+/* .signature-input View TextArea{
     height: 200px;
     outline: none !important;
     border: 1px solid #F0F0F0 !important;
     transition: none !important;
 }
 
-.signature-input div TextArea:focus{
+.signature-input View TextArea:focus{
     box-shadow: none !important;
     outline: none!important;
     border: none !important;
     transition: none !important;
 }
 
-.signature-input div TextArea:hover{
+.signature-input View TextArea:hover{
     box-shadow: none !important;
     outline: none !important;
     border: none !important;

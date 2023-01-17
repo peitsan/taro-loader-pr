@@ -9,7 +9,7 @@ import { View } from '@tarojs/components';
 //   Intermediate,
 //   SpecialAssessment,
 // } from './components';
-import { TechnologyTable } from './components';
+import { AllIssueList, TechnologyTable } from './components';
 import httpUtil from '../../../../../utils/httpUtil';
 import {
   issuesItem,
@@ -86,8 +86,8 @@ function ProjectList() {
       const res = await httpUtil.getProjectProgressDetail({
         // project_id: String(Taro.getStorageSync('projectId')),
         // progress_id: String(Taro.getStorageSync('progressId')),
-        project_id: String(304),
-        progress_id: String(2018),
+        project_id: String(305),
+        progress_id: String(2026),
       });
       if (res.code === 200) {
         const { issue, problem, procedure, protocol } = res.data;
@@ -231,8 +231,12 @@ function ProjectList() {
               <AtTabsPane
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '统一任务')}>
-                <View style='width:750rpx; height:200px;padding: 200px 50px;background-color: #FAFBFC;text-align: center;'>
-                  统一任务
+                <View style='background-color: #FAFBFC;'>
+                  <AllIssueList
+                    issuesItems={issues}
+                    index={4}
+                    fresh={getTimeDetail}
+                  />
                 </View>
               </AtTabsPane>
             )}
@@ -315,7 +319,7 @@ function ProjectList() {
                 index={tabList.findIndex(
                   val => val.title === '建设专业可研反馈记录表',
                 )}>
-                <View style='height:600px;background-color: #FAFBFC;'>
+                <View style='background-color: #FAFBFC;'>
                   <TechnologyTable />
                 </View>
               </AtTabsPane>

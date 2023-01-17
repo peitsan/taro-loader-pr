@@ -30,7 +30,12 @@ export const TechnologyTable: React.FC = () => {
   const getTechnologyList = async () => {
     setIsLoading(true);
     try {
+      // 这里是调试写死的数据
+      // projectId,
+      // progressId,
       const res = await httpUtil.getTechnologyList({
+        // projectId: String(305),
+        // progressId: String(2025),
         projectId,
         progressId,
       });
@@ -42,6 +47,7 @@ export const TechnologyTable: React.FC = () => {
         setIsLoading(false);
       }
     } finally {
+      setIsLoading(false);
     }
   };
 
@@ -126,20 +132,23 @@ export const TechnologyTable: React.FC = () => {
   return (
     <View className='technologyTable-container'>
       <ModalForm />
+      <View className='technologyTable-header'>
+        <View>序号</View>
+        <View>审核内容</View>
+        <View>依据</View>
+        <View>审核意见 (可研内审后填写)</View>
+        <View>闭环情况 (可研批复会签前填写)</View>
+      </View>
       <View className='technologyTable-table'>
-        <View className='technologyTable-header'>
-          <View>序号</View>
-          <View>审核内容</View>
-          <View>依据</View>
-          <View>审核意见(可研内审后填写)</View>
-          <View>闭环情况(可研批复会签前填写)</View>
-        </View>
-        {isLoading ? (
-          <View className='example'>{/* <SpinLoading /> */}</View>
-        ) : recordList.length === 0 ? (
-          <View className='technologyTable-empty'>{/* <Empty /> */}</View>
+        {recordList.length === 0 ? (
+          <View className='technologyTable-empty'>
+            <AtIcon value='bullet-list' size='196' color='#99bead'></AtIcon>
+            <View className='technologyTable-empty-tip'>
+              暂 无 专 业 可 研 反 馈 记 录
+            </View>
+          </View>
         ) : (
-          <>
+          <View className='technologyTable-lists'>
             {recordList.map((item, index) => {
               return (
                 <View className='technologyTable-item' key={index}>
@@ -192,7 +201,7 @@ export const TechnologyTable: React.FC = () => {
                 </View>
               </View>
             </View>
-          </>
+          </View>
         )}
       </View>
       <AtMessage />

@@ -10,7 +10,7 @@ export function BackPrePage() {
       onClick={() => {
         Taro.navigateBack({ delta: 1 });
       }}>
-      <AtIcon value='chevron-left' size='30' color='#F00' />
+      <AtIcon value='chevron-left' size='30' color='#005307' />
       返回
     </View>
   );
