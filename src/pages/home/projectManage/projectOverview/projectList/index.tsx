@@ -25,16 +25,17 @@ function ProjectList() {
   const projectName = Taro.getStorageSync('projectName');
   const fatherName = Taro.getStorageSync('fatherName');
   const type = Number(Taro.getStorageSync('type'));
+  // 此处为了方便调试
   const defaultKey = type === 8 ? '4' : '1';
   const [indexKey, setIndexKey] = useState<string>(defaultKey);
-  const [issues, setIssuesItem] = useState<issuesItem[]>([]);
-  const [problems, setProblemItem] = useState<problemsItem[]>([]);
-  const [protocols, setProtocolsItem] = useState<protocolsItem[]>([]);
-  const [procedures, setProceduresItem] = useState<proceduresItem[]>([]);
+  const [issue, setIssuesItem] = useState<issuesItem[]>([]);
+  const [problem, setProblemItem] = useState<problemsItem[]>([]);
+  const [protocol, setProtocolsItem] = useState<protocolsItem[]>([]);
+  const [procedure, setProceduresItem] = useState<proceduresItem[]>([]);
   const [fresh, setFresh] = useState<boolean>(false);
   const [flag, setFlag] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectTab, setSelectTab] = useState<number>(type);
+  const [selectTab, setSelectTab] = useState<number>(0);
   const [tabList, setTableList] = useState<tabListItem[]>([]);
   // setFresh(false);
   const typeName = [
@@ -84,17 +85,15 @@ function ProjectList() {
   const getTimeDetail = async () => {
     try {
       const res = await httpUtil.getProjectProgressDetail({
-        // project_id: String(Taro.getStorageSync('projectId')),
-        // progress_id: String(Taro.getStorageSync('progressId')),
-        project_id: String(305),
-        progress_id: String(2026),
+        project_id: String(Taro.getStorageSync('projectId')),
+        progress_id: String(Taro.getStorageSync('progressId')),
       });
       if (res.code === 200) {
-        const { issue, problem, procedure, protocol } = res.data;
-        setIssuesItem(issue);
-        setProblemItem(problem);
-        setProceduresItem(procedure);
-        setProtocolsItem(protocol);
+        const { issues, problems, procedures, protocols } = res.data;
+        setIssuesItem(issues);
+        setProblemItem(problems);
+        setProceduresItem(procedures);
+        setProtocolsItem(protocols);
         setLoading(false);
       }
     } finally {
@@ -107,7 +106,7 @@ function ProjectList() {
     setSelectTab(val);
   };
   const effectTabList = () => {
-    var TabList: tabListItem[] = [
+    const TabList: tabListItem[] = [
       { title: '统一任务' },
       { title: '问题清单' },
       { title: '协议清单' },
@@ -123,7 +122,6 @@ function ProjectList() {
         TabList.findIndex(val => val.title === '统一任务'),
         1,
       );
-      console.log(TabList);
     }
     //无科研技术收口和专项评估 问题清单
     if (noTwoType.includes(type)) {
@@ -179,6 +177,7 @@ function ProjectList() {
         1,
       );
     }
+    console.log(TabList);
     setTableList(TabList);
   };
   useEffect(() => {
@@ -233,7 +232,7 @@ function ProjectList() {
                 index={tabList.findIndex(val => val.title === '统一任务')}>
                 <View style='background-color: #FAFBFC;'>
                   <AllIssueList
-                    issuesItems={issues}
+                    issuesItems={issue}
                     index={4}
                     fresh={getTimeDetail}
                   />
@@ -244,9 +243,11 @@ function ProjectList() {
               <AtTabsPane
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '问题清单')}>
-                <View style='padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                  问题清单
-                </View>
+                <AllIssueList
+                  problemsItem={problem}
+                  index={1}
+                  fresh={getTimeDetail}
+                />
                 {/* 问题清单 */}
                 {/* <AllIssueList
                 problemsItem={problems}
@@ -259,9 +260,11 @@ function ProjectList() {
               <AtTabsPane
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '协议清单')}>
-                <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                  协议清单
-                </View>
+                <AllIssueList
+                  protocolsItem={protocol}
+                  index={2}
+                  fresh={getTimeDetail}
+                />
                 {/* 协议清单 */}
                 {/* <AllIssueList
                 protocolsItem={protocols}
@@ -274,9 +277,11 @@ function ProjectList() {
               <AtTabsPane
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '手续清单')}>
-                <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                  手续清单
-                </View>
+                <AllIssueList
+                  proceduresItem={procedure}
+                  index={3}
+                  fresh={getTimeDetail}
+                />
                 {/* 手续清单 */}
                 {/* <AllIssueList
                 proceduresItem={procedures}

@@ -1,19 +1,25 @@
+import Taro from '@tarojs/taro';
 import React, { useState } from 'react';
-import {
-  Table,
-  Space,
-  Button,
-  Modal,
-  Tooltip,
-  message,
-  TextArea,
-} from 'antd-mobile';
-import type { ColumnsType } from 'antd-mobile/lib/table';
+import { View } from '@tarojs/components';
+import { AtIcon, AtModal } from 'taro-ui';
+// import {
+//   Table,
+//   Space,
+//   Button,
+//   Modal,
+//   Tooltip,
+//   message,
+//   TextArea,
+// } from 'antd-mobile';
+// import type { ColumnsType } from 'antd-mobile/lib/table';
 import { DataType, IProps, Item } from './childrenTableType';
-import { ProjectForm } from './projectForm/projectForm';
-import { AdjustTimeForm } from './adjustTimeForm/adjustTimeForm';
-import { AtIcon } from 'taro-ui';
-import { canCheckOtherReply } from '../../../../../../../../common/functions';
+// import { ProjectForm } from './projectForm/projectForm';
+// import { AdjustTimeForm } from './adjustTimeForm/adjustTimeForm';
+
+import {
+  canCheckOtherReply,
+  message,
+} from '../../../../../../../../common/functions';
 import httpUtil from '../../../../../../../../utils/httpUtil';
 import styles from './childrenTable.module.css';
 
@@ -22,6 +28,7 @@ export const ChildrenTable: React.FC<IProps> = ({
   index,
   fresh,
 }: IProps) => {
+  const Modal = AtModal;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reasonId, setReasonId] = useState<number>(0);
   const [isAdjustTime, setIsAdjustTime] = useState<boolean>(false);
@@ -60,11 +67,11 @@ export const ChildrenTable: React.FC<IProps> = ({
       width: '20%',
       render: (responsibleArray: any[]) => {
         return responsibleArray && responsibleArray.length !== 0 ? (
-          <div>
+          <View>
             {responsibleArray.map(item => {
-              return <div>{item.unit.name + '-' + item.nickname}</div>;
+              return <View>{item.unit.name + '-' + item.nickname}</View>;
             })}
-          </div>
+          </View>
         ) : (
           '暂未指定'
         );
@@ -129,7 +136,7 @@ export const ChildrenTable: React.FC<IProps> = ({
   ];
 
   const lookReply = (question_id: string) => {
-    message.loading('请稍等', 0);
+    message('请稍等', 'warning');
     httpUtil
       .lookAllListReply({
         project_id: Taro.getStorageSync('projectId')!,
@@ -144,7 +151,6 @@ export const ChildrenTable: React.FC<IProps> = ({
         } = res;
         setReplyText(text);
         setAttachmentUrl(attachment);
-        message.destroy();
         setIsCheckModal(true);
       });
   };
@@ -165,7 +171,7 @@ export const ChildrenTable: React.FC<IProps> = ({
 
     const downloadFile = () => {
       setCanDownload(false);
-      const hiding = message.loading('下载中', 0);
+      const hiding = message('下载中', 'warning');
       httpUtil.downloadFile({ replyFile: attachmentUrl }).then(res => {
         const blob = new Blob([res.blob], {
           type: 'application/octet-stream',
@@ -182,21 +188,21 @@ export const ChildrenTable: React.FC<IProps> = ({
     return (
       <Modal
         title='初设批复附件'
-        visible={isCheckModal}
-        onOk={okCheckModal}
+        isOpened={isCheckModal}
+        onConfirm={okCheckModal}
         onCancel={okCheckModal}
-        okText='确认'
+        confirmText='确认'
         cancelText='关闭'>
-        <div className={styles['reply-wrapper']}>
-          <span className={styles['reply-title']}>文字内容：</span>
-          <TextArea
+        <View className={styles['reply-wrapper']}>
+          <View className={styles['reply-title']}>文字内容：</View>
+          {/* <TextArea
             className={styles['reply-text-area']}
             readOnly
             autoSize={{ minRows: 3, maxRows: 5 }}
             value={replyText}
-          />
-          <span className={styles['reply-title']}>附件：</span>
-          <div className={styles['reply-files']}>
+          /> */}
+          <View className={styles['reply-title']}>附件：</View>
+          <View className={styles['reply-files']}>
             {attachmentUrl !== '' ? (
               canDownload ? (
                 <a href={downloadURL} download={downloadName}>
@@ -215,8 +221,8 @@ export const ChildrenTable: React.FC<IProps> = ({
                 无附件
               </a>
             )}
-          </div>
-        </div>
+          </View>
+        </View>
       </Modal>
     );
   };
@@ -237,34 +243,29 @@ export const ChildrenTable: React.FC<IProps> = ({
 
   const data: DataType[] = [...item];
   return (
-    <div>
-      <Modal
-        title='回复清单'
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={null}>
-        <ProjectForm
+    <View>
+      <Modal title='回复清单' isOpened={isModalVisible} onCancel={handleCancel}>
+        {/* <ProjectForm
           reasonId={reasonId}
           index={index}
           handleCancel={fresh}
           close={close}
-        />
+        /> */}
       </Modal>
       <Modal
         title='申请调整时间'
-        visible={isAdjustTime}
-        onCancel={handleAdjustTimeCancel}
-        footer={null}>
-        <AdjustTimeForm
+        isOpened={isAdjustTime}
+        onCancel={handleAdjustTimeCancel}>
+        {/* <AdjustTimeForm
           reasonId={reasonId}
           PlanTime={planTime}
           index={index}
           TimeClose={TimeClose}
           handleCancel={fresh}
-        />
+        /> */}
       </Modal>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      {/* <Table columns={columns} dataSource={data} pagination={false} /> */}
       <CheckModal />
-    </div>
+    </View>
   );
 };

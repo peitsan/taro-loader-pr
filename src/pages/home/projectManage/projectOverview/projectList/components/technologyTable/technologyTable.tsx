@@ -34,8 +34,6 @@ export const TechnologyTable: React.FC = () => {
       // projectId,
       // progressId,
       const res = await httpUtil.getTechnologyList({
-        // projectId: String(305),
-        // progressId: String(2025),
         projectId,
         progressId,
       });

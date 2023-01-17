@@ -1,13 +1,13 @@
 export interface IProps {
-    Type:number
+  Type: number;
 }
 
 export interface dataItem {
-    single:string;
-    content:any[]
+  single: string;
+  content: any[];
 }
 
 export interface oneData {
-    title:string;
-    key:number
+  title: string;
+  key: number;
 }
