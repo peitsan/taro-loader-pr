@@ -1,18 +1,17 @@
-import React from "react";
-import styles from "./backPrePage.module.css";
-import { LeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import Taro from '@tarojs/taro';
+import { AtIcon } from 'taro-ui';
+import { View } from '@tarojs/components';
+import './backPrePage.module.css';
 
 export function BackPrePage() {
-  const navigate = useNavigate();
-
-  const backToPrePage = () => {
-    navigate(-1);
-  };
-
   return (
-    <div className={styles["back"]} onClick={backToPrePage}>
-      <LeftOutlined /> 返回
-    </div>
+    <View
+      className='back'
+      onClick={() => {
+        Taro.navigateBack({ delta: 1 });
+      }}>
+      <AtIcon value='chevron-left' size='30' color='#005307' />
+      返回
+    </View>
   );
 }

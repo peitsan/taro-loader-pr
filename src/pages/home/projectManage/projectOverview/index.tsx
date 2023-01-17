@@ -1,12 +1,7 @@
-import { View, Text } from '@tarojs/components';
+import ProjectList from './projectList';
 
-const Index: React.FC = () => {
-  return (
-    <>
-      <View className='index'>
-        <Text>主页</Text>
-      </View>
-    </>
-  );
+const ProjectOverview = () => {
+  return <ProjectList />;
 };
-export default Index;
+
+export default ProjectOverview;

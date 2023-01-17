@@ -1,4 +1,4 @@
-import { deepClone } from "../../common/function/deepClone";
+import { deepClone } from "../../common/functions/deepClone";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import httpUtil from "../../utils/httpUtil";
 
@@ -61,7 +61,7 @@ export const getManagersAC = createAsyncThunk(
     const {
       data: { units },
     } = await httpUtil.getManagers();
-    const userId = Number(sessionStorage.getItem("id")!);
+    const userId = Number(Taro.getStorageSync("id")!);
     const flatManagers: FlatManagerType[] = [];
     for (let unit of units) {
       const { name: unitName, depts } = unit;

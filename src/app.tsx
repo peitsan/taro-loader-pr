@@ -1,12 +1,14 @@
 import 'taro-ui/dist/style/index.scss';
 import { Component, PropsWithChildren } from 'react';
 import { Provider } from 'react-redux';
+import { useEffect } from '@tarojs/react'
 import { store } from './redux/store';
-import './styles/global.less';
 
-class App extends Component<PropsWithChildren> {
-  render() {
-    return <Provider store={store}>{this.props.children}</Provider>;
-  }
+const App = (props) => {
+  return (
+    <Provider store={store}>
+      {props.children}
+    </Provider>
+  )
 }
 export default App;

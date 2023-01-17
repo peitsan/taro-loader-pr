@@ -1,4 +1,4 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb } from "antd-mobile";
 import React from "react";
 
 export function BreadNavigator() {

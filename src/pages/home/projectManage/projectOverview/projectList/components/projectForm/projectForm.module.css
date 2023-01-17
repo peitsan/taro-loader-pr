@@ -1,0 +1,4 @@
+.btn-background {
+    background-color: var(--first-theme-color) !important;
+    border-color: var(--first-theme-color) !important ;
+}

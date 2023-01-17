@@ -1,4 +1,4 @@
-# we3.0
+# 电网工程管理系统
 
 ## prepare
 
@@ -11,8 +11,8 @@
 * 分支管理
   - master 线上主分支
   - dev 开发主分支
-  - feat-* 新功能开发分支
-  - fix-* 修复bug分支
+  - feat-\* 新功能开发分支
+  - fix-\* 修复 bug 分支
   - ...
 
 ## start
@@ -21,4 +21,3 @@
 $ pnpm i
 $ pnpm dev
 ```
-
