@@ -7,7 +7,6 @@ import {
   AtButton,
   AtModal,
   AtTextarea,
-  AtModalHeader,
   AtModalContent,
   AtModalAction,
 } from 'taro-ui';
@@ -49,6 +48,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   };
   const lookReply = (question_id: string) => {
     message('请稍等', 'warning');
+    setIsCheckModal(true);
     httpUtil
       .lookAllListReply({
         project_id: Taro.getStorageSync('projectId')!,
@@ -176,219 +176,281 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   };
   const statusList = ['被驳回', '待审批', '通过'];
   const statusColor = ['reply', 'approval', 'solve'];
-  return active && active ? (
-    <View className={styles['boardw']}>
-      {index === 4 ? (
-        <View className={styles['boardw-list']}>
-          <View
-            style={{ width: '30%', textAlign: 'center', fontSize: '32rpx' }}>
-            {data.issueOverView}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '35%',
-              textAlign: 'center',
-              color: '#52c41a',
-            }}>
-            {len}
-          </View>
-          <View style={{ width: '35%' }} onClick={() => setActive(false)}>
-            <View style={{ float: 'right' }}>
-              <AtIcon value='chevron-up' size='20' color='#767676'></AtIcon>
+  return (
+    <>
+      <AtModal
+        isOpened={isCheckModal}
+        onConfirm={okCheckModal}
+        onClose={okCheckModal}>
+        <AtModalContent>
+          <View className={styles['reply-wrapper']}>
+            <View className={styles['reply-title']}>文字内容：</View>
+            <AtTextarea
+              className={styles['reply-text-area']}
+              disabled
+              height={5}
+              value={replyText}
+              onChange={e => setReplyText(e)}
+            />
+            <View className={styles['reply-title']}>附件：</View>
+            <View className={styles['reply-files']}>
+              {/* {attachmentUrl !== '' ? (
+                canDownload ? (
+                  <a href={downloadURL} download={downloadName}>
+                    <AtIcon value='file-generic' size='30' color='#F00' />
+                    下载成功，点击查看
+                  </a>
+                ) : (
+                  <a onClick={downloadFile}>
+                    <AtIcon value='file-generic' size='30' color='#F00' />
+                    下载附件
+                  </a>
+                )
+              ) : (
+                <a style={{ color: 'silver' }}>
+                  <AtIcon value='file-generic' size='30' color='#F00' />
+                  无附件
+                </a>
+              )} */}
             </View>
           </View>
+        </AtModalContent>
+        <AtModalAction>
+          {' '}
+          <AtButton>取消</AtButton> <AtButton>确定</AtButton>{' '}
+        </AtModalAction>
+      </AtModal>
+      {active && active ? (
+        <View className={styles['boardw']}>
+          {index === 4 ? (
+            <View className={styles['boardw-list']}>
+              <View
+                style={{
+                  width: '30%',
+                  textAlign: 'center',
+                  fontSize: '32rpx',
+                }}>
+                {data.issueOverView}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '35%',
+                  textAlign: 'center',
+                  color: '#52c41a',
+                }}>
+                {len}
+              </View>
+              <View style={{ width: '35%' }} onClick={() => setActive(false)}>
+                <View style={{ float: 'right' }}>
+                  <AtIcon value='chevron-up' size='20' color='#767676'></AtIcon>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View className={styles['boardw-list']}>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                }}>
+                {data.issueOverView}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                  color: '#ff4500',
+                }}>
+                {data.progress.name}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                  color: '#52c41a',
+                }}>
+                {len}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '20%',
+                  textAlign: 'center',
+                }}
+                className={styles[statusColor[data.status + 1]]}>
+                {statusList[Number(data.status) + 1]}
+              </View>
+              <View style={{ width: '5%' }} onClick={() => setActive(false)}>
+                <View style={{ float: 'right' }}>
+                  <AtIcon value='chevron-up' size='20' color='#767676'></AtIcon>
+                </View>
+              </View>
+            </View>
+          )}
+          {/* <CheckModal /> */}
+          {/* 子列表 */}
+          <View className={styles['boardw-list']}>
+            <View className={styles['boardw-subList']} style={{ width: '20%' }}>
+              原因
+            </View>
+            <View className={styles['boardw-subList']} style={{ width: '25%' }}>
+              计划完成时间
+            </View>
+            <View className={styles['boardw-subList']} style={{ width: '25%' }}>
+              责任人及责任单位
+            </View>
+            <View className={styles['boardw-subList']} style={{ width: '15%' }}>
+              当前整改情况
+            </View>
+            <View className={styles['boardw-subList']} style={{ width: '10%' }}>
+              操作
+            </View>
+          </View>
+          {item.length !== 0 ? (
+            item.map((list, id) => {
+              return (
+                <View className={styles['boardw-list']} key={'reason-row' + id}>
+                  <View
+                    className={styles['boardw-subList']}
+                    style={{ width: '20%' }}>
+                    {list.reason}
+                  </View>
+                  <View
+                    className={styles['boardw-subList']}
+                    style={{ width: '25%' }}>
+                    {list.planTime}
+                  </View>
+                  <View
+                    className={styles['boardw-subList']}
+                    style={{ width: '25%' }}>
+                    {list.manage.length && list.manage.length !== 0
+                      ? list.manage.map(manage => {
+                          return (
+                            <View
+                              className={styles['boardw-subList']}
+                              style={{ width: '20%' }}>
+                              {manage.unit.name + '-' + manage.nickname}
+                            </View>
+                          );
+                        })
+                      : '暂未指定'}
+                  </View>
+                  <View
+                    className={styles['boardw-subList']}
+                    style={{ width: '10%' }}>
+                    {list.current}
+                  </View>
+                  <View
+                    className={styles['boardw-subList']}
+                    style={{ width: '20%' }}>
+                    <GetOperation records={list} />
+                  </View>
+                </View>
+              );
+            })
+          ) : (
+            <View className={styles['boardw-list']}>暂无数据</View>
+          )}
         </View>
       ) : (
-        <View className={styles['boardw-list']}>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '25%',
-              textAlign: 'center',
-            }}>
-            {data.issueOverView}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              width: '25%',
-              textAlign: 'center',
-              color: '#ff4500',
-            }}>
-            {data.progress.name}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '25%',
-              textAlign: 'center',
-              color: '#52c41a',
-            }}>
-            {len}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '20%',
-              textAlign: 'center',
-            }}
-            className={styles[statusColor[data.status + 1]]}>
-            {statusList[Number(data.status) + 1]}
-          </View>
-          <View style={{ width: '5%' }} onClick={() => setActive(false)}>
-            <View style={{ float: 'right' }}>
-              <AtIcon value='chevron-up' size='20' color='#767676'></AtIcon>
+        <View className={styles['board']}>
+          {index === 4 ? (
+            <View className={styles['board-list']}>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '30%',
+                  textAlign: 'center',
+                }}>
+                {data.issueOverView}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  width: '35%',
+                  textAlign: 'center',
+                  color: '#52c41a',
+                }}>
+                {len}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '35%',
+                }}>
+                <View
+                  style={{ float: 'right' }}
+                  onClick={() => setActive(true)}>
+                  <AtIcon
+                    value='chevron-down'
+                    size='20'
+                    color='#767676'></AtIcon>
+                </View>
+              </View>
             </View>
-          </View>
+          ) : (
+            <View className={styles['board-list']}>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                }}>
+                {data.issueOverView}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                  color: '#ff4500',
+                }}>
+                {data.progress.name}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '25%',
+                  textAlign: 'center',
+                  color: '#52c41a',
+                }}>
+                {len}
+              </View>
+              <View
+                style={{
+                  fontSize: '32rpx',
+                  lineHeight: '70rpx',
+                  width: '20%',
+                  textAlign: 'center',
+                }}
+                className={styles[statusColor[data.status + 1]]}>
+                {statusList[Number(data.status) + 1]}
+              </View>
+              <View style={{ width: '5%' }} onClick={() => setActive(true)}>
+                <View style={{ float: 'right' }}>
+                  <AtIcon
+                    value='chevron-down'
+                    size='20'
+                    color='#767676'></AtIcon>
+                </View>
+              </View>
+            </View>
+          )}
         </View>
       )}
-      {/* <CheckModal /> */}
-      {/* 子列表 */}
-      <View className={styles['boardw-list']}>
-        <View className={styles['boardw-subList']} style={{ width: '20%' }}>
-          原因
-        </View>
-        <View className={styles['boardw-subList']} style={{ width: '25%' }}>
-          计划完成时间
-        </View>
-        <View className={styles['boardw-subList']} style={{ width: '25%' }}>
-          责任人及责任单位
-        </View>
-        <View className={styles['boardw-subList']} style={{ width: '15%' }}>
-          当前整改情况
-        </View>
-        <View className={styles['boardw-subList']} style={{ width: '10%' }}>
-          操作
-        </View>
-      </View>
-      {item.length !== 0 ? (
-        item.map((list, id) => {
-          return (
-            <View className={styles['boardw-list']} key={'reason-row' + id}>
-              <View
-                className={styles['boardw-subList']}
-                style={{ width: '20%' }}>
-                {list.reason}
-              </View>
-              <View
-                className={styles['boardw-subList']}
-                style={{ width: '25%' }}>
-                {list.planTime}
-              </View>
-              <View
-                className={styles['boardw-subList']}
-                style={{ width: '25%' }}>
-                {list.manage.length && list.manage.length !== 0
-                  ? list.manage.map(manage => {
-                      return (
-                        <View
-                          className={styles['boardw-subList']}
-                          style={{ width: '20%' }}>
-                          {manage.unit.name + '-' + manage.nickname}
-                        </View>
-                      );
-                    })
-                  : '暂未指定'}
-              </View>
-              <View
-                className={styles['boardw-subList']}
-                style={{ width: '10%' }}>
-                {list.current}
-              </View>
-              <View
-                className={styles['boardw-subList']}
-                style={{ width: '20%' }}>
-                <GetOperation records={list} />
-              </View>
-            </View>
-          );
-        })
-      ) : (
-        <View className={styles['boardw-list']}>暂无数据</View>
-      )}
-    </View>
-  ) : (
-    <View className={styles['board']}>
-      {index === 4 ? (
-        <View className={styles['board-list']}>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '30%',
-              textAlign: 'center',
-            }}>
-            {data.issueOverView}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              width: '35%',
-              textAlign: 'center',
-              color: '#52c41a',
-            }}>
-            {len}
-          </View>
-          <View
-            style={{ fontSize: '32rpx', lineHeight: '70rpx', width: '35%' }}>
-            <View style={{ float: 'right' }} onClick={() => setActive(true)}>
-              <AtIcon value='chevron-down' size='20' color='#767676'></AtIcon>
-            </View>
-          </View>
-        </View>
-      ) : (
-        <View className={styles['board-list']}>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '25%',
-              textAlign: 'center',
-            }}>
-            {data.issueOverView}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              width: '25%',
-              textAlign: 'center',
-              color: '#ff4500',
-            }}>
-            {data.progress.name}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '25%',
-              textAlign: 'center',
-              color: '#52c41a',
-            }}>
-            {len}
-          </View>
-          <View
-            style={{
-              fontSize: '32rpx',
-              lineHeight: '70rpx',
-              width: '20%',
-              textAlign: 'center',
-            }}
-            className={styles[statusColor[data.status + 1]]}>
-            {statusList[Number(data.status) + 1]}
-          </View>
-          <View style={{ width: '5%' }} onClick={() => setActive(true)}>
-            <View style={{ float: 'right' }}>
-              <AtIcon value='chevron-down' size='20' color='#767676'></AtIcon>
-            </View>
-          </View>
-        </View>
-      )}
-    </View>
+    </>
   );
 };
 export default Accordion;
