@@ -9,7 +9,7 @@ import { View } from '@tarojs/components';
 //   Intermediate,
 //   SpecialAssessment,
 // } from './components';
-import { AllIssueList, TechnologyTable } from './components';
+import { AllIssueList, TechnologyTable, SpecialAssessment } from './components';
 import httpUtil from '../../../../../utils/httpUtil';
 import {
   issuesItem,
@@ -335,7 +335,7 @@ function ProjectList() {
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '专项评估')}>
                 <View style='50px;background-color: #FAFBFC;'></View>
-                {/* <SpecialAssessment Type={type} /> */}
+                <SpecialAssessment Type={type} />
               </AtTabsPane>
             ) : null}
           </AtTabs>

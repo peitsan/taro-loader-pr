@@ -1,9 +1,12 @@
+import Taro from '@tarojs/taro';
 import React, { useEffect, useState } from 'react';
-import { ChildrenTable } from './childrenTable/childrenTable';
+import { View } from '@tarojs/components';
+// import { ChildrenTable } from './childrenTable/childrenTable';
 import httpUtil from '../../../../../../../utils/httpUtil';
-import { IProps, dataItem } from './specialAssessmentType';
+import { IProps, dataItem, tableProps } from './specialAssessmentType';
 import styles from './specialAssessment.module.css';
-import { Table } from 'antd-mobile';
+import AccordionForSpecialist from '../../../../../../../common/components/AccordionForSpecialist/index';
+// import { Table } from 'antd-mobile';
 
 export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
   const progressId = Taro.getStorageSync('progressId')!;
@@ -40,10 +43,10 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
     },
   ];
 
-  const expandedRowRender = (record: dataItem) => {
-    const { content } = record;
-    return <ChildrenTable type={Type} item={content} getSpecial={getSpecial} />;
-  };
+  // const expandedRowRender = (record: dataItem) => {
+  //   const { content } = record;
+  //   return <ChildrenTable type={Type} item={content} getSpecial={getSpecial} />;
+  // };
 
   const getSpecial = async () => {
     setLoading(true);
@@ -109,7 +112,7 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
                 id,
               },
             ],
-          });
+          } as never);
           i++;
         }
         setSpecialList(itemList);
@@ -123,16 +126,52 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
     getSpecial();
   }, []);
 
+  // 重新封装一个表格组件
+  const Table: React.FC<tableProps> = tableProp => {
+    const { dataSource } = tableProp;
+    return (
+      <View className={styles['issueListTable']}>
+        {/* 表头 */}
+        <View className={styles['issueListTable-title']}>
+          <View
+            style={{
+              fontWeight: '700',
+              fontSize: '32rpx',
+              width: '30%',
+              textAlign: 'center',
+            }}>
+            标 题
+          </View>
+          <View
+            style={{
+              fontWeight: '700',
+              fontSize: '32rpx',
+              width: '35%',
+              textAlign: 'center',
+            }}>
+            需解决问题数
+          </View>
+        </View>
+        <View className={styles['issueListTable-tabs']}>
+          {dataSource.map((item, ind) => {
+            return (
+              <View key={'Accordion-' + item + `-` + ind}>
+                <AccordionForSpecialist
+                  data={item}
+                  type={Type as number}
+                  getSpecial={getSpecial}
+                />
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <div>
-      <Table
-        className='components-table-demo-nested'
-        loading={loading}
-        columns={columns}
-        expandable={{ expandedRowRender: e => expandedRowRender(e) }}
-        dataSource={specialList}
-        pagination={false}
-      />
-    </div>
+    <>
+      <Table dataSource={specialList} />
+    </>
   );
 };

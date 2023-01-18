@@ -11,3 +11,7 @@ export interface oneData {
   title: string;
   key: number;
 }
+
+export interface tableProps {
+  dataSource: dataItem[];
+}

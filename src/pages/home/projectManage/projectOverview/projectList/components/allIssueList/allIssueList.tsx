@@ -12,14 +12,8 @@ import {
 import style from './allIssueList.module.css';
 
 export const AllIssueList: React.FC<IProps> = props => {
-  const {
-    issuesItems,
-    problemsItem,
-    proceduresItem,
-    protocolsItem,
-    index,
-    fresh,
-  } = props;
+  const { issuesItems, problemsItem, proceduresItem, protocolsItem, index } =
+    props;
   // const expandedRowRender = (record: DataType) => {
   //   const { item } = record;
   //   console.log('item', item);
@@ -102,7 +96,7 @@ export const AllIssueList: React.FC<IProps> = props => {
       const { id, name, responsibles, status, planTime, code } = itemList[i];
       const idList = [];
       for (let j = 0; j < responsibles.length; j++) {
-        idList.push(responsibles[j].id);
+        idList.push(responsibles[j].id as never);
       }
       itemArr.push({
         key: id,
