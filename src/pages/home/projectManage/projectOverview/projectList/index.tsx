@@ -2,14 +2,13 @@ import Taro from '@tarojs/taro';
 import { useState, useEffect } from 'react';
 import { AtLoadMore, AtTabs, AtTabsPane } from 'taro-ui';
 import { View } from '@tarojs/components';
-// import {
-//   AllIssueList,
-//   TechnologyTable,
-//   ProjectModel,
-//   Intermediate,
-//   SpecialAssessment,
-// } from './components';
-import { AllIssueList, TechnologyTable, SpecialAssessment } from './components';
+import {
+  AllIssueList,
+  TechnologyTable,
+  SpecialAssessment,
+  ProjectModel,
+  Intermediate,
+} from './components';
 import httpUtil from '../../../../../utils/httpUtil';
 import {
   issuesItem,
@@ -204,7 +203,8 @@ function ProjectList() {
           <View
             className='projectModel-container'
             style={{ position: 'absolute', right: '30px', top: '100px' }}>
-            {/* <ProjectModel flushFunction={flush} indexKey={Number(indexKey)} /> */}
+            {/* 这个还有很多bug */}
+            <ProjectModel flushFunction={flush} indexKey={Number(indexKey)} />
           </View>
         ) : null}
       </View>
@@ -220,6 +220,7 @@ function ProjectList() {
           <AtLoadMore style={{ marginTop: 150 }} />
         </View>
       ) : (
+        // 两个清单组件操作模态框调不出来
         <View>
           <AtTabs
             scroll
@@ -249,11 +250,6 @@ function ProjectList() {
                   fresh={getTimeDetail}
                 />
                 {/* 问题清单 */}
-                {/* <AllIssueList
-                problemsItem={problems}
-                index={1}
-                fresh={getTimeDetail}
-              /> */}
               </AtTabsPane>
             )}
             {noTwoType.includes(type) ? null : (
@@ -266,11 +262,6 @@ function ProjectList() {
                   fresh={getTimeDetail}
                 />
                 {/* 协议清单 */}
-                {/* <AllIssueList
-                protocolsItem={protocols}
-                index={2}
-                fresh={getTimeDetail}
-              /> */}
               </AtTabsPane>
             )}
             {type === 0 ? null : (
@@ -283,11 +274,6 @@ function ProjectList() {
                   fresh={getTimeDetail}
                 />
                 {/* 手续清单 */}
-                {/* <AllIssueList
-                proceduresItem={procedures}
-                index={3}
-                fresh={getTimeDetail}
-              /> */}
               </AtTabsPane>
             )}
             {type === 3 || type === 2 ? (
@@ -298,10 +284,7 @@ function ProjectList() {
                   index={tabList.findIndex(
                     val => val.title === '初设第一阶段中间检查要点',
                   )}>
-                  <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                    初设第一阶段中间检查要点
-                  </View>
-                  {/* <Intermediate /> */}{' '}
+                  <Intermediate />
                 </AtTabsPane>
               ) : (
                 // 初设第二阶段中间检查要点
@@ -310,10 +293,7 @@ function ProjectList() {
                   index={tabList.findIndex(
                     val => val.title === '初设第二阶段中间检查要点',
                   )}>
-                  <View style='height:100%;padding: 100px 50px;background-color: #FAFBFC;text-align: center;'>
-                    初设第二阶段中间检查要点
-                  </View>
-                  {/* <Intermediate /> */}{' '}
+                  <Intermediate />
                 </AtTabsPane>
               )
             ) : null}

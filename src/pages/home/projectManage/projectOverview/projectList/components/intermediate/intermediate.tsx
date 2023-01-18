@@ -1,14 +1,15 @@
-import { Badge, Table } from "antd-mobile";
-import type { ColumnsType } from "antd-mobile/lib/table";
-import React, { useEffect, useState } from "react";
-import { DataType, ExpandedDataType, resType, res } from "./intermediateType";
-import httpUtil from "../../../../../../../utils/httpUtil";
-import styles from './intermediate.module.css'
+// import { Badge, Table } from "antd-mobile";
+// import type { ColumnsType } from "antd-mobile/lib/table";
+import Taro from '@tarojs/taro';
+import React, { useEffect, useState } from 'react';
+import { DataType, ExpandedDataType, resType, res } from './intermediateType';
+import httpUtil from '../../../../../../../utils/httpUtil';
+import styles from './intermediate.module.css';
 
 export const Intermediate: React.FC = () => {
   const [mediateList, setMediateList] = useState<any[]>([]);
-  const projectId = Taro.getStorageSync("projectId");
-  const progressId = Taro.getStorageSync("progressId");
+  const projectId = Taro.getStorageSync('projectId');
+  const progressId = Taro.getStorageSync('progressId');
   // 列表loading
   const [loading, setLoading] = useState(true);
 
@@ -20,7 +21,7 @@ export const Intermediate: React.FC = () => {
       });
       if (res.code === 200) {
         setMediateList(res.data);
-        setLoading(false)
+        setLoading(false);
       }
     } finally {
     }
@@ -34,22 +35,26 @@ export const Intermediate: React.FC = () => {
     const { checkList } = record;
     console.log(checkList);
     const columns: ColumnsType<ExpandedDataType> = [
-      { title: "序号", dataIndex: "index", key: "index", width: "6%" },
+      { title: '序号', dataIndex: 'index', key: 'index', width: '6%' },
       {
-        title: "检查内容",
-        dataIndex: "checkText",
-        key: "checkText",
-        width: "18%",
+        title: '检查内容',
+        dataIndex: 'checkText',
+        key: 'checkText',
+        width: '18%',
       },
-      { title: "检查要点", dataIndex: "checkPoint", key: "checkPoint" },
+      { title: '检查要点', dataIndex: 'checkPoint', key: 'checkPoint' },
       {
-        title: "状态",
-        dataIndex: "isCheck",
-        key: "isCheck",
-        width: "7%",
+        title: '状态',
+        dataIndex: 'isCheck',
+        key: 'isCheck',
+        width: '7%',
         render: (text: number) => {
-          const className = text === 0 ? 'noCheck' : 'checked'
-          return <span className={styles[className]}>{text === 0 ? "未审核" : "已审核"}</span>;
+          const className = text === 0 ? 'noCheck' : 'checked';
+          return (
+            <span className={styles[className]}>
+              {text === 0 ? '未审核' : '已审核'}
+            </span>
+          );
         },
       },
     ];
@@ -67,13 +72,14 @@ export const Intermediate: React.FC = () => {
         isCheck,
         major,
         progressId,
-      });
+      } as never);
     }
-    return <Table columns={columns} dataSource={data} pagination={false} />;
+    return <></>
+    {/* <Table columns={columns} dataSource={data} pagination={false} />; */}
   };
 
   const columns: ColumnsType<DataType> = [
-    { title: "专业", dataIndex: "major", key: "major" },
+    { title: '专业', dataIndex: 'major', key: 'major' },
   ];
 
   const data: DataType[] = [];
@@ -88,12 +94,13 @@ export const Intermediate: React.FC = () => {
   }
 
   return (
-    <Table
-      className="components-table-demo-nested"
-      columns={columns}
-      expandable={{ expandedRowRender }}
-      dataSource={data}
-      loading={loading}
-    />
+    <></>
+    // <Table
+    //   className='components-table-demo-nested'
+    //   columns={columns}
+    //   expandable={{ expandedRowRender }}
+    //   dataSource={data}
+    //   loading={loading}
+    // />
   );
 };

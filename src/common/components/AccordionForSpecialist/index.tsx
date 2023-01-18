@@ -31,8 +31,23 @@ const AccordionForSpecialist: React.FC<
   const [inDex, setInDex] = useState<number>();
   const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachments, setAttachments] = useState<string>('');
-  const [replyText, setReplyText] = useState<string>('空');
+  const projectId = Taro.getStorageSync('projectId')!;
   const progressId = Taro.getStorageSync('progressId')!;
+  const searchUnits = useSelector(state => state.units.data.searchUnits);
+  const [loading, setLoading] = useState(true);
+  // 当前操作的question
+  const [question_id, setQuestion_id] = useState<string>();
+
+  const [isReplyModalVisible, setIsReplyModalVisible] = useState(false);
+  const [isTimeApplyModalVisible, setTimeApplyModalVisible] = useState(false);
+  const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
+
+  // 回复内容
+  const [replyText, setReplyText] = useState<string>('空');
+  const [replyFile, setReplyFile] = useState<string>('');
+  // 申请调整时间
+  const [timeApplyTime, setTimeApplyTime] = useState('');
+  const [timeApplyReason, setTimeApplyReason] = useState('');
   // const Height = String(85 * (data.item.length + 1)) + `px`;
   // const itemName = ['reason', 'opinion', 'condition', 'question'];
 
