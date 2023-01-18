@@ -57,8 +57,8 @@ const Login: React.FC = () => {
         Taro.setStorageSync('projectName', 'lpc_test');
         Taro.setStorageSync('fatherName', 'lpc_test');
         Taro.setStorageSync('type', 1);
-        Taro.setStorageSync('projectId', 305);
-        Taro.setStorageSync('progressId', 2026);
+        Taro.setStorageSync('projectId', 303);
+        Taro.setStorageSync('progressId', 2011);
         // **********测试用例，上线删除**********
         dispatch(updateUserInfoAC(user));
         Taro.atMessage({

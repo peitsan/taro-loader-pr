@@ -7,3 +7,7 @@ export interface Item {
   code: number;
   manageId: number[];
 }
+export interface AccordionProps {
+  data: any;
+  index: number;
+}

@@ -90,6 +90,7 @@ function ProjectList() {
       });
       if (res.code === 200) {
         const { issues, problems, procedures, protocols } = res.data;
+        console.log(res.data);
         setIssuesItem(issues);
         setProblemItem(problems);
         setProceduresItem(procedures);
@@ -177,7 +178,6 @@ function ProjectList() {
         1,
       );
     }
-    console.log(TabList);
     setTableList(TabList);
   };
   useEffect(() => {

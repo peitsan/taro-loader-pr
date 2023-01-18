@@ -6,3 +6,4 @@ export * from './transPermission';
 export * from './canCheckOtherReply';
 export * from './getNumberTime';
 export * from './taroUIFun';
+export * from './router';

@@ -9,7 +9,7 @@ import {
   reasons,
   conditions,
 } from '../../projectListType/projectListType';
-import './allIssueList.module.css';
+import style from './allIssueList.module.css';
 
 export const AllIssueList: React.FC<IProps> = props => {
   const {
@@ -148,18 +148,71 @@ export const AllIssueList: React.FC<IProps> = props => {
   // 重新封装一个表格组件
   const Table: React.FC<tableProps> = tableProp => {
     const { dataSource } = tableProp;
- 
     return (
-      <View className='issueListTable'>
-        <View className='issueListTable-title'>
-          <View style={{ fontWeight: 500, width: '30%', textAlign: 'center' }}>
-            {titleList[index - 1]}
+      <View className={style['issueListTable']}>
+        {index === 4 ? (
+          <View className={style['issueListTable-title']}>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '30%',
+                textAlign: 'center',
+              }}>
+              {titleList[index - 1]}
+            </View>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '35%',
+                textAlign: 'center',
+              }}>
+              需解决问题数
+            </View>
           </View>
-          <View style={{ fontWeight: 500, width: '35%', textAlign: 'center' }}>
-            需解决问题数
+        ) : (
+          <View className={style['issueListTable-title']}>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '25%',
+                textAlign: 'center',
+              }}>
+              {titleList[index - 1]}
+            </View>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '25%',
+                textAlign: 'center',
+              }}>
+              所属流程
+            </View>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '28%',
+                textAlign: 'center',
+              }}>
+              需解决问题数
+            </View>
+            <View
+              style={{
+                fontWeight: '700',
+                fontSize: '32rpx',
+                width: '20%',
+                textAlign: 'center',
+              }}>
+              问题状态
+            </View>
           </View>
-        </View>
-        <View className='issueListTable-tabs'>
+        )}
+
+        <View className={style['issueListTable-tabs']}>
           {dataSource.map((item, ind) => {
             return (
               <View key={'Accordion-' + item + `-` + ind}>
