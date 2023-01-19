@@ -550,12 +550,13 @@ const AccordionForSpecialist: React.FC<
         onCancel={handleCancel}>
         <AtForm onSubmit={onFinish}>
           <AtInput
+            focus
             name='text'
             title='回复'
             type='text'
             placeholder='请输入回复内容'
             value={replyText}
-            onChange={e => setReplyText(e)}
+            onChange={e => setReplyText(e as string)}
           />
           <View>
             <UploadBtn

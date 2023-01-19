@@ -110,6 +110,7 @@ export const TechnologyTable: React.FC = () => {
         onCancel={handleCancel}>
         <AtForm onSubmit={onFinish}>
           <Input
+            focus
             title={titleList[currentTab!]}
             name={parameterList[currentTab!]}
             placeholder={`请输入${titleList[currentTab!]}`}

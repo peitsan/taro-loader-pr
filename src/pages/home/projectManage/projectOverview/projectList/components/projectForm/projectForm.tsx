@@ -51,7 +51,7 @@ export const ProjectForm: React.FC<IProps> = ({
         });
 
         if (res.code === 200) {
-          form.resetFields();
+          // form.resetFields();
           setFlush(!flush);
           handleOk(!flush);
           message('添加成功', 'success');
@@ -88,6 +88,7 @@ export const ProjectForm: React.FC<IProps> = ({
                       name={[field.name, `name`]}
                       rules={[{ required: true, message: '原因不能为空' }]}>
                          <AtInput
+                              focus
                               required
                               title='账号'
                               name='username'
@@ -107,31 +108,25 @@ export const ProjectForm: React.FC<IProps> = ({
                 >
                   <UploadBtn />
                 </Form.Item> */}
-                <AtIcon
-                  value='subtract'
-                  size='30'
-                  color='#F00'
-                  onClick={() => remove(field.name)}
-                />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button
-                type='dashed'
-                onClick={() => add()}
-                block
-                icon={<AtIcon value='add' size='30' color='#F00' />}>
-                增加{newList[indexKey - 2]}
-              </Button>
-            </Form.Item>
-          </>
-        )}
+      {/* <AtIcon
+        value='subtract'
+        size='30'
+        color='#F00'
+        onClick={() => remove(field.name)}
+      /> */}
+      {/* <AtButton
+        type='dashed'
+        onClick={() => add()}
+        block
+        icon={<AtIcon value='add' size='30' color='#F00' />}>
+        增加{newList[indexKey - 2]}
+      </AtButton> */}
       <AtButton
         type='primary'
         formType='submit'
         className={styles['btn-background']}>
         确定
-      </AtButton> */}
+      </AtButton>
     </AtForm>
   );
 };

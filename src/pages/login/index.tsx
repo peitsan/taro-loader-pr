@@ -77,6 +77,7 @@ const Login: React.FC = () => {
       <>
         <AtForm name='basic' onSubmit={onFinish} onReset={onReset}>
           <AtInput
+            focus
             required
             title='账号'
             name='username'
@@ -86,6 +87,7 @@ const Login: React.FC = () => {
             onChange={e => setUsername(e as string)}
           />
           <AtInput
+            focus
             required
             title='密码'
             name='password'
