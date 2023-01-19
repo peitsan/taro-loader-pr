@@ -7,7 +7,7 @@ export interface Item {
   code: number;
   manageId: number[];
 }
-export interface AccordionForSepcialProps {
+export interface AccordionForSpecialProps {
   data: any;
   type: number;
   getSpecial: Function;

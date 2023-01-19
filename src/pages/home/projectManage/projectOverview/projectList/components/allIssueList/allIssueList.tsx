@@ -14,80 +14,8 @@ import style from './allIssueList.module.css';
 export const AllIssueList: React.FC<IProps> = props => {
   const { issuesItems, problemsItem, proceduresItem, protocolsItem, index } =
     props;
-  // const expandedRowRender = (record: DataType) => {
-  //   const { item } = record;
-  //   console.log('item', item);
-  //   return <ChildrenTable item={item} index={index} fresh={fresh} />;
-  // };
   const listItem = [problemsItem, protocolsItem, proceduresItem, issuesItems];
   const titleList = ['问题概述', '协议清单', '手续清单', '问题概述'];
-  // const columns: ColumnsType<DataType> = [
-  //   // { title: '序号', dataIndex: 'index', key: 'index', width:"25%" },
-  //   {
-  //     title: `${titleList[index - 1]}`,
-  //     dataIndex: 'issueOverView',
-  //     key: 'issueOverView',
-  //     width: '20%',
-  //   },
-  //   index === 4
-  //     ? {}
-  //     : {
-  //         title: '所属流程',
-  //         key: 'progress',
-  //         width: '30%',
-  //         render: (_: any, record: DataType) => {
-  //           const { name } = record.progress;
-  //           return <span>{name}</span>;
-  //         },
-  //         sorter: (a, b) => {
-  //           if (b.len - a.len > 0) {
-  //             return a.progress.type - b.progress.type;
-  //           }
-  //           return b.progress.type - a.progress.type;
-  //         },
-  //         defaultSortOrder: 'ascend',
-  //       },
-  //   {
-  //     title: '需解决问题数',
-  //     key: 'number',
-  //     render: (_: any, record: DataType) => {
-  //       const { item } = record;
-  //       let len = 0;
-  //       for (let i = 0; i < item.length; i++) {
-  //         const { manageId, code } = item[i];
-  //         const { id } = JSON.parse(Taro.getStorageSync('user')!);
-  //         if (manageId.includes(id) && code === 1) {
-  //           len++;
-  //         }
-  //       }
-  //       const className = len > 0 ? 'num1-color' : 'num-color';
-  //       return <span className={styles[className]}>{len}</span>;
-  //     },
-  //     sorter: (a, b) => b.len - a.len,
-  //   },
-  //   index == 4
-  //     ? {}
-  //     : {
-  //         title: '问题状态',
-  //         dataIndex: 'status',
-  //         key: 'status',
-  //         width: '30%',
-  //         render: (text, record) => {
-  //           const { status } = record;
-  //           const statusList = ['被驳回', '待审批', '通过'];
-  //           const statusColor = ['reply', 'approval', 'solve'];
-  //           return status === undefined ? (
-  //             <span className={styles['solve']}>{'通过'}</span>
-  //           ) : (
-  //             <span className={styles[statusColor[status + 1]]}>
-  //               {statusList[Number(status) + 1]}
-  //             </span>
-  //           );
-  //         },
-  //         sorter: (a, b) => a.len - b.len,
-  //       },
-  // ];
-
   const itemListFunction = (
     itemList: questions[] | opinions[] | reasons[] | conditions[],
   ) => {
@@ -205,16 +133,19 @@ export const AllIssueList: React.FC<IProps> = props => {
             </View>
           </View>
         )}
-
-        <View className={style['issueListTable-tabs']}>
-          {dataSource.map((item, ind) => {
-            return (
-              <View key={'Accordion-' + item + `-` + ind}>
-                <Accordion data={item} index={index} />
-              </View>
-            );
-          })}
-        </View>
+        {!dataSource ? (
+          <View style={{ textAlign: 'center' }}>暂无数据</View>
+        ) : (
+          <View className={style['issueListTable-tabs']}>
+            {dataSource.map((item, ind) => {
+              return (
+                <View key={'Accordion-' + item + `-` + ind}>
+                  <Accordion data={item} index={index} />
+                </View>
+              );
+            })}
+          </View>
+        )}
       </View>
     );
   };

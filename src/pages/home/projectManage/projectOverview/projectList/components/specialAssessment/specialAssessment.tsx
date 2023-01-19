@@ -1,12 +1,10 @@
 import Taro from '@tarojs/taro';
 import React, { useEffect, useState } from 'react';
 import { View } from '@tarojs/components';
-// import { ChildrenTable } from './childrenTable/childrenTable';
 import httpUtil from '../../../../../../../utils/httpUtil';
 import { IProps, dataItem, tableProps } from './specialAssessmentType';
 import styles from './specialAssessment.module.css';
 import AccordionForSpecialist from '../../../../../../../common/components/AccordionForSpecialist/index';
-// import { Table } from 'antd-mobile';
 
 export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
   const progressId = Taro.getStorageSync('progressId')!;
@@ -152,19 +150,23 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
             需解决问题数
           </View>
         </View>
-        <View className={styles['issueListTable-tabs']}>
-          {dataSource.map((item, ind) => {
-            return (
-              <View key={'Accordion-' + item + `-` + ind}>
-                <AccordionForSpecialist
-                  data={item}
-                  type={Type as number}
-                  getSpecial={getSpecial}
-                />
-              </View>
-            );
-          })}
-        </View>
+        {!dataSource ? (
+          <View style={{ textAlign: 'center' }}>暂无数据</View>
+        ) : (
+          <View className={styles['issueListTable-tabs']}>
+            {dataSource.map((item, ind) => {
+              return (
+                <View key={'Accordion-' + item + `-` + ind}>
+                  <AccordionForSpecialist
+                    data={item}
+                    type={Type as number}
+                    getSpecial={getSpecial}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        )}
       </View>
     );
   };

@@ -13,15 +13,16 @@ import {
   AtForm,
   AtInput,
 } from 'taro-ui';
-import { Item, AccordionForSepcialProps } from './indexProps';
+import { Item, AccordionForSpecialProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
 
 import styles from './index.module.less';
 import { UploadBtn } from '../uploadBtn/uploadBtn';
+import { useSelector } from '../../../redux/hooks';
 
 const AccordionForSpecialist: React.FC<
-  AccordionForSepcialProps
+  AccordionForSpecialProps
 > = selfProps => {
   const { data, type, getSpecial } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
@@ -648,7 +649,7 @@ const AccordionForSpecialist: React.FC<
               </View>
             </View>
           </View>
-          {/* <CheckModal /> */}
+          <CheckModal />
           {/* 子列表 */}
           <View className={styles['board-list']}>
             <View className={styles['boardw-subList']} style={{ width: '30%' }}>

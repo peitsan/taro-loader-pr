@@ -25,3 +25,7 @@ export interface resType {
 export interface res {
   res: resType[];
 }
+
+export interface tableProps {
+  dataSource: DataType[];
+}

@@ -24,13 +24,14 @@ export default defineAppConfig({
     /* 
     典型经验
   */
+    'pages/home/typicalExperience/index',
     /* 
     项目经理管理
   */
     'pages/home/managerManage/index',
   ],
-  // entryPagePath: 'pages/home/projectManage/projectOverview/projectList/index',
-  entryPagePath: 'pages/login/index',
+  entryPagePath: 'pages/home/typicalExperience/index',
+  // entryPagePath: 'pages/login/index',
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

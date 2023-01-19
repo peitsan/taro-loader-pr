@@ -31,7 +31,7 @@
   --emphasize-font-size: 20px;
 }
 .board{
-  overflow-y: scroll;
+    overflow-y: scroll;
     width:690rpx;
     height:80rpx;
     margin:2% 4%;
@@ -40,7 +40,7 @@
     border-radius: 16rpx;
     box-shadow: 2rpx 4rpx 10rpx #d5d5d5;
   }
-  .board-list{
+ .board-list{
     display: flex;
     flex-flow: inline;
     width: 690rpx;
@@ -65,14 +65,14 @@
     margin:10px 0;
     border-top:#005307;
     width: 100%;
-    height: 80rpx;
+    height: 200rpx;
     text-align: center;
  
   }
   .boardw-subList{
     float: left;
     text-align: center;
-  overflow-y: scroll;
+    overflow-y: scroll;
    }
 .reply{
     color: rgb(255, 77, 79);
@@ -174,3 +174,61 @@
   flex-direction: column;
 }
 
+
+.num-color{
+  color: var(--success-color);
+  font-size: var(--emphasize-font-size);
+}
+
+.num1-color{
+  color: var(--warning-color);
+  font-size: var(--emphasize-font-size);
+}
+
+.reply{
+  color: var(--error-color);
+}
+
+.approval{
+  color: var(--warning-color);
+}
+
+.solve{
+  color: var(--success-color);
+}
+.issueListTable{
+  height:1200rpx; 
+  width:750rpx;
+}
+.issueListTable-title{
+  display: flex;
+  flex-flow: inline;
+  background-color: #e2f6f2;
+  height:50rpx;
+  width:690rpx;
+  margin:2% 4%;
+  padding: 3% 1%;
+  border-radius: 16rpx; 
+  box-shadow: 2rpx 4rpx 10rpx #d5d5d5;
+}
+.issueListTable-tabs{
+  height:90%; 
+  width:690rpx;
+  overflow-y: stroll;
+}
+.normal-a,
+.normal-a:hover {
+  color: var(--first-theme-color);
+}
+.delete-a{
+  color: var(--error-color);
+}
+.delete-a:hover {
+  color: var(--warning-color);
+}
+.describe {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}

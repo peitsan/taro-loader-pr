@@ -1,11 +1,16 @@
-// import { Badge, Table } from "antd-mobile";
-// import type { ColumnsType } from "antd-mobile/lib/table";
 import Taro from '@tarojs/taro';
+import { View } from '@tarojs/components';
 import React, { useEffect, useState } from 'react';
-import { DataType, ExpandedDataType, resType, res } from './intermediateType';
+import {
+  DataType,
+  ExpandedDataType,
+  resType,
+  res,
+  tableProps,
+} from './intermediateType';
+import AccordionForIntermediate from '../../../../../../../common/components/AccordionForIntermediate/index';
 import httpUtil from '../../../../../../../utils/httpUtil';
 import styles from './intermediate.module.css';
-import { View } from '@tarojs/components';
 
 export const Intermediate: React.FC = () => {
   const [mediateList, setMediateList] = useState<any[]>([]);
@@ -16,12 +21,12 @@ export const Intermediate: React.FC = () => {
 
   const getMediateList = async () => {
     try {
-      const res = await httpUtil.mediateInspection({
+      const resl = await httpUtil.mediateInspection({
         projectId: projectId!,
         progressId: progressId!,
       });
-      if (res.code === 200) {
-        setMediateList(res.data);
+      if (resl.code === 200) {
+        setMediateList(resl.data);
         setLoading(false);
       }
     } finally {
@@ -75,13 +80,11 @@ export const Intermediate: React.FC = () => {
         progressId,
       } as never);
     }
-    return <></>
-    {/* <Table columns={columns} dataSource={data} pagination={false} />; */}
+    return <></>;
+    {
+      /* <Table columns={columns} dataSource={data} pagination={false} />; */
+    }
   };
-
-  const columns: ColumnsType<DataType> = [
-    { title: '专业', dataIndex: 'major', key: 'major' },
-  ];
 
   const data: DataType[] = [];
   for (let i = 0; i < mediateList.length; i++) {
@@ -94,23 +97,47 @@ export const Intermediate: React.FC = () => {
     }
   }
 
-  const Table:React.FC<tableProps>=(tableProps)=>{
-    const { dataSource } = tableProps;
-    return(
+  const Table: React.FC<tableProps> = tableProp => {
+    const { dataSource } = tableProp;
+    return (
       <>
+        {dataSource ? (
+          <View className={styles['issueListTable']}>
+            {/* 表头 */}
+            <View className={styles['issueListTable-title']}>
+              <View
+                style={{
+                  fontWeight: '700',
+                  fontSize: '32rpx',
+                  width: '30%',
+                  textAlign: 'center',
+                }}>
+                专 业
+              </View>
+            </View>
+            {!dataSource ? (
+              <View style={{ textAlign: 'center' }}>暂无数据</View>
+            ) : (
+              <View className={styles['issueListTable-tabs']}>
+                {dataSource.map((item, ind) => {
+                  return (
+                    <View key={'Accordion-' + item + `-` + ind}>
+                      <AccordionForIntermediate data={item} />
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        ) : (
+          <View>暂无数据</View>
+        )}
       </>
     );
-  }
+  };
   return (
     <>
-      <Table/>
+      <Table dataSource={data} />
     </>
-    // <Table
-    //   className='components-table-demo-nested'
-    //   columns={columns}
-    //   expandable={{ expandedRowRender }}
-    //   dataSource={data}
-    //   loading={loading}
-    // />
   );
 };
