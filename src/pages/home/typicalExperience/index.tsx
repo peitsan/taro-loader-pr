@@ -123,7 +123,10 @@ const typicalExperience: React.FC = () => {
             onClick={e => tabSwitchHandle(e)}>
             {mapData.map((mapItem, mapId) => {
               return (
-                <AtTabsPane current={selectTab} index={mapId}>
+                <AtTabsPane
+                  style={{ height: '1000rpx' }}
+                  current={selectTab}
+                  index={mapId}>
                   <TableForExperience data={mapItem.data} />
                 </AtTabsPane>
               );

@@ -8,6 +8,7 @@ import {
   DataType,
   OperationProps,
 } from './indexProps';
+import TypicalExperienceDetail from './TypicalExperienceDetail';
 import { message } from '../../functions/index';
 import style from './index.module.less';
 
@@ -15,15 +16,19 @@ const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
   const { data } = selfProps;
   const userId = Number(Taro.getStorageSync('id'));
   const [open, setOpen] = useState<boolean>(false);
+  const [detail, setDetail] = useState<boolean>(false);
   const [curData, serCurData] = useState<DataType>();
   const [Data, setData] = useState<DataType[]>(data);
   console.log(data);
   // 打开模态框查阅附件和详情
   const showDrawer = (record: DataType) => {
-    setOpen(true);
+    setDetail(true);
     serCurData(record);
   };
-
+  const disableDraw = () => {
+    console.log('disable');
+    setDetail(false);
+  };
   const onClose = () => {
     setOpen(false);
   };
@@ -134,6 +139,11 @@ const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
     <>
       <TableHeader />
       <TablePanel dataSource={data} />
+      <TypicalExperienceDetail
+        data={curData}
+        onClose={disableDraw}
+        open={detail}
+      />
     </>
   );
 };
