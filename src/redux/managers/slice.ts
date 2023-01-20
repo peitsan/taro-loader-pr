@@ -1,4 +1,4 @@
-import { deepClone } from "../../common/function/deepClone";
+import { deepClone } from "../../common/functions/deepClone";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import httpUtil from "../../utils/httpUtil";
 

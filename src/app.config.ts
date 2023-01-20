@@ -1,6 +1,8 @@
 export default defineAppConfig({
   pages: [
-    'pages/home/projectManage/projectOverview/index'
+    // 'pages/login/index',
+    'pages/home/projectManage/projectOverview/fatherProjectProgress/index',
+    'pages/home/projectManage/projectOverview/index',
   ],
   window: {
     backgroundTextStyle: 'light',

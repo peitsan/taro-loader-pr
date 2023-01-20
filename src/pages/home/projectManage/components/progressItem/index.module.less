@@ -1,0 +1,103 @@
+// **********暂时先这样写，后面再改***************
+@grey: silver;
+@warn: rgb(222, 151, 9);
+@error: rgb(255, 77, 79);
+@success: rgb(82, 196, 26);
+
+.item {
+    display: flex;
+    justify-content: center;
+}
+
+.leftSign {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.circle {
+    background-color: #005307;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.nextLine {
+    background-color: #005307;
+    width: 15px;
+    height: 80px;
+    transition: 0.3s height ease;
+}
+
+.long {
+    height: 250px;
+}
+
+.longT {
+    height: 150px;
+}
+
+.rightContent {
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    align-content: flex-end;
+}
+
+.itemContent {
+    width: 600px;
+    height: 100px;
+    box-shadow: 10px 10px 20px 1px rgb(195, 194, 194);
+    border-radius: 25px;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.planTime {
+    font-size: small;
+    color: #a8a7a7;
+}
+
+.timeSpace {
+    width: 590px;
+    height: 0px;
+    background-color: #a8a7a7;
+    transition: 0.3s height ease;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding-left: 30px;
+    padding-right: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.show {
+    height: 200px;
+}
+
+.showT {
+    height: 100px;
+}
+
+.item-noTime {
+    color: grey;
+}
+
+.item-time-warning {
+    color: @warn;
+}
+
+.item-time-error {
+    color: @error;
+}
+
+.item-time-success {
+    color: @success;
+}
+
