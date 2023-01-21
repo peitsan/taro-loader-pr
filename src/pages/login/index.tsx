@@ -56,9 +56,15 @@ const Login: React.FC = () => {
         // **********测试用例，上线删除**********
         Taro.setStorageSync('projectName', 'lpc_test');
         Taro.setStorageSync('fatherName', 'lpc_test');
+<<<<<<< HEAD
         Taro.setStorageSync('type', 3);
         Taro.setStorageSync('projectId', 303);
         Taro.setStorageSync('progressId', 2010);
+=======
+        Taro.setStorageSync('type', 1);
+        Taro.setStorageSync('projectId', 305);
+        Taro.setStorageSync('progressId', 2026);
+>>>>>>> 20eee0f7e4cb504d5d3efac60e0656f3ff5f1278
         // **********测试用例，上线删除**********
         dispatch(updateUserInfoAC(user));
         Taro.atMessage({
@@ -67,7 +73,11 @@ const Login: React.FC = () => {
         });
         permission === 'admin'
           ? navigateTo('/home/managerManage')
+<<<<<<< HEAD
           : navigateTo('/home/typicalExperience');
+=======
+          : navigateTo('/home/projectManage/projectOverview/projectList');
+>>>>>>> 20eee0f7e4cb504d5d3efac60e0656f3ff5f1278
         // : navigateTo('/home/projectManage/projectOverview');
       } finally {
         onReset();

@@ -10,6 +10,8 @@ export default defineAppConfig({
     'pages/home/projectManage/index',
     // 工程总览
     'pages/home/projectManage/projectOverview/index',
+    // 工程进度
+    'pages/home/projectManage/projectOverview/fatherProjectProgress/index',
     // 三项清单查阅
     'pages/home/projectManage/projectOverview/projectList/index',
     // 三项清单审批

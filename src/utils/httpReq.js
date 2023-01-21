@@ -134,5 +134,10 @@ export const httpReq = (method, url, form, resType) => {
       },
     );
   });
+<<<<<<< HEAD
    
 };
+=======
+
+};
+>>>>>>> 20eee0f7e4cb504d5d3efac60e0656f3ff5f1278
