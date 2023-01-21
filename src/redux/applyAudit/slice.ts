@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { message } from "antd-mobile";
-import httpUtil from "../../utils/httpUtil";
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { message } from '../../common/functions/index';
+import httpUtil from '../../utils/httpUtil';
 
 export interface QuestionApprovalType {
   createTime: string;
@@ -45,11 +45,11 @@ const initialState: ApplyAuditType = {
 };
 
 export const getApplyListAC = createAsyncThunk(
-  "applyAudit/getApplyListAC",
+  'applyAudit/getApplyListAC',
   async (isFirst?: boolean) => {
     let hideLoading = () => {};
     if (isFirst) {
-      hideLoading = message.loading("请求中");
+      hideLoading = message('请求中', 'warning');
     }
     const questionTimeApply = await httpUtil.workerGetQuestionTimeApplyList();
     const projectTimeApply = await httpUtil.workerGetProjectTimeApplyList();
@@ -63,20 +63,20 @@ export const getApplyListAC = createAsyncThunk(
       hideLoading();
     }
     return { questionApprovals, projectApprovals };
-  }
+  },
 );
 
 export const applyAuditSlice = createSlice({
-  name: "applyAudit",
+  name: 'applyAudit',
   initialState,
   reducers: {},
   extraReducers: {
-    [getApplyListAC.pending.type]: (state) => {
+    [getApplyListAC.pending.type]: state => {
       state.loading = true;
     },
     [getApplyListAC.fulfilled.type]: (
       state,
-      action: PayloadAction<ApplyAuditType>
+      action: PayloadAction<ApplyAuditType>,
     ) => {
       [state.loading, state.questionApprovals, state.projectApprovals] = [
         false,

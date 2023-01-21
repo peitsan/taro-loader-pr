@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 import { deepClone } from '../../common/functions/deepClone';
-=======
-import { deepClone } from "../../common/functions/deepClone";
->>>>>>> 20eee0f7e4cb504d5d3efac60e0656f3ff5f1278
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import httpUtil from "../../utils/httpUtil";
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import httpUtil from '../../utils/httpUtil';
 
 interface ObjectType {
   [propName: string | number]: any;
@@ -60,12 +56,12 @@ const initialState: StateType = {
 };
 
 export const getManagersAC = createAsyncThunk(
-  "managers/getManagersAC",
+  'managers/getManagersAC',
   async () => {
     const {
       data: { units },
     } = await httpUtil.getManagers();
-    const userId = Number(Taro.getStorageSync("id")!);
+    const userId = Number(Taro.getStorageSync('id')!);
     const flatManagers: FlatManagerType[] = [];
     for (let unit of units) {
       const { name: unitName, depts } = unit;
@@ -88,7 +84,7 @@ export const getManagersAC = createAsyncThunk(
     for (let unit of otherManagers) {
       for (let dept of unit.depts) {
         dept.workers = dept.workers.filter(
-          (worker: WorkerType) => worker.id !== userId
+          (worker: WorkerType) => worker.id !== userId,
         );
       }
     }
@@ -97,7 +93,7 @@ export const getManagersAC = createAsyncThunk(
       searchManagers[unit.id] = {};
       unit.depts.forEach((dept: DeptType) => {
         searchManagers[unit.id][dept.id] = dept.workers.map(
-          (worker: WorkerType) => worker.id
+          (worker: WorkerType) => worker.id,
         );
       });
     });
@@ -105,20 +101,20 @@ export const getManagersAC = createAsyncThunk(
     return {
       data: { managers: units, flatManagers, otherManagers, searchManagers },
     };
-  }
+  },
 );
 
 export const managersSlice = createSlice({
-  name: "managers",
+  name: 'managers',
   initialState,
   reducers: {},
   extraReducers: {
-    [getManagersAC.pending.type]: (state) => {
+    [getManagersAC.pending.type]: state => {
       state.loading = true;
     },
     [getManagersAC.fulfilled.type]: (
       state,
-      action: PayloadAction<StateType>
+      action: PayloadAction<StateType>,
     ) => {
       [state.loading, state.data] = [false, action.payload.data];
     },
