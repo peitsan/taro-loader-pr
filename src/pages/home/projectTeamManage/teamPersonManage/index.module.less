@@ -31,20 +31,20 @@
   --emphasize-font-size: 20px;
 }
 .board{
-  overflow-y: scroll;
+    overflow-y: scroll;
     width:690rpx;
-    height:80rpx;
+    height:70rpx;
     margin:2% 4%;
     padding: 3% 1%;
     background-color:rgb(255, 255, 255);
     border-radius: 16rpx;
     box-shadow: 2rpx 4rpx 10rpx #d5d5d5;
   }
-  .board-list{
+ .board-list{
     display: flex;
     flex-flow: inline;
     width: 690rpx;
-    height: 80rpx;
+    height: 60rpx;
     text-align: center;
   }
 .boardw{
@@ -65,14 +65,14 @@
     margin:10px 0;
     border-top:#005307;
     width: 100%;
-    height: 100rpx;
+    height: 60rpx;
     text-align: center;
  
   }
   .boardw-subList{
     float: left;
     text-align: center;
-  overflow-y: scroll;
+    overflow-y: scroll;
    }
 .reply{
     color: rgb(255, 77, 79);
@@ -89,88 +89,48 @@
 .btn-background {
     background-color:rgb(0, 83, 7) !important;
     border-color: rgb(153, 190, 173) !important ;
+    color: rgb(255, 255, 255) !important ;
     margin-left: 10px;
 }
-.will-pass-text {
-  color: var(--warning-color);
+.issueListTable{
+  height:1200rpx; 
+  width:750rpx;
 }
-.pass-text {
-  color: var(--success-color);
-}
-.look-btn {
-  background-color: var(--warning-color) !important;
-  border-color: var(--warning-color) !important;
-}
-.look-btn:hover {
-  border-color: var(--warning-color) !important;
-}
-.pass-btn {
-  background-color: var(--first-theme-color) !important;
-  border-color: var(--first-theme-color) !important ;
-}
-.back-btn {
-  color: white !important;
-  background-color: var(--error-color) !important;
-  border-color: var(--error-color) !important;
-}
-.back-btn:hover {
-  border-color: var(--error-color) !important;
-}
-.unchecked-count {
-  font-size: var(--emphasize-font-size);
-  color: var(--warning-color);
-}
-.checked-count {
-  font-size: var(--emphasize-font-size);
-  color: var(--success-color);
-}
-.cofirm-btn {
-  background-color: var(--first-theme-color) !important;
-  border-color: var(--first-theme-color) !important;
-}
-
-.reply-wrapper {
-  overflow-y: auto;
-}
-
-.reply-title {
-  display: inline-block;
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.reply-text-area {
-  margin-bottom: 10px;
-  border-color: var(--first-theme-color) !important;
-  box-shadow: none !important;
-}
-.reply-text-area:hover,
-.reply-text-area:focus {
-  box-shadow: none !important;
-}
-
-.reply-files {
+.issueListTable-title{
   display: flex;
-  flex-direction: column;
+  flex-flow: inline;
+  background-color: #e2f6f2;
+  height:50rpx;
+  width:690rpx;
+  margin:2% 4%;
+  padding: 3% 1%;
+  border-radius: 16rpx; 
+  box-shadow: 2rpx 4rpx 10rpx #d5d5d5;
 }
-
-.btn {
-  border: var(--first-theme-color) !important;
-  background-color: var(--first-theme-color) !important;
-  color: white !important;
+.issueListTable-tabs{
+  height:90%; 
+  width:690rpx;
+  overflow-y: stroll;
 }
-.btn:hover {
-  background-color: var(--first-theme-color) !important;
-  color: white !important;
+.normal-a{
+  line-height: 100px;
+  color: rgb(0, 83, 7) !important;
 }
-
-.btn-choose {
-  background-color: var(--first-theme-color) !important;
-  border: var(--first-theme-color) !important;
-  color: white !important;
+.normal-a:hover {
+  line-height: 100px;
+  color: rgb(0, 83, 7) !important;
 }
-.datePicker-modal{
-  display: flex;
-  flex-direction: column;
+.delete-a{
+  line-height: 100px;
+  color: rgb(255, 77, 79) !important;
 }
-
+.delete-a:hover {
+  line-height: 100px;
+  color: rgb(222, 151, 9) !important;
+}
+.describe {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}

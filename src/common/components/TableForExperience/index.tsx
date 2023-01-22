@@ -138,7 +138,7 @@ const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
   return (
     <>
       <TableHeader />
-      <TablePanel dataSource={data} />
+      <TablePanel />
       <TypicalExperienceDetail
         data={curData}
         onClose={disableDraw}

@@ -57,6 +57,14 @@ export default defineAppConfig({
         // 上报审核
       ],
     },
+    /* 
+    项目团队管理
+  */
+    {
+      root: 'pages/home/projectTeamManage/teamPersonManage',
+      // 团队成员管理
+      pages: ['index'],
+    },
     {
       // 系统登录
       root: 'pages/login',

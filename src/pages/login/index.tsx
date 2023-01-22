@@ -3,7 +3,7 @@ import { View, Image } from '@tarojs/components';
 import { AtMessage, AtForm, AtInput, AtButton } from 'taro-ui';
 import { useState } from 'react';
 import httpUtil from '../../utils/httpUtil';
-import { navigateTo } from '../../common/functions/router';
+import { switchTab } from '../../common/functions/router';
 import { useDispatch } from '../../redux/hooks';
 import { updateUserInfoAC } from '../../redux/actionCreators';
 import logo from '../../assets/logo.png';
@@ -66,8 +66,8 @@ const Login: React.FC = () => {
           type: `success`,
         });
         permission === 'admin'
-          ? navigateTo('/home/managerManage')
-          : navigateTo('/home/projectManage/projectOverview/projectList');
+          ? switchTab('/home/managerManage')
+          : switchTab('/home/projectManage');
         // : navigateTo('/home/projectManage/projectOverview');
       } finally {
         onReset();
