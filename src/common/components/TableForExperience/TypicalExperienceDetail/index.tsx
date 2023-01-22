@@ -10,6 +10,7 @@ import {
   AtModalContent,
   AtModalAction,
   AtButton,
+  AtMessage,
 } from 'taro-ui';
 import { message } from '../../../functions/index';
 import style from './index.module.less';
@@ -113,6 +114,7 @@ const TypicalExperienceDetail: React.FC<
         </AtModalContent>{' '}
         <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
       </AtModal>
+      <AtMessage />
     </>
   );
 };

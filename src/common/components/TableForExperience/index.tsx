@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro';
 import { useState } from 'react';
 import { View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
-import { AtButton, AtModal } from 'taro-ui';
+import { AtButton, AtMessage, AtModal } from 'taro-ui';
 import {
   TableForExperienceProps,
   DataType,
@@ -144,6 +144,7 @@ const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
         onClose={disableDraw}
         open={detail}
       />
+      <AtMessage />
     </>
   );
 };

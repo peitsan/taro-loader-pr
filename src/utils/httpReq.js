@@ -20,7 +20,7 @@ const pageToLogin = () => {
   Taro.clearStorage();
   if (!path.includes('login')) {
     Taro.reLaunch({
-      url: '/pages/login/login',
+      url: '/pages/login/index',
     });
   }
 };

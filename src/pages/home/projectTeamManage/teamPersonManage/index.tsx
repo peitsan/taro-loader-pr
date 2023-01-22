@@ -1,16 +1,21 @@
 import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { View } from '@tarojs/components';
+import { Button, Picker, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
-import { AtLoadMore } from 'taro-ui';
-import { TeamPersonType, ParamsType } from './indexProps';
 import {
-  message,
-  PersonSelector,
-  transPersons,
-} from '../../../../common/functions/index';
-import BackPrePage from '../../../../common/components/backPrePage/backPrePage';
+  AtForm,
+  AtList,
+  AtListItem,
+  AtLoadMore,
+  AtMessage,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtModalHeader,
+} from 'taro-ui';
+import { TeamPersonType, ParamsType } from './indexProps';
+import { message, transPersons } from '../../../../common/functions/index';
+import { PersonSelector } from '../../../../common/components/personSelector/personSelector';
 import { UnitType } from '../../../../redux/units/slice';
 import { useSelector, useDispatch } from '../../../../redux/hooks';
 import { getUnitsAC } from '../../../../redux/actionCreators';
@@ -19,9 +24,10 @@ import { addManagerProjectTeamPerson } from '../../../../utils/params';
 import style from './index.module.less';
 
 const TeamList: React.FC = () => {
-  const params = useParams<ParamsType>();
+  const { router } = Taro.getCurrentInstance(); //获取路由传入的index参数
+  const fatherId: string = router?.params.i; //存储路由传入的index参数
+  const name: string = router?.params.me; //存储路由传入的index参数、
   const dispatch = useDispatch();
-  const { fatherId, name } = params;
   const [data, setData] = useState<TeamPersonType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const units = useSelector(state => state.units.data.units as UnitType);
@@ -29,16 +35,20 @@ const TeamList: React.FC = () => {
     state => state.units.data.searchUnits as UnitType,
   );
   const [loading, setLoading] = useState(true);
+  const [
+    addManagerProjectTeamPersonLoading,
+    setAddManagerProjectTeamPersonLoading,
+  ] = useState(false);
   // 获取团队数据
   const getLsit = () => {
     httpUtil.getManagerProjectTeamPerson({ fatherId: fatherId! }).then(res => {
-      const units: UnitType[] = res.data?.units;
+      const Units: UnitType[] = res.data?.units;
       const teamPersons: TeamPersonType[] = [];
-      for (let unit of units) {
+      for (const unit of Units) {
         const { name: unitName, depts } = unit;
-        for (let dept of depts) {
+        for (const dept of depts) {
           const { name: deptName, workers } = dept;
-          for (let worker of workers) {
+          for (const worker of workers) {
             const {
               nickname: workerName,
               phone,
@@ -63,16 +73,88 @@ const TeamList: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch( getUnitsAC({ fatherId, getTeamPerson: false })) ;
+    dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getLsit();
   }, []);
-
-  const toTeamPersonManage = (fatherId: number, name: string) => {
-    Taro.navigateTo({
-      url: `/pages/home/projectTeamManage/teamList/teamPersonManage/index?i=${fatherId}&me=${name}`,
-    });
+  console.log(data);
+  const handleAppend = () => {
+    setIsModalVisible(false);
   };
-
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const onFinish = (values: addManagerProjectTeamPerson) => {
+    const { userIds: _userIds, identity } = values;
+    const userIds = transPersons(_userIds, searchUnits);
+    setAddManagerProjectTeamPersonLoading(true);
+    httpUtil
+      .addManagerProjectTeamPerson({
+        userIds,
+        identity,
+        projectId: Number(fatherId),
+      })
+      .then(res => {
+        const { message: msg, code } = res;
+        200 === code
+          ? message(msg, 'success')
+          : message('新增成员失败', 'error');
+        getLsit();
+        dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
+      })
+      .finally(() => {
+        setIsModalVisible(false);
+        setAddManagerProjectTeamPersonLoading(false);
+      });
+  };
+  const AddStaff: React.FC = () => {
+    const Modal = () => {
+      const SelectorRange = ['第三方', '员工'];
+      const [SelectValue, setSelectValue] = useState<string>('第三方');
+      const SelectChecked: string = '第三方';
+      return (
+        <AtModal isOpened={isModalVisible} onClose={handleCancel}>
+          <AtModalHeader>添加人员</AtModalHeader>
+          <AtModalContent>
+            <AtForm onSubmit={onFinish}>
+              <View>
+                {/* <PersonSelector /> */}
+              </View>
+              <View>
+                <Picker
+                  mode='selector'
+                  range={SelectorRange}
+                  onChange={e =>
+                    console.log(String(Number(e.detail.value as string) + 2))
+                  }>
+                  <AtList>
+                    <AtListItem
+                      title='新增成员类型'
+                      extraText={SelectChecked}
+                    />
+                  </AtList>
+                </Picker>
+              </View>
+            </AtForm>
+          </AtModalContent>
+          <AtModalAction>
+            <Button onClick={handleCancel}>取消</Button>{' '}
+            <Button onClick={handleAppend}>确定</Button>
+          </AtModalAction>
+        </AtModal>
+      );
+    };
+    return (
+      <>
+        <View className={style['normal-a']}> {name}</View>
+        <View
+          onClick={() => setIsModalVisible(true)}
+          className={style['btn-background']}>
+          新增成员
+        </View>
+        <Modal />
+      </>
+    );
+  };
   const TableHeader: React.FC = () => {
     return (
       <View className={style['issueListTable-title']}>
@@ -80,8 +162,15 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '10%',
-            textAlign: 'center',
+            width: '5%',
+            textAlign: 'right',
+          }}></View>
+        <View
+          style={{
+            fontWeight: '700',
+            fontSize: '32rpx',
+            width: '15%',
+            textAlign: 'left',
           }}>
           姓名
         </View>
@@ -89,7 +178,7 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '20%',
+            width: '15%',
             textAlign: 'center',
           }}>
           单位
@@ -98,7 +187,7 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '20%',
+            width: '15%',
             textAlign: 'center',
           }}>
           部门
@@ -107,7 +196,7 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '10%',
+            width: '18%',
             textAlign: 'center',
           }}>
           身份
@@ -116,7 +205,7 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '20%',
+            width: '25%',
             textAlign: 'center',
           }}>
           手机号码
@@ -125,8 +214,8 @@ const TeamList: React.FC = () => {
           style={{
             fontWeight: '700',
             fontSize: '32rpx',
-            width: '20%',
-            textAlign: 'center',
+            width: '12%',
+            textAlign: 'right',
           }}>
           操作
         </View>
@@ -134,15 +223,45 @@ const TeamList: React.FC = () => {
     );
   };
   const TablePanel: React.FC = () => {
+    const confirm = (uId: number, fId: number) => {
+      message('请求中', 'warning');
+      httpUtil
+        .deleteManagerProjectTeamPerson({ userId: uId, fatherId: fId })
+        .then(res => {
+          const { code, message: msg } = res;
+          if (code === 200) {
+            message(msg, 'success');
+            dispatch(
+              getUnitsAC({ fatherId: String(fatherId), getTeamPerson: false }),
+            );
+            getLsit();
+          }
+        })
+        .finally(() => {});
+    };
     const RendorOperation: React.FC<OperationProps> = props => {
+      const [confirmDelete, setConfirmDelete] = useState<boolean>(false);
       const { dataList, index } = props;
-      return (
+      const myId = Number(Taro.getStorageSync('id'));
+      return myId === dataList.userId ? (
+        <View>无</View>
+      ) : (
         <View>
+          <AtModal
+            isOpened={confirmDelete}
+            title='确认删除'
+            cancelText='取消'
+            confirmText='确认'
+            onClose={() => setConfirmDelete(false)}
+            onCancel={() => setConfirmDelete(false)}
+            onConfirm={() => confirm(dataList.userId, Number(fatherId)!)}
+            content={`确认要从团队删除${dataList.name}吗?`}
+          />
           <View
-            onClick={() => toTeamPersonManage(dataList.id, dataList.name)}
+            onClick={() => setConfirmDelete(true)}
             key={`look-${index}`}
-            className={style['btn-background']}>
-            管理团队
+            className={style['btn-background-err']}>
+            删除
           </View>
         </View>
       );
@@ -156,22 +275,37 @@ const TeamList: React.FC = () => {
                 <View className={style['boardw-list']} key={'reason-row' + ids}>
                   <View
                     className={style['boardw-subList']}
-                    style={{ width: '10%' }}>
+                    style={{ width: '5%' }}>
                     {ids + 1}
                   </View>
                   <View
                     className={style['boardw-subList']}
-                    style={{ width: '30%', textAlign: 'left' }}>
+                    style={{ width: '15%', textAlign: 'left' }}>
                     {list.name}
                   </View>
                   <View
                     className={style['boardw-subList']}
-                    style={{ width: '30%', textAlign: 'center' }}>
-                    {list.scope ? '规模以上' : '规模以下'}
+                    style={{ width: '15%', textAlign: 'left' }}>
+                    {list.unit}
                   </View>
                   <View
                     className={style['boardw-subList']}
-                    style={{ width: '30%' }}>
+                    style={{ width: '15%', textAlign: 'left' }}>
+                    {list.dept}
+                  </View>
+                  <View
+                    className={style['boardw-subList']}
+                    style={{ width: '18%', textAlign: 'left' }}>
+                    {list.identity}
+                  </View>
+                  <View
+                    className={style['boardw-subList']}
+                    style={{ width: '25%', textAlign: 'left' }}>
+                    {list.phone}
+                  </View>
+                  <View
+                    className={style['boardw-subList']}
+                    style={{ width: '12%' }}>
                     <RendorOperation dataList={list} index={ids} />
                   </View>
                 </View>
@@ -188,8 +322,10 @@ const TeamList: React.FC = () => {
     <AtLoadMore status={loading ? 'loading' : 'noMore'}></AtLoadMore>
   ) : (
     <>
+      <AddStaff />
       <TableHeader />
       <TablePanel />
+      <AtMessage />
     </>
   );
 };

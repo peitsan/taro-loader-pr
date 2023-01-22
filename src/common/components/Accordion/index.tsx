@@ -9,6 +9,7 @@ import {
   AtTextarea,
   AtModalContent,
   AtModalAction,
+  AtMessage,
 } from 'taro-ui';
 import { Item, AccordionProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
@@ -448,6 +449,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
             </View>
           )}
+          <AtMessage />
         </View>
       )}
     </>

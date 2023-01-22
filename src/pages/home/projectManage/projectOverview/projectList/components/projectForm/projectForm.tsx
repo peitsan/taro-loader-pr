@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
 import React, { useState } from 'react';
-import { AtIcon, AtForm, AtInput, AtButton } from 'taro-ui';
+import { AtIcon, AtForm, AtInput, AtButton, AtMessage } from 'taro-ui';
 import { message } from '../../../../../../../common/functions';
 import httpUtil from '../../../../../../../utils/httpUtil';
 import styles from './projectForm.module.css';
@@ -127,6 +127,7 @@ export const ProjectForm: React.FC<IProps> = ({
         className={styles['btn-background']}>
         确定
       </AtButton>
+      <AtMessage />
     </AtForm>
   );
 };

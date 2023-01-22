@@ -12,6 +12,7 @@ import {
   AtModalAction,
   AtForm,
   AtInput,
+  AtMessage,
 } from 'taro-ui';
 import { Item, AccordionForSpecialProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
@@ -738,6 +739,7 @@ const AccordionForSpecialist: React.FC<
               </View>
             </View>
           </View>
+          <AtMessage />
         </View>
       )}
     </>
