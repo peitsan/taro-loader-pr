@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import httpUtil from "../../utils/httpUtil";
+import Taro from '@tarojs/taro';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import httpUtil from '../../utils/httpUtil';
 
 interface ObjectType {
   [propName: string | number]: any;
@@ -48,15 +49,15 @@ const initialState: StateType = {
 };
 
 export const getUnitsAC = createAsyncThunk(
-  "units/getUnitsAC",
+  'units/getUnitsAC',
   async (obj: GetUnitObjType = {}) => {
     const { fatherId, getTeamPerson = true } = obj;
-    const permission = Taro.getStorageSync("permission");
+    const permission = Taro.getStorageSync('permission');
     const fetch = () => {
       if (getTeamPerson && fatherId) {
         return httpUtil.getManagerProjectTeamPerson({ fatherId });
       } else {
-        return permission === "admin"
+        return permission === 'admin'
           ? httpUtil.adminGetAllWorker()
           : httpUtil.managerGetAllWorker({ fatherId: Number(fatherId) });
       }
@@ -70,21 +71,21 @@ export const getUnitsAC = createAsyncThunk(
       searchUnits[unit.id] = {};
       unit.depts.forEach((dept: DeptType) => {
         searchUnits[unit.id][dept.id] = dept.workers.map(
-          (worker: WorkerType) => worker.id
+          (worker: WorkerType) => worker.id,
         );
       });
     });
 
     return { data: { units, searchUnits } };
-  }
+  },
 );
 
 export const unitsSlice = createSlice({
-  name: "units",
+  name: 'units',
   initialState,
   reducers: {},
   extraReducers: {
-    [getUnitsAC.pending.type]: (state) => {
+    [getUnitsAC.pending.type]: state => {
       state.loading = true;
     },
     [getUnitsAC.fulfilled.type]: (state, action: PayloadAction<StateType>) => {

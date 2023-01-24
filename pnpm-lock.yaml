@@ -40,6 +40,7 @@ specifiers:
   eslint-plugin-prettier: ^4.2.1
   eslint-plugin-react: ^7.8.2
   eslint-plugin-react-hooks: ^4.2.0
+  hook-stash: ^0.1.6
   moment: ^2.29.4
   prettier: ^2.8.0
   react: ^18.0.0
@@ -75,6 +76,7 @@ dependencies:
   '@tarojs/taro': registry.npmmirror.com/@tarojs/taro/3.5.7_@types+react@18.0.25
   '@tarojs/taro-h5': registry.npmmirror.com/@tarojs/taro-h5/3.5.7_@types+react@18.0.25
   axios: registry.npmmirror.com/axios/0.24.0
+  hook-stash: registry.npmmirror.com/hook-stash/0.1.6_biqbaboplfbrettd7655fr4n2y
   moment: registry.npmmirror.com/moment/2.29.4
   react: registry.npmmirror.com/react/18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
@@ -4243,6 +4245,16 @@ packages:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/range-parser/-/range-parser-1.2.4.tgz}
     name: '@types/range-parser'
     version: 1.2.4
+
+  registry.npmmirror.com/@types/react/17.0.53:
+    resolution: {integrity: sha512-1yIpQR2zdYu1Z/dc1OxC+MA6GR240u3gcnP4l6mvj/PJiVaqHsQPmWttsvHsfnhfPbU2FuGmo0wSITPygjBmsw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/react/-/react-17.0.53.tgz}
+    name: '@types/react'
+    version: 17.0.53
+    dependencies:
+      '@types/prop-types': registry.npmmirror.com/@types/prop-types/15.7.5
+      '@types/scheduler': registry.npmmirror.com/@types/scheduler/0.16.2
+      csstype: registry.npmmirror.com/csstype/3.1.1
+    dev: false
 
   registry.npmmirror.com/@types/react/18.0.25:
     resolution: {integrity: sha512-xD6c0KDT4m7n9uD4ZHi02lzskaiqcBxf4zi+tXZY98a04wvc0hi/TcCPC2FOESZi51Nd7tlUeOJY8RofL799/g==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/react/-/react-18.0.25.tgz}
@@ -11146,6 +11158,20 @@ packages:
     dependencies:
       parse-passwd: registry.npmmirror.com/parse-passwd/1.0.0
     dev: true
+
+  registry.npmmirror.com/hook-stash/0.1.6_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-cPzuQqsX5FxJqtI3JLIESUgNWJ5P7yd6SutK8l/BhqJjd9v79LQiNDmE9kArDE1A0ZEcmf6umzOlTg+X5DxXlw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hook-stash/-/hook-stash-0.1.6.tgz}
+    id: registry.npmmirror.com/hook-stash/0.1.6
+    name: hook-stash
+    version: 0.1.6
+    peerDependencies:
+      react: ^17.0.2
+      react-dom: ^17.0.2
+    dependencies:
+      '@types/react': registry.npmmirror.com/@types/react/17.0.53
+      react: registry.npmmirror.com/react/18.2.0
+      react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
+    dev: false
 
   registry.npmmirror.com/hoopy/0.1.4:
     resolution: {integrity: sha512-HRcs+2mr52W0K+x8RzcLzuPPmVIKMSv97RGHy0Ea9y/mpcaK+xTrjICA04KAHi4GRzxliNqNJEFYWHghy3rSfQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hoopy/-/hoopy-0.1.4.tgz}

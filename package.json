@@ -41,6 +41,7 @@
     "@tarojs/taro": "3.5.7",
     "@tarojs/taro-h5": "3.5.7",
     "axios": "^0.24.0",
+    "hook-stash": "^0.1.6",
     "moment": "^2.29.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",

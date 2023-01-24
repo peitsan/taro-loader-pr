@@ -3,13 +3,13 @@ import {
   ThunkAction,
   Action,
   combineReducers,
-} from "@reduxjs/toolkit";
+} from '@reduxjs/toolkit';
 import {
   userInfoSlice,
   unitsSlice,
   managersSlice,
   applyAuditSlice,
-} from "./reducers";
+} from './reducers';
 
 const rootReducer = combineReducers({
   userInfo: userInfoSlice.reducer,

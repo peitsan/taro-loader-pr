@@ -15,8 +15,8 @@ import {
 } from 'taro-ui';
 import { TeamPersonType, ParamsType } from './indexProps';
 import { message, transPersons } from '../../../../common/functions/index';
-import { PersonSelector } from '../../../../common/components/personSelector/personSelector';
-import { UnitType } from '../../../../redux/units/slice';
+import PersonSelector from '../../../../common/components/personSelector/personSelector';
+import { UnitType, UnitsType } from '../../../../redux/units/slice';
 import { useSelector, useDispatch } from '../../../../redux/hooks';
 import { getUnitsAC } from '../../../../redux/actionCreators';
 import { addManagerProjectTeamPerson } from '../../../../utils/params';
@@ -25,12 +25,12 @@ import style from './index.module.less';
 
 const TeamList: React.FC = () => {
   const { router } = Taro.getCurrentInstance(); //获取路由传入的index参数
-  const fatherId: string = router?.params.i; //存储路由传入的index参数
-  const name: string = router?.params.me; //存储路由传入的index参数、
+  const fatherId: string = router?.params.i as string; //存储路由传入的index参数
+  const name: string = router?.params.me as string; //存储路由传入的index参数、
   const dispatch = useDispatch();
   const [data, setData] = useState<TeamPersonType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const units = useSelector(state => state.units.data.units as UnitType);
+  const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(
     state => state.units.data.searchUnits as UnitType,
   );
@@ -76,7 +76,6 @@ const TeamList: React.FC = () => {
     dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getLsit();
   }, []);
-  console.log(data);
   const handleAppend = () => {
     setIsModalVisible(false);
   };
@@ -115,9 +114,15 @@ const TeamList: React.FC = () => {
         <AtModal isOpened={isModalVisible} onClose={handleCancel}>
           <AtModalHeader>添加人员</AtModalHeader>
           <AtModalContent>
-            <AtForm onSubmit={onFinish}>
+            <AtForm onSubmit={() => onFinish}>
               <View>
-                {/* <PersonSelector data={data} width={200} /> */}
+                {/* {PersonSelector(units, '请选择人员', 354)} */}
+                <PersonSelector
+                  data={units as UnitsType}
+                  placeholder='请选择人员'
+                  width={354}
+                  multiple
+                />
               </View>
               <View>
                 <Picker
