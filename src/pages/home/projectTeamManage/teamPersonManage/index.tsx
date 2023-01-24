@@ -109,7 +109,7 @@ const TeamList: React.FC = () => {
   const AddStaff: React.FC = () => {
     const Modal = () => {
       const SelectorRange = ['第三方', '员工'];
-      const [SelectValue, setSelectValue] = useState<string>('第三方');
+      const [SelectValue, setSelectValue] = useState<number>(2);
       const SelectChecked: string = '第三方';
       return (
         <AtModal isOpened={isModalVisible} onClose={handleCancel}>
@@ -117,14 +117,15 @@ const TeamList: React.FC = () => {
           <AtModalContent>
             <AtForm onSubmit={onFinish}>
               <View>
-                {/* <PersonSelector /> */}
+                {/* <PersonSelector data={data} width={200} /> */}
               </View>
               <View>
                 <Picker
                   mode='selector'
                   range={SelectorRange}
+                  value={SelectValue}
                   onChange={e =>
-                    console.log(String(Number(e.detail.value as string) + 2))
+                    setSelectValue(Number(e.detail.value as string) + 2)
                   }>
                   <AtList>
                     <AtListItem

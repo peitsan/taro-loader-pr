@@ -3,7 +3,7 @@
   其中对错误进行了统一处理
 */
 import Taro from '@tarojs/taro';
-import { message } from 'antd-mobile';
+import { message } from '../common/functions/index';
 import { BASE_URL } from './baseUrl';
 import { HTTP_STATUS } from './HttpConfig';
 /**
@@ -107,26 +107,26 @@ export const httpReq = (method, url, form, resType) => {
         // 根据状态码做提示处理
         switch (status) {
           case 200:
-            message.error(`请求成功`);
+            message(`请求成功`, 'success');
             break;
           case 400:
-            message.error(`请求错误: ${errInfo}`);
+            message(`请求错误: ${errInfo}`, 'error');
             break;
           case 401:
-            message.error(`认证失败: ${errInfo}`);
+            message(`认证失败: ${errInfo}`, 'error');
             window.location.href = '/login';
             break;
           case 403:
-            message.error(`授权失败: ${errInfo}`);
+            message(`授权失败: ${errInfo}`, 'error');
             break;
           case 404:
-            message.error(`未找到资源: ${errInfo}`);
+            message(`未找到资源: ${errInfo}`, 'error');
             break;
           case 412:
-            message.error(`请求错误: ${errInfo}`);
+            message(`请求错误: ${errInfo}`, 'error');
             break;
           case 500:
-            message.warning(`服务器未能处理`);
+            message(`服务器未能处理`, 'warning');
             break;
           default:
             break;
