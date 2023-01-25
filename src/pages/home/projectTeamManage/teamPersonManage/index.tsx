@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Picker, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import {
@@ -32,11 +32,12 @@ const TeamList: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const units = useSelector(state => state.units.data.units);
   const [SelectValue, setSelectValue] = useState<number>(2);
-  const [states, setStates] = useRefState<stateDo>({
-    value: [0, 0, 0],
-    ranges: [[], [], []],
-    newList: {},
-  });
+  // const [states, setStates] = useState<stateDo>({
+  //   value: [0, 0, 0],
+  //   ranges: [[], [], []],
+  //   newList: {},
+  // });
+  const PersonValue = useRef();
   const [lastSelectValue, setLastSelectValue] = useState<number>(SelectValue);
   const searchUnits = useSelector(
     state => state.units.data.searchUnits as UnitType,
@@ -89,9 +90,11 @@ const TeamList: React.FC = () => {
       units[states.value[0]]?.depts[states.value[1]]?.workers[states.value[2]]
         ?.id,
     ];
+    console.log(states.value);
     // 目前在移动端不支持多选
     // const { userIds: _userIds, identity } = values;
     const userIds = transPersons(_userIds, searchUnits);
+    console.log(userIds, SelectValue);
     setAddManagerProjectTeamPersonLoading(true);
     httpUtil
       .addManagerProjectTeamPerson({
@@ -124,19 +127,26 @@ const TeamList: React.FC = () => {
   const AddStaff: React.FC = () => {
     const Modal = () => {
       const SelectorRange = ['员工', '第三方'];
-      const [SelectChecked, setSelectChecked] = useState<string>('员工');
-      const [lastSelected, setLastSelected] = useState<string>(SelectChecked);
+      const [SelectChecked, setSelectChecked] = useState<string>(' ');
+      const [lastSelected, setLastSelected] = useState<string>(' ');
+      // const NowSelect = SelectChecked;
       const withdrawPicker = () => {
         setSelectChecked(lastSelected);
         setSelectValue(lastSelectValue);
       };
       const selectValueHandle = e => {
         console.log(e);
-        console.log(SelectorRange[e - 2]);
+        setLastSelected(SelectChecked);
+        setLastSelectValue(SelectValue);
         setSelectValue(e);
         setSelectChecked(SelectorRange[e - 2]);
       };
-      const setStatess = (val: any) => {
+
+      // setLastSelected(SelectChecked);
+      // setLastSelectValue(SelectValue);
+      // setSelectValue(e.detail.value as number);
+      // setSelectChecked(SelectorRange[e.detail.value])
+      const getState = (val: any) => {
         setStates(val);
       };
       return (
@@ -144,32 +154,35 @@ const TeamList: React.FC = () => {
           <AtModalHeader>添加人员</AtModalHeader>
           <AtModalContent>
             <AtForm onSubmit={() => onFinish}>
-              <View>
-                {/* {PersonSelector(units, '请选择人员', 354)} */}
-                <PersonSelector
-                  title='请选择员工'
-                  state={states}
-                  setState={setStatess}
-                  data={units as UnitsType}
-                  placeholder='请选择人员'
-                  width={354}
-                  multiple
-                />
-              </View>
               {/* 员工类型 */}
               <View>
                 <Picker
                   mode='selector'
                   range={SelectorRange}
-                  onChange={e => selectValueHandle(Number(e.detail.value) + 2)}
+                  onChange={e => {
+                    selectValueHandle(Number(e.detail.value) + 2);
+                  }}
                   onCancel={withdrawPicker}>
                   <AtList>
                     <AtListItem
                       title='新增成员类型'
-                      extraText={SelectChecked}
+                      extraText={
+                        SelectChecked === ' ' ? '请选择类型' : SelectChecked
+                      }
                     />
                   </AtList>
                 </Picker>
+              </View>
+              <View>
+                {/* {PersonSelector(units, '请选择人员', 354)} */}
+                <PersonSelector
+                  title='请选择员工'
+                  getState={getState}
+                  data={units as UnitsType}
+                  placeholder='请选择人员'
+                  width={354}
+                  multiple
+                />
               </View>
             </AtForm>
           </AtModalContent>

@@ -11,15 +11,14 @@ interface stateDo {
 }
 interface IProps {
   title: string;
-  state: stateDo;
-  setState: Function;
+  getState: Function;
   data: UnitsType | any;
   placeholder: string;
   width: number | string;
   multiple: boolean | true;
 }
 const PersonSelector: React.FC<IProps> = props => {
-  const { title, data, placeholder, width, multiple } = props;
+  const { title, data, placeholder, getState, width, multiple } = props;
   const list = data;
   const [firstFresh,setFirstFresh] = useState<Boolean>(true);
   const [state, setState] = useRefState<stateDo>({
@@ -27,7 +26,8 @@ const PersonSelector: React.FC<IProps> = props => {
     ranges: [[], [], []],
     newList: {},
   });
-  // 为了避免react父组件更新重新render对子组件选中值的影响  将子组件选中值通过父组件传入
+  console.log("1")
+    // 为了避免react父组件更新重新render对子组件选中值的影响  将子组件选中值通过父组件传入
   const handlePickerShow = e => {
     setState({
       value: e.detail.value,
@@ -81,15 +81,6 @@ const PersonSelector: React.FC<IProps> = props => {
   // 初始化多列数据
   const cityChange = () => {
     const newList = list;
-    // const ranges = [
-    //   tranUnit(newList),
-    //   // 取出部门名称
-    //   tranDepts(newList[state.value[0]].depts),
-    //   // 判断区角标为0 取出员工
-    //   newList[state.value[0]].depts.length !== 0
-    //     ? tranWordkers(newList[state.value[0]].depts[state.value[1]].workers)
-    //     : ['不详'],
-    // ];
     const ranges = [
       tranUnit(newList),
       // 取出部门名称
@@ -101,13 +92,6 @@ const PersonSelector: React.FC<IProps> = props => {
         ? tranWordkers(newList[0].depts[0].workers)
         : ['不详'],
     ];
-    // const ranges = [
-    //   tranUnit(newList),
-    //   // 取出部XQ门名称
-    //   [],
-    //   // 判断区角标为0 取出员工
-    //   ['不详'],
-    // ];
     console.log(ranges);
     if (!!newList) {
       setState({
@@ -118,51 +102,9 @@ const PersonSelector: React.FC<IProps> = props => {
     }
     return ranges;
   };
-
-  // 递归初始化树形数据
-  // const dataChange = datalist => {
-  //   if (datalist) {
-  //     const option = { id: '0', name: '暂无' };
-  //     datalist.unshift(option);
-  //     datalist.map((unitslist,unitindex) => {
-  //     if (unitslist?.depts) {
-  //     datalist[unitindex].depts.map((deptlist,deptid) => {
-  //       const option1 = { id: '0', name: '暂无' };
-  //       datalist[unitindex].units[unitindex].depts.unshift(option1);
-  //       datalist[unitindex].units[unitindex].depts.map((deptlist,deptid) => {
-  //         if (deptlist?.workers) {
-  //           const option2 = { id: '0', nickname: '不详' };
-  //           datalist[unitindex].units[unitindex].depts[deptid]?.workers.unshift(option2);
-  //         }
-  //       });
-  //       }
-  //     })
-  //   })
-  // }
-  //   return datalist;
-  // };
-  const dataChange = datalist => {
-    if (datalist[0]?.units) {
-      const option = { id: '0', name: '暂无' };
-      datalist.units.unshift(option);
-      if (datalist[0]?.units[0]?.depts) {
-        const option1 = { id: '0', name: '暂无' };
-        datalist[0].units[0].depts.unshift(option1);
-        datalist[0].units[0].depts.map(deptlist => {
-          if (deptlist?.workers) {
-            const option2 = { id: '0', nickname: '不详' };
-            deptlist?.workers.unshift(option2);
-          }
-        });
-      }
-    }
-    console.log('2');
-    return datalist;
-  };
-
   useEffect(() => {
     cityChange();
-  },[data]);
+  },[]);
 
   return (
     <View style={{fontSize:"18px",lineHeight:'20px', margin:'0 4%'}} onClick={()=>setFirstFresh(false)}>
@@ -188,4 +130,4 @@ const PersonSelector: React.FC<IProps> = props => {
   );
 };
 
-export default PersonSelector;
+export default React.memo(PersonSelector);
