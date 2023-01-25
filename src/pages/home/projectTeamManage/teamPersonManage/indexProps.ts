@@ -11,3 +11,9 @@ export interface TeamPersonType {
   phone: string;
   userId: number;
 }
+
+export interface stateDo {
+  value: number[];
+  ranges: string[][][];
+  newList: any;
+}

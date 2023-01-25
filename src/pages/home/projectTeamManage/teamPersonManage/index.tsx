@@ -13,14 +13,14 @@ import {
   AtModalContent,
   AtModalHeader,
 } from 'taro-ui';
-import { TeamPersonType, ParamsType } from './indexProps';
+import { useRefState } from 'hook-stash';
+import { TeamPersonType, stateDo } from './indexProps';
 import { message, transPersons } from '../../../../common/functions/index';
 import PersonSelector from '../../../../common/components/personSelector/personSelector';
 import { UnitType, UnitsType } from '../../../../redux/units/slice';
 import { useSelector, useDispatch } from '../../../../redux/hooks';
 import { getUnitsAC } from '../../../../redux/actionCreators';
-import { addManagerProjectTeamPerson } from '../../../../utils/params';
-
+// import { addManagerProjectTeamPerson } from '../../../../utils/params';
 import style from './index.module.less';
 
 const TeamList: React.FC = () => {
@@ -31,6 +31,13 @@ const TeamList: React.FC = () => {
   const [data, setData] = useState<TeamPersonType[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const units = useSelector(state => state.units.data.units);
+  const [SelectValue, setSelectValue] = useState<number>(2);
+  const [states, setStates] = useRefState<stateDo>({
+    value: [0, 0, 0],
+    ranges: [[], [], []],
+    newList: {},
+  });
+  const [lastSelectValue, setLastSelectValue] = useState<number>(SelectValue);
   const searchUnits = useSelector(
     state => state.units.data.searchUnits as UnitType,
   );
@@ -76,20 +83,20 @@ const TeamList: React.FC = () => {
     dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getLsit();
   }, []);
-  const handleAppend = () => {
-    setIsModalVisible(false);
-  };
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-  const onFinish = (values: addManagerProjectTeamPerson) => {
-    const { userIds: _userIds, identity } = values;
+
+  const onFinish = () => {
+    const _userIds = [
+      units[states.value[0]]?.depts[states.value[1]]?.workers[states.value[2]]
+        ?.id,
+    ];
+    // 目前在移动端不支持多选
+    // const { userIds: _userIds, identity } = values;
     const userIds = transPersons(_userIds, searchUnits);
     setAddManagerProjectTeamPersonLoading(true);
     httpUtil
       .addManagerProjectTeamPerson({
         userIds,
-        identity,
+        identity: SelectValue,
         projectId: Number(fatherId),
       })
       .then(res => {
@@ -105,11 +112,33 @@ const TeamList: React.FC = () => {
         setAddManagerProjectTeamPersonLoading(false);
       });
   };
+  const handleAppend = () => {
+    setLoading(true);
+    onFinish();
+    setIsModalVisible(false);
+    setLoading(false);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const AddStaff: React.FC = () => {
     const Modal = () => {
-      const SelectorRange = ['第三方', '员工'];
-      const [SelectValue, setSelectValue] = useState<number>(2);
-      const SelectChecked: string = '第三方';
+      const SelectorRange = ['员工', '第三方'];
+      const [SelectChecked, setSelectChecked] = useState<string>('员工');
+      const [lastSelected, setLastSelected] = useState<string>(SelectChecked);
+      const withdrawPicker = () => {
+        setSelectChecked(lastSelected);
+        setSelectValue(lastSelectValue);
+      };
+      const selectValueHandle = e => {
+        console.log(e);
+        console.log(SelectorRange[e - 2]);
+        setSelectValue(e);
+        setSelectChecked(SelectorRange[e - 2]);
+      };
+      const setStatess = (val: any) => {
+        setStates(val);
+      };
       return (
         <AtModal isOpened={isModalVisible} onClose={handleCancel}>
           <AtModalHeader>添加人员</AtModalHeader>
@@ -118,20 +147,22 @@ const TeamList: React.FC = () => {
               <View>
                 {/* {PersonSelector(units, '请选择人员', 354)} */}
                 <PersonSelector
+                  title='请选择员工'
+                  state={states}
+                  setState={setStatess}
                   data={units as UnitsType}
                   placeholder='请选择人员'
                   width={354}
                   multiple
                 />
               </View>
+              {/* 员工类型 */}
               <View>
                 <Picker
                   mode='selector'
                   range={SelectorRange}
-                  value={SelectValue}
-                  onChange={e =>
-                    setSelectValue(Number(e.detail.value as string) + 2)
-                  }>
+                  onChange={e => selectValueHandle(Number(e.detail.value) + 2)}
+                  onCancel={withdrawPicker}>
                   <AtList>
                     <AtListItem
                       title='新增成员类型'
