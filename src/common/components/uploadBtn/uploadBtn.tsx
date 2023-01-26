@@ -25,7 +25,6 @@ class UploadBtn extends PureComponent {
 
   onChange(v, doType, index) {
     this.props.onFilesValue(v);
-
     console.log(2, v); // doType代表操作类型，移除图片和添加图片,index为移除图片时返回的图片下标
     if (doType === 'remove') {
       this.setState(

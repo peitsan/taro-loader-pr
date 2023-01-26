@@ -19,7 +19,7 @@ import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
 
 import styles from './index.module.less';
-import { UploadBtn } from '../uploadBtn/uploadBtn';
+import { UploadBtn } from '../UploadBtn/UploadBtn';
 import { useSelector } from '../../../redux/hooks';
 
 const AccordionForSpecialist: React.FC<
