@@ -11,7 +11,7 @@ export const transPersons = (Arr: any[], searchUnits: any) => {
       persons.push(...searchUnits[item[0]][item[1]]);
     } else if (item.length === 1) {
       const UnitAllWorker: number[] = Object.values<number>(
-        searchUnits[item[0]]
+        searchUnits[item[0]],
       ).flat();
       persons.push(...UnitAllWorker);
     }

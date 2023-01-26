@@ -12,8 +12,8 @@ export interface TeamPersonType {
   userId: number;
 }
 
-export interface stateDo {
-  value: number[];
-  ranges: string[][][];
-  newList: any;
-}
+// export interface stateDo {
+//   value: number[];
+//   ranges: [string[][][]];
+//   newList: any;
+// }

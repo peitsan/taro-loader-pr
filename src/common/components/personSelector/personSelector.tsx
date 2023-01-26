@@ -1,24 +1,27 @@
 import Taro from '@tarojs/taro';
 import { Picker, View, Text } from '@tarojs/components';
 import { useRefState } from 'hook-stash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,forwardRef, useImperativeHandle} from 'react';
 import { UnitsType } from '../../../redux/units/slice';
+import { AsyncHooks, SyncHooks } from '@/utils/hooks';
 
 interface stateDo {
   value: number[];
   ranges: string[][][];
   newList: any;
 }
+
+// getState: Function;
 interface IProps {
   title: string;
-  getState: Function;
+  ref: any;
   data: UnitsType | any;
   placeholder: string;
   width: number | string;
   multiple: boolean | true;
 }
-const PersonSelector: React.FC<IProps> = props => {
-  const { title, data, placeholder, getState, width, multiple } = props;
+const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
+  const { title, data, placeholder, width, multiple, getState } = props;
   const list = data;
   const [firstFresh,setFirstFresh] = useState<Boolean>(true);
   const [state, setState] = useRefState<stateDo>({
@@ -26,7 +29,9 @@ const PersonSelector: React.FC<IProps> = props => {
     ranges: [[], [], []],
     newList: {},
   });
-  console.log("1")
+  useImperativeHandle(ref, () => ({
+    state
+  }))
     // 为了避免react父组件更新重新render对子组件选中值的影响  将子组件选中值通过父组件传入
   const handlePickerShow = e => {
     setState({
@@ -92,7 +97,7 @@ const PersonSelector: React.FC<IProps> = props => {
         ? tranWordkers(newList[0].depts[0].workers)
         : ['不详'],
     ];
-    console.log(ranges);
+    // console.log(ranges);
     if (!!newList) {
       setState({
         value:[0,0,0],
@@ -113,7 +118,8 @@ const PersonSelector: React.FC<IProps> = props => {
         value={state.value}
         range={state.ranges}
         onChange={handlePickerShow}
-        onColumnChange={columnChange}>
+        onColumnChange={columnChange}
+        >
         <View style={{ margin:'4% 0'}}>{title}:</View>
         <View style={{ color:'#a7a7a7'}}>
           {firstFresh == true?(<View style={{ color:'#a7a7a7',textAlign:'center'}}>{placeholder}</View>):
@@ -128,6 +134,6 @@ const PersonSelector: React.FC<IProps> = props => {
       </Picker>
     </View>
   );
-};
+});
 
 export default React.memo(PersonSelector);

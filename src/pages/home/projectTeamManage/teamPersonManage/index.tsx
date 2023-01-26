@@ -13,8 +13,7 @@ import {
   AtModalContent,
   AtModalHeader,
 } from 'taro-ui';
-import { useRefState } from 'hook-stash';
-import { TeamPersonType, stateDo } from './indexProps';
+import { TeamPersonType } from './indexProps';
 import { message, transPersons } from '../../../../common/functions/index';
 import PersonSelector from '../../../../common/components/personSelector/personSelector';
 import { UnitType, UnitsType } from '../../../../redux/units/slice';
@@ -32,12 +31,10 @@ const TeamList: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const units = useSelector(state => state.units.data.units);
   const [SelectValue, setSelectValue] = useState<number>(2);
-  // const [states, setStates] = useState<stateDo>({
-  //   value: [0, 0, 0],
-  //   ranges: [[], [], []],
-  //   newList: {},
-  // });
-  const PersonValue = useRef();
+  const SelectorRange = ['员工', '第三方'];
+  const [SelectChecked, setSelectChecked] = useState<string>(' ');
+  const [lastSelected, setLastSelected] = useState<string>(' ');
+  const PersonValue = useRef<any>();
   const [lastSelectValue, setLastSelectValue] = useState<number>(SelectValue);
   const searchUnits = useSelector(
     state => state.units.data.searchUnits as UnitType,
@@ -87,18 +84,19 @@ const TeamList: React.FC = () => {
 
   const onFinish = () => {
     const _userIds = [
-      units[states.value[0]]?.depts[states.value[1]]?.workers[states.value[2]]
-        ?.id,
+      units[PersonValue?.current?.state.value[0]]?.depts[
+        PersonValue?.current?.state.value[1]
+      ]?.workers[PersonValue?.current?.state.value[2]]?.id,
     ];
-    console.log(states.value);
+    console.log(_userIds);
     // 目前在移动端不支持多选
     // const { userIds: _userIds, identity } = values;
-    const userIds = transPersons(_userIds, searchUnits);
-    console.log(userIds, SelectValue);
+    // const userIds = transPersons(_userIds, searchUnits);
+    console.log(_userIds, SelectValue);
     setAddManagerProjectTeamPersonLoading(true);
     httpUtil
       .addManagerProjectTeamPerson({
-        userIds,
+        userIds: _userIds,
         identity: SelectValue,
         projectId: Number(fatherId),
       })
@@ -126,28 +124,16 @@ const TeamList: React.FC = () => {
   };
   const AddStaff: React.FC = () => {
     const Modal = () => {
-      const SelectorRange = ['员工', '第三方'];
-      const [SelectChecked, setSelectChecked] = useState<string>(' ');
-      const [lastSelected, setLastSelected] = useState<string>(' ');
-      // const NowSelect = SelectChecked;
       const withdrawPicker = () => {
         setSelectChecked(lastSelected);
         setSelectValue(lastSelectValue);
       };
       const selectValueHandle = e => {
-        console.log(e);
+        // console.log(e);
         setLastSelected(SelectChecked);
         setLastSelectValue(SelectValue);
         setSelectValue(e);
         setSelectChecked(SelectorRange[e - 2]);
-      };
-
-      // setLastSelected(SelectChecked);
-      // setLastSelectValue(SelectValue);
-      // setSelectValue(e.detail.value as number);
-      // setSelectChecked(SelectorRange[e.detail.value])
-      const getState = (val: any) => {
-        setStates(val);
       };
       return (
         <AtModal isOpened={isModalVisible} onClose={handleCancel}>
@@ -174,10 +160,9 @@ const TeamList: React.FC = () => {
                 </Picker>
               </View>
               <View>
-                {/* {PersonSelector(units, '请选择人员', 354)} */}
                 <PersonSelector
                   title='请选择员工'
-                  getState={getState}
+                  ref={PersonValue}
                   data={units as UnitsType}
                   placeholder='请选择人员'
                   width={354}
