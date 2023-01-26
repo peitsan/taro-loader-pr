@@ -1,4 +1,3 @@
-import Taro, { getCurrentInstance } from '@tarojs/taro';
 import { useState, useEffect } from 'react';
 import { AtLoadMore, AtTabs, AtTabsPane } from 'taro-ui';
 import { View } from '@tarojs/components';
