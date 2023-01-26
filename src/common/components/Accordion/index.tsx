@@ -64,7 +64,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
         } = res;
         setReplyText(text);
         setAttachmentUrl(attachment);
-        console.log(isCheckModal);
       });
   };
 

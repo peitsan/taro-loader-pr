@@ -139,7 +139,6 @@ const TeamList: React.FC = () => {
         setSelectValue(lastSelectValue);
       };
       const selectValueHandle = e => {
-        // console.log(e);
         setLastSelected(SelectChecked);
         setLastSelectValue(SelectValue);
         setSelectValue(e);

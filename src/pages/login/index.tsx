@@ -3,7 +3,7 @@ import { View, Image } from '@tarojs/components';
 import { AtMessage, AtForm, AtInput, AtButton } from 'taro-ui';
 import { useState } from 'react';
 import httpUtil from '../../utils/httpUtil';
-import { switchTab } from '../../common/functions/router';
+import { switchTab, message } from '../../common/functions/index';
 import { useDispatch } from '../../redux/hooks';
 import { updateUserInfoAC } from '../../redux/actionCreators';
 import logo from '../../assets/logo.png';
@@ -46,7 +46,6 @@ const Login: React.FC = () => {
         const res = await httpUtil.userLogin(values);
         const user: IdentityType = res.data?.user;
         const token: string = res.data?.token;
-        console.log(user);
         const { permission, teams, id } = user;
         Taro.setStorageSync('user', JSON.stringify(user));
         Taro.setStorageSync('permission', permission);
@@ -61,10 +60,7 @@ const Login: React.FC = () => {
         Taro.setStorageSync('progressId', 2010);
         // **********测试用例，上线删除**********
         dispatch(updateUserInfoAC(user));
-        Taro.atMessage({
-          message: `欢迎您，${user.nickname || '用户'}`,
-          type: `success`,
-        });
+        message(`欢迎您，${user.nickname || '用户'}`, `success`);
         permission === 'admin'
           ? switchTab('/home/managerManage')
           : switchTab('/home/projectManage');

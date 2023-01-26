@@ -9,7 +9,6 @@ const AccordionForIntermediate: React.FC<
   AccordionForIntermediateProps
 > = selfProps => {
   const { data } = selfProps;
-  console.log(data);
   const [active, setActive] = useState<Boolean>(false);
 
   return (

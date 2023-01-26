@@ -16,17 +16,13 @@ import TypicalExperienceDetail from '../../../common/components/TableForExperien
 import styles from './index.module.less';
 
 const TypicalExperience: React.FC = () => {
-  const confirmModalRef = useRef<any>();
-  // const { params } = getCurrentInstance(); //获取路由传入的index参数
   const [loading, setLoading] = useState<Boolean>(true);
   const [other, setOther] = useState([]);
   const [safe, setSafe] = useState([]);
   const [experience, setExperience] = useState([]);
   const [design, setDesign] = useState([]);
   const [quality, setQuality] = useState([]);
-  const [open, setOpen] = useState<boolean>(
-    confirmModalRef.current?.open as boolean,
-  );
+  const [open, setOpen] = useState<boolean>(false);
   const [detail, setDetail] = useState<boolean>(true);
   const [selectTab, setSelectTab] = useState<number>(0);
   const [listSort, setListSort] = useState<number>(0);
@@ -110,7 +106,7 @@ const TypicalExperience: React.FC = () => {
   ];
 
   const toAddExperience = () => {
-    navigateTo(`/home/typicalExperience/experienceList/addExperience`);
+    navigateTo(`/home/typicalExperience/typicalExperienceAppend`);
   };
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
@@ -130,12 +126,9 @@ const TypicalExperience: React.FC = () => {
     setOpen(false);
   };
   const confirmDelete = () => {
-    console.log(listSort);
     message('请稍后', 'warning');
     httpUtil.deleteOneCase({ caseId: listSort }).then(res => {
       if (res.code === 200 || res.status === 'success') {
-        // const deletedData = Data.filter(item => item.id !== caseId);
-        // setData(deletedData);
         getExpeirence();
         message('删除成功', 'success');
       } else {
@@ -143,13 +136,17 @@ const TypicalExperience: React.FC = () => {
       }
     });
   };
-  // 删除确认有一个bug
   return (
     <>
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
           典型经验
         </AtTag>
+        <View
+          onClick={() => toAddExperience()}
+          className={styles['btn-background']}>
+          新增典例
+        </View>
       </View>
       <View style={{ height: '1100rpx' }}>
         {loading ? (
@@ -164,7 +161,6 @@ const TypicalExperience: React.FC = () => {
             <AtLoadMore style={{ marginTop: 150 }} />
           </View>
         ) : (
-          // 两个清单组件操作模态框调不出来
           <View>
             <AtTabs
               style={{ zIndex: 100 }}

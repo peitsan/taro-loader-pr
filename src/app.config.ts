@@ -65,6 +65,14 @@ export default defineAppConfig({
       // 团队成员管理
       pages: ['index'],
     },
+    /* 
+    典型经验
+  */
+    {
+      root: 'pages/home/typicalExperience/typicalExperienceAppend',
+      // 新增典型经验
+      pages: ['index'],
+    },
     {
       // 系统登录
       root: 'pages/login',

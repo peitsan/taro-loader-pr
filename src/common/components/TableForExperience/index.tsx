@@ -1,21 +1,11 @@
 import Taro from '@tarojs/taro';
-import { forwardRef, useImperativeHandle, useState } from 'react';
 import { View } from '@tarojs/components';
-import httpUtil from '@/utils/httpUtil';
-import {
-  TableForExperienceProps,
-  DataType,
-  OperationProps,
-} from './indexProps';
-// import TypicalExperienceDetail from './TypicalExperienceDetail';
+import { TableForExperienceProps, OperationProps } from './indexProps';
 import style from './index.module.less';
 
 const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
   const { data, onConfirm, onDetail } = selfProps;
   const userId = Number(Taro.getStorageSync('id'));
-  const [Data] = useState<DataType[]>(data);
-  console.log(Data);
-
   const TableHeader: React.FC = () => {
     return (
       <View className={style['issueListTable-title']}>
