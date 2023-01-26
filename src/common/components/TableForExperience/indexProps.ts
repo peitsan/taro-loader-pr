@@ -9,6 +9,7 @@ export interface DataType {
 }
 export interface TableForExperienceProps {
   data: DataType[];
+  ref: any;
 }
 
 export interface OperationProps {

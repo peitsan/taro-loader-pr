@@ -3,15 +3,12 @@ import { useState } from 'react';
 import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { TypicalExperienceDetailProps } from './indexProps';
-import {
-  AtIcon,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction,
-  AtButton,
-  AtMessage,
-} from 'taro-ui';
+import { AtIcon, AtDrawer, AtButton, AtMessage } from 'taro-ui';
+
+// AtModal,
+// AtModalHeader,
+// AtModalContent,
+// AtModalAction,
 import { message } from '../../../functions/index';
 import style from './index.module.less';
 
@@ -69,7 +66,7 @@ const TypicalExperienceDetail: React.FC<
 
   return (
     <>
-      <AtModal isOpened={open} style={{ zIndex: 99999 }}>
+      {/* <AtModal isOpened={open} style={{ zIndex: 99999 }}>
         <AtModalHeader>典例经验</AtModalHeader>
         <AtModalContent>
           <View>
@@ -113,7 +110,49 @@ const TypicalExperienceDetail: React.FC<
           </View>
         </AtModalContent>{' '}
         <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
-      </AtModal>
+      </AtModal> */}
+      <AtDrawer show={open} mask>
+        <View>
+          <View>问题概述:</View>
+          <View>{data.describe}</View>
+        </View>
+        <View>
+          <View>解决方案:</View>
+          <View>{data.solution}</View>
+        </View>
+        <View>
+          <View>注意要点:</View>
+          <View>{data.point}</View>
+        </View>
+        <View>
+          <View>相关资料：</View>
+          <View>{data.point}</View>
+        </View>
+        <View className={style['file-list']}>
+          {data.files && data.files.length ? (
+            canDownload ? (
+              <a
+                href={downloadURL}
+                download={getFileName(data.files[0])}
+                onError={() => console.log('失败')}>
+                <AtIcon value='file-generic' size='30' color='#F00'></AtIcon>
+                {getFileName(data.files[0])}
+              </a>
+            ) : (
+              <a onClick={downloadFile.bind(null, data.files[0])}>
+                <AtIcon value='download' size='30' color='#F00'></AtIcon>
+                下载附件
+              </a>
+            )
+          ) : (
+            <View style={{ color: 'silver' }}>
+              <AtIcon value='file-generic' size='30' color='#F00'></AtIcon>
+              无附件
+            </View>
+          )}
+        </View>
+        <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
+      </AtDrawer>
       <AtMessage />
     </>
   );

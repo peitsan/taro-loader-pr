@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
-import { AtLoadMore, AtTabs, AtTabsPane } from 'taro-ui';
+import { useState, useEffect, useRef } from 'react';
+import { AtLoadMore, AtModal, AtTabs, AtTabsPane } from 'taro-ui';
 import { View } from '@tarojs/components';
-import { navigateTo } from '../../..//common/functions/index';
+import { message, navigateTo } from '../../..//common/functions/index';
 import { BackPrePage } from '../../../common/components/backPrePage/backPrePage';
-import { tabListItem } from './indexProps';
+import { tabListItem, refItem } from './indexProps';
 import httpUtil from '../../../utils/httpUtil';
 import TableForExperience from '../../../common/components/TableForExperience/index';
+import TypicalExperienceDetail from '../../../common/components/TableForExperience/TypicalExperienceDetail';
 
 const typicalExperience: React.FC = () => {
   // const { params } = getCurrentInstance(); //获取路由传入的index参数
@@ -15,7 +16,12 @@ const typicalExperience: React.FC = () => {
   const [experience, setExperience] = useState([]);
   const [design, setDesign] = useState([]);
   const [quality, setQuality] = useState([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [detail, setDetail] = useState<boolean>(true);
   const [selectTab, setSelectTab] = useState<number>(0);
+  // const [curData, serCurData] = useState<any>();
+
+  const confirmModalRef = useRef<refItem>();
   useEffect(() => {
     httpUtil.getAllCase().then(res => {
       const data = res.data;
@@ -97,6 +103,26 @@ const typicalExperience: React.FC = () => {
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
   };
+  const disableDraw = () => {
+    console.log('disable');
+    setDetail(false);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+  const confirmDelete = (caseId: number) => {
+    const hideLoading = message('请稍后', 'warning');
+    httpUtil.deleteOneCase({ caseId }).then(res => {
+      if (res.code === 200 || res.status === 'success') {
+        // const deletedData = Data.filter(item => item.id !== caseId);
+        // setData(deletedData);
+        message('删除成功', 'success');
+      } else {
+        message('删除失败', 'error');
+      }
+      hideLoading();
+    });
+  };
   // 删除确认有一个bug
   return (
     <View style={{ height: '1100rpx' }}>
@@ -116,7 +142,7 @@ const typicalExperience: React.FC = () => {
         // 两个清单组件操作模态框调不出来
         <View>
           <AtTabs
-            enable-flex='true'
+            style={{ zIndex: 100 }}
             scroll
             current={selectTab}
             tabList={TabList}
@@ -124,14 +150,35 @@ const typicalExperience: React.FC = () => {
             {mapData.map((mapItem, mapId) => {
               return (
                 <AtTabsPane
-                  style={{ height: '1000rpx' }}
+                  style={{ height: '1000rpx', zIndex: 0 }}
                   current={selectTab}
                   index={mapId}>
-                  <TableForExperience data={mapItem.data} />
+                  <TableForExperience
+                    ref={confirmModalRef}
+                    data={mapItem.data}
+                  />
                 </AtTabsPane>
               );
             })}
           </AtTabs>
+          <AtModal
+            title='确认删除该典例吗'
+            isOpened={confirmModalRef?.current?.open as boolean}
+            onConfirm={() =>
+              confirmModalRef?.current?.confirmDelete.bind(
+                null,
+                confirmModalRef?.current?.listSort,
+              )
+            }
+            onCancel={confirmModalRef?.current?.onClose}
+            confirmText='确认'
+            cancelText='取消'
+          />
+          <TypicalExperienceDetail
+            data={confirmModalRef?.current?.curData}
+            onClose={confirmModalRef?.current?.disableDraw as Function}
+            open={confirmModalRef?.current?.detail as boolean}
+          />
         </View>
       )}
     </View>
