@@ -9,7 +9,8 @@ export interface DataType {
 }
 export interface TableForExperienceProps {
   data: DataType[];
-  ref: any;
+  onConfirm: Function;
+  onDetail: Function;
 }
 
 export interface OperationProps {

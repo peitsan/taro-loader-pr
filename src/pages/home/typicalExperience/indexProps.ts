@@ -1,4 +1,4 @@
-import { CommonEventFunction } from "@tarojs/components";
+import { CommonEventFunction } from '@tarojs/components';
 
 export interface DataType {
   creator: number;
