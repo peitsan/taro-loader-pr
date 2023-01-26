@@ -116,6 +116,7 @@ const typicalExperience: React.FC = () => {
         // 两个清单组件操作模态框调不出来
         <View>
           <AtTabs
+            enable-flex='true'
             scroll
             current={selectTab}
             tabList={TabList}

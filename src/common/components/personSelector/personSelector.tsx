@@ -21,7 +21,7 @@ interface IProps {
   multiple: boolean | true;
 }
 const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
-  const { title, data, placeholder, width, multiple, getState } = props;
+  const { title, data, placeholder, width, multiple} = props;
   const list = data;
   const [firstFresh,setFirstFresh] = useState<Boolean>(true);
   const [state, setState] = useRefState<stateDo>({
@@ -46,11 +46,11 @@ const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
       ranges: [
         tranUnit(state.newList),
         // 取出部门名称
-        tranDepts(state.newList[newVal[0]].depts),
+        state.newList.length !== 0 ?tranDepts(state.newList[newVal[0]].depts): ['暂无可选'],
         // 判断区角标为0 取出员工
-        state.newList[newVal[0]].depts.length !== 0
-          ? tranWordkers(state.newList[newVal[0]].depts[newVal[1]].workers)
-          : ['不详'],
+        state.newList.length !== 0 
+          ? state.newList[newVal[0]].depts.length !== 0 ? tranWordkers(state.newList[newVal[0]].depts[newVal[1]].workers):['暂无可选']
+          : ['暂无可选'],
       ],
     });
   };
@@ -60,7 +60,7 @@ const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
       return arr?.map(el => el.name);
       // 返回单位名称
     } else {
-      return ['暂无'];
+      return ['暂无可选'];
     }
   };
 
@@ -70,7 +70,7 @@ const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
       return arr.map(el => el.name);
       // 返回部门名称
     } else {
-      return ['暂无'];
+      return ['暂无可选'];
     }
   };
 
@@ -80,7 +80,7 @@ const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
       return arr.map(el => el.nickname);
       // 返回部门名称
     } else {
-      return ['暂无'];
+      return ['暂无可选'];
     }
   };
   // 初始化多列数据
@@ -89,13 +89,13 @@ const PersonSelector: React.FC<IProps> = forwardRef((props, ref)=> {
     const ranges = [
       tranUnit(newList),
       // 取出部门名称
-      newList.length !== 0
+      newList.length > 0
       ?tranDepts(newList[0].depts)
-      : ['不详'],
+      : ['暂无可选'],
       // 判断区角标为0 取出员工
-      newList[0].depts.length !== 0
-        ? tranWordkers(newList[0].depts[0].workers)
-        : ['不详'],
+      newList.length > 0 
+        ?  newList[0].depts.length > 0 ? tranWordkers(newList[0].depts[0].workers): 0
+        : ['暂无可选'],
     ];
     // console.log(ranges);
     if (!!newList) {

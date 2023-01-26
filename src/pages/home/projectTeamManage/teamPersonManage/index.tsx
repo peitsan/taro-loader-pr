@@ -83,35 +83,45 @@ const TeamList: React.FC = () => {
   }, []);
 
   const onFinish = () => {
-    const _userIds = [
-      units[PersonValue?.current?.state.value[0]]?.depts[
-        PersonValue?.current?.state.value[1]
-      ]?.workers[PersonValue?.current?.state.value[2]]?.id,
-    ];
-    console.log(_userIds);
+    if (units.length > 0)
+      if (units[PersonValue?.current?.state.value[0]].depts.length > 0)
+        if (
+          units[PersonValue?.current?.state.value[0]].depts[
+            PersonValue?.current?.state.value[1]
+          ]?.workers.length > 0
+        ) {
+          const _userIds = [
+            units[PersonValue?.current?.state.value[0]]?.depts[
+              PersonValue?.current?.state.value[1]
+            ]?.workers[PersonValue?.current?.state.value[2]]?.id,
+          ];
+          setAddManagerProjectTeamPersonLoading(true);
+          httpUtil
+            .addManagerProjectTeamPerson({
+              userIds: _userIds,
+              identity: SelectValue,
+              projectId: Number(fatherId),
+            })
+            .then(res => {
+              const { message: msg, code } = res;
+              200 === code
+                ? message(msg, 'success')
+                : message('新增成员失败', 'error');
+              getLsit();
+              dispatch(
+                getUnitsAC({ fatherId: fatherId, getTeamPerson: false }),
+              );
+            })
+            .finally(() => {
+              setIsModalVisible(false);
+              setAddManagerProjectTeamPersonLoading(false);
+            });
+        }
+        // 校验为空
+        else {
+          message('暂无人员可以选择', 'warning');
+        }
     // 目前在移动端不支持多选
-    // const { userIds: _userIds, identity } = values;
-    // const userIds = transPersons(_userIds, searchUnits);
-    console.log(_userIds, SelectValue);
-    setAddManagerProjectTeamPersonLoading(true);
-    httpUtil
-      .addManagerProjectTeamPerson({
-        userIds: _userIds,
-        identity: SelectValue,
-        projectId: Number(fatherId),
-      })
-      .then(res => {
-        const { message: msg, code } = res;
-        200 === code
-          ? message(msg, 'success')
-          : message('新增成员失败', 'error');
-        getLsit();
-        dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
-      })
-      .finally(() => {
-        setIsModalVisible(false);
-        setAddManagerProjectTeamPersonLoading(false);
-      });
   };
   const handleAppend = () => {
     setLoading(true);
