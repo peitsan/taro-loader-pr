@@ -28,21 +28,33 @@ interface FileProps {
   };
   url: Blob;
 }
+
 const TypicalExperienceAppend: React.FC = () => {
   const [type, setType] = useState<number | undefined>();
   const [describe, setDescribe] = useState<string>('');
   const [solution, setSolution] = useState<string>('');
   const [point, setPoint] = useState<string>('');
-  const [files, setFiles] = useState<FileProps[]>();
+  const [files, setFiles] = useState<FileProps[]>([]);
   const [value, setValue] = useState<any>('');
   const [loading, setLoginLoading] = useState<any>('');
   const SelectorRange = ['安全', '质量', '技经', '设计', '其他'];
   const SelectorRangeEng = ['SAFE', 'QUALITY', 'EXPERIENCE', 'DESIGN', 'OTHER'];
   const chooseFile = useState({
+    fileNum: 1,
     files: [],
     showUploadBtn: true,
     upLoadImg: [],
   });
+
+  function getBlob(url, callback) {
+    const xhr = new window.XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.onload = () => {
+      callback(xhr.response);
+    };
+    xhr.send();
+  }
   function createFormData(values = {}, boundary = '') {
     let result = '';
     for (const i in values) {
@@ -64,18 +76,24 @@ const TypicalExperienceAppend: React.FC = () => {
     // formData.append('describe', describe);
     // formData.append('solution', solution);
     // formData.append('point', point);
-    for (const file of files as FileProps[]) {
-      if (file.file.size / 2 ** 20 >= 110) {
-        return message('上传文件大小不能超过110MB', 'warning');
+    if (files.length > 0)
+      for (const file of files as FileProps[]) {
+        if (file.file.size / 2 ** 20 >= 110) {
+          return message('上传文件大小不能超过110MB', 'warning');
+        }
       }
-    }
+    const blob = undefined;
+    if (files.length > 0) getBlob(files[0].url, blob);
+    console.log(blob);
+    console.log(SelectorRangeEng[(type as number) - 1]);
     const val = {
       type: SelectorRangeEng[(type as number) - 1],
       describe: describe,
       solution: solution,
       point: point,
-      files: files,
+      files: blob,
     };
+    console.log(val);
     const formData = createFormData(val, boundary);
     console.log(formData);
     const hide = message('请稍后', 'warning');
@@ -93,15 +111,13 @@ const TypicalExperienceAppend: React.FC = () => {
       // setLoginLoading(false);
     }
   };
-  const GetStorageToken = () => {
-    return Taro.getStorageSync('token');
-  };
+
   const onReset = () => {
     setType(undefined);
     setDescribe('');
     setSolution('');
     setPoint('');
-    setFiles('');
+    setFiles([]);
   };
   // 拿到子组件上传图片的路径数组
   const getOnFilesValue = (value: any) => {

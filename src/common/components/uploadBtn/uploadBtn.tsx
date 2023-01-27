@@ -9,14 +9,15 @@ class UploadBtn extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      fileNum:0,
       files: [],
       showUploadBtn: false,
       upLoadImg: [],
     };
   }
   componentWillMount() {
-    console.log(this.props.chooseImg);
     this.setState({
+      fileNum: this.props.chooseImg.fileNum,
       files: this.props.chooseImg.files,
       showUploadBtn: this.props.chooseImgshowUploadBtn,
       upLoadImg: this.props.chooseImg.upLoadImg,
@@ -38,7 +39,7 @@ class UploadBtn extends PureComponent {
         },
         () => {
           const { files } = this.state;
-          if (files.length === 3) {
+          if (files.length === this.state.fileNum) {
             // 最多三张图片 隐藏添加图片按钮
             this.setState({
               showUploadBtn: false,
