@@ -36,9 +36,7 @@ const TeamList: React.FC = () => {
   const [lastSelected, setLastSelected] = useState<string>(' ');
   const PersonValue = useRef<any>();
   const [lastSelectValue, setLastSelectValue] = useState<number>(SelectValue);
-  const searchUnits = useSelector(
-    state => state.units.data.searchUnits as UnitType,
-  );
+
   const [loading, setLoading] = useState(true);
   const [
     addManagerProjectTeamPersonLoading,
@@ -76,7 +74,7 @@ const TeamList: React.FC = () => {
       setLoading(false);
     });
   };
-
+  console.log(units);
   useEffect(() => {
     dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getLsit();
@@ -357,7 +355,15 @@ const TeamList: React.FC = () => {
             );
           })
         ) : (
-          <View className={style['boardw-list']}>暂无数据</View>
+          <View
+            style={{
+              textAlign: 'center',
+              lineHeight: '30rpx',
+              fontSize: '30rpx',
+              color: '#9A9A9A',
+            }}>
+            暂无数据
+          </View>
         )}
       </>
     );

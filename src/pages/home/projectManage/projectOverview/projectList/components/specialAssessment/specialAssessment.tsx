@@ -151,7 +151,15 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
           </View>
         </View>
         {!dataSource ? (
-          <View style={{ textAlign: 'center' }}>暂无数据</View>
+          <View
+            style={{
+              textAlign: 'center',
+              lineHeight: '30rpx',
+              fontSize: '30rpx',
+              color: '#9A9A9A',
+            }}>
+            暂无数据
+          </View>
         ) : (
           <View className={styles['issueListTable-tabs']}>
             {dataSource.map((item, ind) => {

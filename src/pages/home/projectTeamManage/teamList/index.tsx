@@ -111,7 +111,15 @@ const TeamList: React.FC = () => {
             );
           })
         ) : (
-          <View className={style['boardw-list']}>暂无数据</View>
+          <View
+            style={{
+              textAlign: 'center',
+              lineHeight: '30rpx',
+              fontSize: '30rpx',
+              color: '#9A9A9A',
+            }}>
+            暂无数据
+          </View>
         )}
       </>
     );

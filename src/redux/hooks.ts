@@ -6,8 +6,5 @@ import {
 
 import type { RootState, AppDispatch } from './store';
 
-// Use throughout your app instead of plain `useDispatch` and `useSelector`
-// export const useDispatch = () => useOriginDispatch<AppDispatch>();
-// export const useSelector: TypedUseSelectorHook<RootState> = useOriginSelector;
 export const useDispatch = () => useOriginDispatch<AppDispatch>();
 export const useSelector: TypedUseSelectorHook<RootState> = useOriginSelector;

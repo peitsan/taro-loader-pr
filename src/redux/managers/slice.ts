@@ -1,6 +1,8 @@
-import { deepClone } from '../../common/functions/deepClone';
+import Taro from '@tarojs/taro';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { deepClone } from '../../common/functions/deepClone';
 import httpUtil from '../../utils/httpUtil';
+
 
 interface ObjectType {
   [propName: string | number]: any;

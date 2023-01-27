@@ -116,7 +116,15 @@ export const Intermediate: React.FC = () => {
               </View>
             </View>
             {!dataSource ? (
-              <View style={{ textAlign: 'center' }}>暂无数据</View>
+              <View
+                style={{
+                  textAlign: 'center',
+                  lineHeight: '30rpx',
+                  fontSize: '30rpx',
+                  color: '#9A9A9A',
+                }}>
+                暂无数据
+              </View>
             ) : (
               <View className={styles['issueListTable-tabs']}>
                 {dataSource.map((item, ind) => {
@@ -130,7 +138,15 @@ export const Intermediate: React.FC = () => {
             )}
           </View>
         ) : (
-          <View>暂无数据</View>
+          <View
+            style={{
+              textAlign: 'center',
+              lineHeight: '30rpx',
+              fontSize: '30rpx',
+              color: '#9A9A9A',
+            }}>
+            暂无数据
+          </View>
         )}
       </>
     );
