@@ -53,7 +53,13 @@ export default defineAppConfig({
       pages: [
         'index',
         // 工程审核
-        // 清单审核
+      ],
+    },
+    {
+      root: 'pages/home/projectManage/applyAudit',
+      // 上报审核
+      pages: [
+        'index',
         // 上报审核
       ],
     },
@@ -94,16 +100,16 @@ export default defineAppConfig({
     borderStyle: 'black',
     list: [
       {
-        pagePath: 'pages/home/projectManage/index',
-        text: '工程管理',
-        iconPath: './assets/icon/projectAdmin.png',
-        selectedIconPath: './assets/icon/projectAdmin-active.png',
-      },
-      {
         pagePath: 'pages/home/projectTeamManage/index',
         text: '团队管理',
         iconPath: './assets/icon/teamAdmin.png',
         selectedIconPath: './assets/icon/teamAdmin-active.png',
+      },
+      {
+        pagePath: 'pages/home/projectManage/index',
+        text: '工程管理',
+        iconPath: './assets/icon/projectAdmin.png',
+        selectedIconPath: './assets/icon/projectAdmin-active.png',
       },
       {
         pagePath: 'pages/home/typicalExperience/index',

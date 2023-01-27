@@ -70,7 +70,7 @@ const TypicalExperienceAppend: React.FC = () => {
     return result;
   }
   // 生成一个boundary字符串
-  const boundary = `----FooBar${new Date().getTime()}`;
+  const boundary = `----WebKitFormBoundary${new Date().getTime()}`;
   const onSubmit = async () => {
     // formData.append('type', SelectorRangeEng[(type as number) - 1]);
     // formData.append('describe', describe);

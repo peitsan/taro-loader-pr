@@ -1,10 +1,14 @@
-import { View, Text } from '@tarojs/components';
+import { View } from '@tarojs/components';
+import { AtTag } from 'taro-ui';
+import styles from './index.module.less';
 
 const Index: React.FC = () => {
   return (
     <>
-      <View className='index'>
-        <Text>项目管理</Text>
+      <View className={styles.top}>
+        <AtTag className={styles.tag} circle>
+          工程移交
+        </AtTag>
       </View>
     </>
   );
