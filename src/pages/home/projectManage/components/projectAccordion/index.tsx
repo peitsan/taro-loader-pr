@@ -4,7 +4,6 @@ import { View } from '@tarojs/components';
 import { AtIcon } from 'taro-ui';
 import styles from './index.module.less';
 import IProjectAccordion from './type';
-import { IChProMoreData } from '../../projectOverview/components/projectItem/moreType';
 
 export const ProjectAccordion: FC<IProjectAccordion> = (
   props: IProjectAccordion,
@@ -12,6 +11,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
   const itemRef = useRef();
   const [isShow, setIsShow] = useState(false);
   const [arrType, setArrType] = useState<'left' | 'down'>('left');
+  let fullQuestion = 0;
   // 设置过渡动画
   const clickHandler = e => {
     e.stopPropagation();
@@ -41,7 +41,12 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
     createProject,
     fatherScope,
     sonScope,
+    showQuestion,
   } = props;
+
+  sonProject.forEach(item => {
+    fullQuestion += item.uncheckedQuestionCount;
+  });
   return (
     <>
       <View className={styles.proItem}>
@@ -49,6 +54,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
           <View
             className={styles.faProName}
             onClick={e =>
+              naviToFatherPro &&
               naviToFatherPro(e, fatherProject.name, fatherProject.id)
             }>
             {fatherProject.name}
@@ -75,6 +81,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
                 新建
               </View>
             )}
+            {showQuestion && <View>{`未审批问题数量: ${fullQuestion}`}</View>}
             {fatherScope !== undefined && (
               <View className={styles.addChPro}>
                 {fatherScope === 1 ? '规模以上' : '规模以下'}
@@ -90,16 +97,22 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
                 <View
                   className={styles.sonProName}
                   onClick={e => {
-                    naviToSonPro(
-                      e,
-                      item.id,
-                      item.name,
-                      fatherProject.id,
-                      fatherProject.name,
-                    );
+                    naviToSonPro &&
+                      naviToSonPro(
+                        e,
+                        item.id,
+                        item.name,
+                        fatherProject.id,
+                        fatherProject.name,
+                      );
                   }}>
                   {item.name}
                 </View>
+                {showQuestion && (
+                  <View>
+                    {`未审批问题数量: ` + item.uncheckedQuestionCount}
+                  </View>
+                )}
                 {clickShowSonMore && (
                   <View
                     className={styles.moreInfo}

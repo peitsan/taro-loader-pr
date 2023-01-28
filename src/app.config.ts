@@ -1,5 +1,6 @@
 export default defineAppConfig({
   pages: [
+    'pages/home/projectManage/threeListAudit/index',
     'pages/home/projectManage/projectAudit/index',
     'pages/home/projectManage/projectOverview/index',
     'pages/login/index',
@@ -13,4 +14,3 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black',
   },
 });
-

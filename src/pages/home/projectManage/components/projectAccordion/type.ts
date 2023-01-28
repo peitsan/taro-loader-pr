@@ -33,11 +33,12 @@ export interface ICreatePro {
 export default interface IProjectAccordion {
   fatherProject: IFatherProject;
   sonProject: IChildrenProject[];
-  naviToFatherPro: INaviToFatherPro;
-  naviToSonPro: INaviToSonPro;
+  naviToFatherPro?: INaviToFatherPro;
+  naviToSonPro?: INaviToSonPro;
   clickShowFatherMore?: IShowMore;
   clickShowSonMore?: IShowMore;
   createProject?: ICreatePro;
+  showQuestion?: boolean;
   fatherScope?: number;
   sonScope?: string;
 }
