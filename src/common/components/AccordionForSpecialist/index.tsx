@@ -704,6 +704,7 @@ const AccordionForSpecialist: React.FC<
               );
             })
           ) : (
+            <View className={styles['boardw-list']}>
             <View
               style={{
                 textAlign: 'center',
@@ -713,6 +714,7 @@ const AccordionForSpecialist: React.FC<
               }}>
               暂无数据
             </View>
+          </View>
           )}
         </View>
       ) : (

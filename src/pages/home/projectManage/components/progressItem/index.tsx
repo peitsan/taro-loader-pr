@@ -7,6 +7,7 @@ import { GetNumberTime } from '../../../../../common/functions/getNumberTime';
 // 响使用改组件的组件传递相应的信息
 export interface IonClickName {
   type: number;
+  name: string | null;
   startTime: string | null;
   endTime: string | null;
   id: number;
@@ -109,6 +110,7 @@ const ProgressItem = (props: IProgressItem) => {
               e.stopPropagation();
               props.onClickName &&
                 props.onClickName({
+                  name: props.name,
                   type: props.type,
                   startTime: props.startTime,
                   endTime: endTime,

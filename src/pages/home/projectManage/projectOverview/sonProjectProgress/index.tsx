@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Taro, { useRouter } from '@tarojs/taro';
 import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
+import { navigateTo } from '@/common/functions';
 import {
   AtTag,
   AtIcon,
@@ -70,7 +71,7 @@ const SonProjectProgress = () => {
 
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
-    const { type, startTime, endTime, id } = params;
+    const { type, startTime, endTime, id, name } = params;
 
     setSelectInfo({ selectId: id, selectIndex: type });
 
@@ -87,8 +88,16 @@ const SonProjectProgress = () => {
     } else if (type === 0 && !startTime) {
       setIsOpenStartDateSele(true);
     } else if (type < progressNow) {
-      console.log('跳转');
-      // Taro.navigateTo({ url: '' })
+      // console.log('跳转');
+      Taro.setStorageSync('projectName', proName);
+      Taro.setStorageSync('fatherName', fatherProName);
+      Taro.setStorageSync('projectId', projectId);
+      Taro.setStorageSync('progressId', id);
+      Taro.setStorageSync('status', '已结束');
+      Taro.setStorageSync('name', name);
+      Taro.setStorageSync('type', String(type));
+      Taro.setStorageSync('progress', JSON.stringify(true));
+      navigateTo('/home/projectManage/projectOverview/projectList');
       return;
     } else if (type === progressNow && !startTime) {
       console.log('*****');
@@ -96,7 +105,17 @@ const SonProjectProgress = () => {
       setIsOpenStartDateSele(true);
       return;
     } else if (type === progressNow && startTime) {
-      console.log('跳转');
+      Taro.setStorageSync('projectName', proName);
+      Taro.setStorageSync('fatherName', fatherProName);
+      Taro.setStorageSync('projectId', projectId);
+      Taro.setStorageSync('progressId', id);
+      Taro.setStorageSync('status', '进行中');
+      Taro.setStorageSync('name', name);
+      Taro.setStorageSync('type', String(type));
+      Taro.setStorageSync('progress', JSON.stringify(false));
+      // progressyi
+      navigateTo('/home/projectManage/projectOverview/projectList');
+      // console.log('跳转');
       return;
     }
   };

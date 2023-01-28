@@ -22,6 +22,7 @@ import './index.less';
 
 function ProjectList() {
   const projectName = Taro.getStorageSync('projectName');
+  const progressName = Taro.getStorageSync('name');
   const fatherName = Taro.getStorageSync('fatherName');
   const type = Number(Taro.getStorageSync('type'));
   // 此处为了方便调试
@@ -172,13 +173,10 @@ function ProjectList() {
   return (
     <View className='projectView-container'>
       <View className='project-title'>
-        {fatherName}/{projectName}/{typeName[type]}
+        {fatherName}/{projectName}/{progressName}
       </View>
       <BackPrePage />
       <View className='projectView-title-wrp'>
-        <View className='projectView-title'>
-          <View>{Taro.getStorageSync('name')}</View>
-        </View>
         {indexKey !== '1' &&
         indexKey !== '5' &&
         indexKey !== '6' &&

@@ -115,15 +115,17 @@ export const Intermediate: React.FC = () => {
                 专 业
               </View>
             </View>
-            {!dataSource ? (
-              <View
-                style={{
-                  textAlign: 'center',
-                  lineHeight: '30rpx',
-                  fontSize: '30rpx',
-                  color: '#9A9A9A',
-                }}>
-                暂无数据
+            {dataSource.length == 0 ? (
+              <View className={styles['boardw-list']}>
+                <View
+                  style={{
+                    textAlign: 'center',
+                    lineHeight: '30rpx',
+                    fontSize: '30rpx',
+                    color: '#9A9A9A',
+                  }}>
+                  暂无数据
+                </View>
               </View>
             ) : (
               <View className={styles['issueListTable-tabs']}>
@@ -138,14 +140,16 @@ export const Intermediate: React.FC = () => {
             )}
           </View>
         ) : (
-          <View
-            style={{
-              textAlign: 'center',
-              lineHeight: '30rpx',
-              fontSize: '30rpx',
-              color: '#9A9A9A',
-            }}>
-            暂无数据
+          <View className={styles['boardw-list']}>
+            <View
+              style={{
+                textAlign: 'center',
+                lineHeight: '30rpx',
+                fontSize: '30rpx',
+                color: '#9A9A9A',
+              }}>
+              暂无数据
+            </View>
           </View>
         )}
       </>

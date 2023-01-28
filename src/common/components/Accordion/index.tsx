@@ -27,6 +27,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
+  const ModalName = Taro.getStorageSync('ModalName');
   // const Height = String(85 * (data.item.length + 1)) + `px`;
   const itemName = ['reason', 'opinion', 'condition', 'question'];
   const { item } = data;

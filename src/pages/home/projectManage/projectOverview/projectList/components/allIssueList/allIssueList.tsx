@@ -133,15 +133,17 @@ export const AllIssueList: React.FC<IProps> = props => {
             </View>
           </View>
         )}
-        {!dataSource ? (
-          <View
-            style={{
-              textAlign: 'center',
-              lineHeight: '30rpx',
-              fontSize: '30rpx',
-              color: '#9A9A9A',
-            }}>
-            暂无数据
+        {dataSource.length == 0 ? (
+          <View className={style['issueListTable-tabs']}>
+            <View
+              style={{
+                textAlign: 'center',
+                lineHeight: '30rpx',
+                fontSize: '30rpx',
+                color: '#9A9A9A',
+              }}>
+              暂无数据
+            </View>
           </View>
         ) : (
           <View className={style['issueListTable-tabs']}>

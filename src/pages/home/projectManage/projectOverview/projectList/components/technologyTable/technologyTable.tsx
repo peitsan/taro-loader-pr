@@ -5,7 +5,7 @@ import { AtMessage, AtIcon, AtInput, AtForm, AtModal } from 'taro-ui';
 import { message } from '../../../../../../../common/index';
 import httpUtil from '../../../../../../../utils/httpUtil';
 import { technologyItem } from './technologyTableType';
-import './technologyTable.module.css';
+import './technologyTable.css';
 
 export const TechnologyTable: React.FC = () => {
   const Modal = AtModal;

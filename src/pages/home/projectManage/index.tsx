@@ -3,6 +3,7 @@ import banner_1 from '@assets/banner/1.jpg';
 import banner_2 from '@assets/banner/2.jpg';
 import banner_3 from '@assets/banner/3.jpg';
 import { View, Image, Swiper, SwiperItem } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import { AtIndexes, AtTag } from 'taro-ui';
 import styles from './index.module.less';
 // import ProjectOverview from './projectOverview/index';
@@ -28,6 +29,7 @@ const Index: React.FC = () => {
     );
   };
   const routerToApplication = e => {
+    Taro.setStorageSync('ModalName', e.key);
     navigateTo('/home/projectManage/' + e.key);
   };
   const list = [

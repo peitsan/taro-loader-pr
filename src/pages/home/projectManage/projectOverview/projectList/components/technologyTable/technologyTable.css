@@ -1,5 +1,6 @@
 .technologyTable-container{
     height: 120%;
+    overflow: scroll;
 }
 .technologyTable-header{
     display: flex;
@@ -43,7 +44,7 @@
     border-radius: 4px;
 }
 .technologyTable-table{
-    height: 100%;
+    height: 1100rpx;
     overflow-y: scroll;
 }
 .technologyTable-item{

@@ -150,15 +150,17 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
             需解决问题数
           </View>
         </View>
-        {!dataSource ? (
-          <View
-            style={{
-              textAlign: 'center',
-              lineHeight: '30rpx',
-              fontSize: '30rpx',
-              color: '#9A9A9A',
-            }}>
-            暂无数据
+        {dataSource.length == 0 ? (
+          <View className={styles['boardw-list']}>
+            <View
+              style={{
+                textAlign: 'center',
+                lineHeight: '30rpx',
+                fontSize: '30rpx',
+                color: '#9A9A9A',
+              }}>
+              暂无数据
+            </View>
           </View>
         ) : (
           <View className={styles['issueListTable-tabs']}>
