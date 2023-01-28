@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default defineAppConfig({
   pages: [
     /* 
@@ -40,7 +41,8 @@ export default defineAppConfig({
     {
       root: 'pages/home/projectManage/threeListAudit',
       // 三项清单审批
-      pages: ['index'],
+      pages: ['index',
+              'threeListQuestionAudit/index'],
     },
     {
       root: 'pages/home/projectManage/projectHandOver',

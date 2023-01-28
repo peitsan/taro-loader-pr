@@ -60,25 +60,9 @@ function ProjectList() {
   const noUnifiedList = [0, 5, 6, 8];
   //无科研技术收口和专项评估
   const noTwoType = [0, 8];
-  //默认key值
-  const defaultKeyList = [
-    '5',
-    '1',
-    '1',
-    '1',
-    '1',
-    '2',
-    '2',
-    '1',
-    '4',
-    '1',
-    '1',
-  ];
+
   //专项评估
   const specialList = [1, 2, 3, 4, 8];
-  const onChange = (key: string) => {
-    setIndexKey(key);
-  };
 
   // 这里注释了取项目id的请求体
   const getTimeDetail = async () => {

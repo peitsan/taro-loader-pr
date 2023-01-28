@@ -54,7 +54,7 @@ const Index: React.FC = () => {
           name: '工程移交',
         },
         {
-          key: 'threeListAudit',
+          key: 'threeListAudit/threeListQuestionAudit',
           name: '清单审核',
         },
         {
@@ -68,7 +68,7 @@ const Index: React.FC = () => {
     <>
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
-          典型经验
+          工程总览
         </AtTag>
       </View>
       <View className={styles.banner}>
