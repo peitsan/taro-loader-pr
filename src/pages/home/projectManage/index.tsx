@@ -47,14 +47,14 @@ const Index: React.FC = () => {
       items: [
         {
           key: 'projectAudit',
-          name: '工程审批',
+          name: '工程审核',
         },
         {
           key: 'projectHandOver',
           name: '工程移交',
         },
         {
-          key: 'threeListAudit/threeListQuestionAudit',
+          key: 'threeListAudit',
           name: '清单审核',
         },
         {

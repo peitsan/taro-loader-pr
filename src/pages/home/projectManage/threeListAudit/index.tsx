@@ -1,8 +1,11 @@
+import React from 'react';
+import Taro from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { AtTag } from 'taro-ui';
 import styles from './index.module.less';
+import { ProjectLists } from './components/projectLists';
 
-const Index: React.FC = () => {
+const ThreeListAudit = () => {
   return (
     <>
       <View className={styles.top}>
@@ -10,7 +13,9 @@ const Index: React.FC = () => {
           清单审核
         </AtTag>
       </View>
+      <ProjectLists />
     </>
   );
 };
-export default Index;
+
+export default ThreeListAudit;
