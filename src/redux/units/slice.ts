@@ -51,7 +51,9 @@ export const getUnitsAC = createAsyncThunk(
   "units/getUnitsAC",
   async (obj: GetUnitObjType = {}) => {
     const { fatherId, getTeamPerson = true } = obj;
-    const permission = sessionStorage.getItem("permission");
+    const permission = sessionStorage.getItem("permission") || 'manager';
+    console.log(permission);
+
     const fetch = () => {
       if (getTeamPerson && fatherId) {
         return httpUtil.getManagerProjectTeamPerson({ fatherId });

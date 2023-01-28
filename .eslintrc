@@ -29,7 +29,9 @@
       }
     ],
     "no-cjs": "off",
-    "@typescript-eslint/no-unused-vars": "error",
-    "no-commonjs": "off"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-commonjs": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "warn"
   }
 }

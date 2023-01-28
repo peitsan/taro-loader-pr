@@ -1,3 +1,3 @@
 export default definePageConfig({
-    navigationBarTitleText: '工程管理'
-})
+  navigationBarTitleText: '工程管理',
+});

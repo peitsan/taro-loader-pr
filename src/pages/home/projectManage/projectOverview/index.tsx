@@ -1,76 +1,45 @@
-import react, { FC } from 'react';
+import react, { useState, useEffect } from 'react';
 import Taro from '@tarojs/taro';
-import { AtTag } from 'taro-ui'
-import { View } from '@tarojs/components'
-import { ProjectModel, ProjectLists } from './components'
+import httpUtil from '@/utils/httpUtil';
+import { AtTag } from 'taro-ui';
+import { View } from '@tarojs/components';
+import { ProjectModel, ProjectLists } from './components';
 import { IData } from './types/projectType';
-import styles from './index.module.less'
+import styles from './index.module.less';
 
 const ProjectOverview = () => {
+  const [projectData, setProjectData] = useState<IData[]>();
+  const getOwnProjects = async () => {
+    try {
+      const res = await httpUtil.getOwnProjects({
+        identity: 1, // 这里要修改
+        isCheck: 2,
+      });
+      if (res.code === 200) {
+        const projectD: IData[] = res.data.projects;
+        setProjectData(projectD);
+      }
+    } catch {
+      // 错误处理
+    } finally {
+    }
+  };
 
-    // 测试样例
-    const data: IData[] = [{
-        fatherProject: {
-            id: 1,
-            name: '项目1',
-            scope: 1,
-            creater: 35,
-            manager: 'mzy'
-        },
-        sonProject: [{
-            fatherProject: '1',
-            id: 2,
-            name: '子项目1',
-            progressNow: { name: '中间审查会', id: 15 },
-            remark: '空',
-            scope: '12',
-            startTime: '2023-1-17',
-            subType: ' ',
-            uncheckedQuestionCount: 0,
-            managers: [{ id: 15, nickname: 'mzy', phone: '17073931666' }]
-        }, {
-            fatherProject: '1',
-            id: 2,
-            name: '子项目1',
-            progressNow: { name: '中间审查会', id: 15 },
-            remark: '空',
-            scope: '12',
-            startTime: '2023-1-17',
-            subType: ' ',
-            uncheckedQuestionCount: 0,
-            managers: [{ id: 15, nickname: 'mzy', phone: '17073931666' }]
-        }]
-    }, {
-        fatherProject: {
-            id: 2,
-            name: '项目2',
-            scope: 1,
-            creater: 35,
-            manager: 'mzy'
-        },
-        sonProject: [{
-            fatherProject: '1',
-            id: 2,
-            name: '子项目1',
-            progressNow: { name: '中间审查会', id: 15 },
-            remark: '空',
-            scope: '12',
-            startTime: '2023-1-17',
-            subType: ' ',
-            uncheckedQuestionCount: 0,
-            managers: [{ id: 15, nickname: 'mzy', phone: '17073931666' }]
-        }]
-    }]
+  useEffect(() => {
+    getOwnProjects();
+  }, []);
 
-    return (
-        <>
-            <View className={styles.top}>
-                <AtTag className={styles.tag} circle>项目总览</AtTag>
-                <ProjectModel refresh={() => { }} />
-            </View>
-            <ProjectLists data={data} />
-        </>
-    )
-}
+  return (
+    <>
+      <View className={styles.top}>
+        <AtTag className={styles.tag} circle>
+          项目总览
+        </AtTag>
+        <ProjectModel refresh={getOwnProjects} />
+      </View>
+      {projectData && <ProjectLists projectData={projectData} />}
+    </>
+  );
+};
 
-export default ProjectOverview
+export default ProjectOverview;

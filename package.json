@@ -24,6 +24,7 @@
   "author": "",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "@reduxjs/toolkit": "^1.8.1",
     "@tarojs/components": "3.5.7",
     "@tarojs/helper": "3.5.7",
     "@tarojs/plugin-framework-react": "3.5.7",
@@ -39,15 +40,14 @@
     "@tarojs/shared": "3.5.7",
     "@tarojs/taro": "3.5.7",
     "@tarojs/taro-h5": "3.5.7",
-    "@reduxjs/toolkit": "^1.8.1",
+    "antd-mobile": "^5.27.0",
+    "axios": "^0.24.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.0.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
-    "taro-ui": "3.1.0-beta.4",
-    "antd-mobile":"^5.27.0",
-    "axios":"^0.24.0"
+    "taro-ui": "3.1.0-beta.4"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
@@ -64,6 +64,7 @@
     "babel-loader": "^9.1.0",
     "babel-preset-taro": "3.5.7",
     "cache-loader": "^4.1.0",
+    "dayjs": "^1.11.7",
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-taro": "3.5.7",
@@ -77,8 +78,8 @@
     "taro-plugin-compiler-optimization": "^1.0.4",
     "thread-loader": "^3.0.4",
     "typescript": "^4.6.4",
-    "webpack": "5.69.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "5.69.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
