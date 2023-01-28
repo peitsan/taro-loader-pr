@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Picker } from '@tarojs/components';
+import httpUtil from '@/utils/httpUtil';
 import {
   AtForm,
   AtList,
@@ -11,14 +12,14 @@ import {
 } from 'taro-ui';
 import Taro from '@tarojs/taro';
 import styles from './index.module.less';
-import httpUtil from '@/utils/httpUtil';
 
 // 定义 interface 用于请求成功关闭上一层的 modal
 interface IProps {
   handleReq: Function;
+  refresh: () => Promise<void>;
 }
 
-export const ProjectForm: FC<IProps> = ({ handleReq }: IProps) => {
+export const ProjectForm: FC<IProps> = ({ handleReq, refresh }: IProps) => {
   const pickerRange = ['规模以下', '规模以上'];
   const [picker, setPicker] = useState('规模以上');
   const [name, setName] = useState<string>('');
@@ -39,11 +40,13 @@ export const ProjectForm: FC<IProps> = ({ handleReq }: IProps) => {
             name,
           });
           if (res.code === 200) {
-            // @ts-ignore
-            Taro.atMessage({ message: '消息通知', type: 'success' });
             setName(''); // 重置
             // 隐藏上一级的modal
             handleReq();
+            refresh().then(() => {
+              // @ts-ignore
+              Taro.atMessage({ message: '添加成功', type: 'success' });
+            });
           }
         } finally {
         }
@@ -51,7 +54,7 @@ export const ProjectForm: FC<IProps> = ({ handleReq }: IProps) => {
     } else setShow(true);
   };
   return (
-    <AtForm onSubmit={submit}>
+    <AtForm>
       <Picker
         mode='selector'
         range={pickerRange}
@@ -72,7 +75,14 @@ export const ProjectForm: FC<IProps> = ({ handleReq }: IProps) => {
         title='项目名称'
         focus
       />
-      <AtButton loading={loading} type='primary' formType='submit'>
+      <AtButton
+        loading={loading}
+        type='primary'
+        formType='submit'
+        className={styles.btn}
+        onClick={() => {
+          submit();
+        }}>
         确定
       </AtButton>
       <AtToast text='请填写完整' isOpened={show}></AtToast>

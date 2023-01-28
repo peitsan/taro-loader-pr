@@ -34,8 +34,11 @@ export default defineAppConfig({
         'index',
         // 工程进度
         'fatherProjectProgress/index',
+        // 子项目查询
+        'sonProjectProgress/index',
         // 三项清单查阅
         'projectList/index',
+   
       ],
     },
     {

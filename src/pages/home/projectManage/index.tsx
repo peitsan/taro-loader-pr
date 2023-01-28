@@ -68,7 +68,7 @@ const Index: React.FC = () => {
     <>
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
-          工程总览
+          工程管理
         </AtTag>
       </View>
       <View className={styles.banner}>

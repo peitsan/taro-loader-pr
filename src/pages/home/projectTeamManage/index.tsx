@@ -1,4 +1,3 @@
-import Taro from '@tarojs/taro';
 import { AtTag } from 'taro-ui';
 import { View } from '@tarojs/components';
 import TeamList from './teamList/index';
@@ -9,7 +8,7 @@ const projectTeamManage: React.FC = () => {
     <>
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
-          团队总览
+          团队管理
         </AtTag>
       </View>
       <View>

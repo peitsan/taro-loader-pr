@@ -33,6 +33,7 @@ specifiers:
   babel-loader: ^9.1.0
   babel-preset-taro: 3.5.7
   cache-loader: ^4.1.0
+  dayjs: ^1.11.7
   eslint: ^8.12.0
   eslint-config-prettier: ^8.5.0
   eslint-config-taro: 3.5.7
@@ -104,6 +105,7 @@ devDependencies:
   babel-loader: registry.npmmirror.com/babel-loader/9.1.0_unjjnp53qjpfvrtvmnx5faggpy
   babel-preset-taro: registry.npmmirror.com/babel-preset-taro/3.5.7_onoxfpradg3rlmt5xxu6q6gmia
   cache-loader: registry.npmmirror.com/cache-loader/4.1.0_webpack@5.69.0
+  dayjs: registry.npmmirror.com/dayjs/1.11.7
   eslint: registry.npmmirror.com/eslint/8.28.0
   eslint-config-prettier: registry.npmmirror.com/eslint-config-prettier/8.5.0_eslint@8.28.0
   eslint-config-taro: registry.npmmirror.com/eslint-config-taro/3.5.7_dj5zkyejsunkhyj64j65kacupu
@@ -7918,11 +7920,10 @@ packages:
       whatwg-url: registry.npmmirror.com/whatwg-url/8.7.0
     dev: false
 
-  registry.npmmirror.com/dayjs/1.11.6:
-    resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dayjs/-/dayjs-1.11.6.tgz}
+  registry.npmmirror.com/dayjs/1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/dayjs/-/dayjs-1.11.7.tgz}
     name: dayjs
-    version: 1.11.6
-    dev: false
+    version: 1.11.7
 
   registry.npmmirror.com/de-indent/1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/de-indent/-/de-indent-1.0.2.tgz}
@@ -10696,7 +10697,7 @@ packages:
     version: 0.4.1
 
   registry.npmmirror.com/glob/6.0.4:
-    resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/glob/-/glob-6.0.4.tgz}
+    resolution: {integrity: sha512-MKZeRNyYZAVVVG1oZeLaWie1uweH40m9AZwIwxyPbTSX4hHrVYSzLg0Ro5Z5R7XKkIX+Cc6oD1rqeDJnwsB8/A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/glob/-/glob-6.0.4.tgz}
     name: glob
     version: 6.0.4
     dependencies:
@@ -19349,7 +19350,7 @@ packages:
       '@tarojs/components': registry.npmmirror.com/@tarojs/components/3.5.7_@types+react@18.0.25
       '@tarojs/react': registry.npmmirror.com/@tarojs/react/3.5.7_react@18.2.0
       classnames: registry.npmmirror.com/classnames/2.3.2
-      dayjs: registry.npmmirror.com/dayjs/1.11.6
+      dayjs: registry.npmmirror.com/dayjs/1.11.7
       lodash: registry.npmmirror.com/lodash/4.17.21
       prop-types: registry.npmmirror.com/prop-types/15.8.1
       react: registry.npmmirror.com/react/18.2.0

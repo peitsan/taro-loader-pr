@@ -21,6 +21,7 @@ import {
   PlanTimeModal,
   EndTimeModal,
 } from '../../components/timeSelect';
+import UploadFile from './uploadFile';
 
 export interface INowProgressInfo {
   startTime: string | null;
@@ -29,15 +30,17 @@ export interface INowProgressInfo {
   progressId: number;
 }
 
-const FatherProjectProgress = () => {
-  // 获取父项目id，name，permission
+const SonProjectProgress = () => {
   const {
-    projectId = 74,
-    projectName = 'mzy Test',
+    projectId = 304,
+    proName,
+    fatherProName,
+    fatherId,
     permission = 'manager',
   } = useRouter().params;
+
   // 存储目前进行到的步骤，默认是1
-  const [progressNow, setProgressNow] = useState<number>(1);
+  const [progressNow, setProgressNow] = useState<number>(0);
   // 轻提示的显示与隐藏
   const [isOpenToast, setOpenToast] = useState(false);
   // 相关操作的显示与隐藏
@@ -46,11 +49,15 @@ const FatherProjectProgress = () => {
   const [timestamp, setTimestamp] = useState<IProgressItem[]>([]);
 
   // 控制选择开始时间窗口的打开与关闭
-  const [isOpenStartDateSele, setIsOpenStartDataSele] = useState(false);
+  const [isOpenStartDateSele, setIsOpenStartDateSele] = useState(false);
   // 控制计划时间窗口的打开与关闭
   const [isOpenPlanDateSele, setIsOpenPlanDateSele] = useState(false);
   // 控制完成时间窗口的打开与关闭
   const [isOpenEndDateSele, setIsOpenEndDateSele] = useState(false);
+  // 上传附件与否
+  const [isUpload, setIsUpload] = useState(false);
+  // 控制打开上传文件与关闭
+  const [isOpenLoadFile, setIsOpenLoadFile] = useState(false);
   // 点击选择的index,id
   interface ISelectInfo {
     selectIndex: number;
@@ -64,15 +71,33 @@ const FatherProjectProgress = () => {
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
     const { type, startTime, endTime, id } = params;
+
     setSelectInfo({ selectId: id, selectIndex: type });
+
     if (type > progressNow) {
       setOpenToast(true);
       setTimeout(() => {
         setOpenToast(false);
       }, 2000);
-    } else {
-      if ((type === 0 && !startTime) || (type !== 0 && !startTime))
-        setIsOpenStartDataSele(true);
+      return;
+    } else if (type === 7 && startTime && !isUpload) {
+      permission === 'manager'
+        ? setIsOpenLoadFile(true)
+        : console.log('还未上传附件');
+    } else if (type === 0 && !startTime) {
+      setIsOpenStartDateSele(true);
+    } else if (type < progressNow) {
+      console.log('跳转');
+      // Taro.navigateTo({ url: '' })
+      return;
+    } else if (type === progressNow && !startTime) {
+      console.log('*****');
+
+      setIsOpenStartDateSele(true);
+      return;
+    } else if (type === progressNow && startTime) {
+      console.log('跳转');
+      return;
     }
   };
 
@@ -80,11 +105,13 @@ const FatherProjectProgress = () => {
   const getData = () => {
     // 获取时间戳数据
     return httpUtil
-      .getFatherProjectNodeDetail({ projectId: Number(projectId) })
+      .getProjectProgress({ project_id: String(projectId) })
       .then(res => {
+        let hasFinish = true;
         const { progresses } = res.data;
         progresses.forEach((item: IProgressItem) => {
           if (item.status === '进行中') {
+            hasFinish = false;
             setProgressNow(item.type);
             setCurProgressInfo({
               startTime: item.startTime,
@@ -94,6 +121,7 @@ const FatherProjectProgress = () => {
             });
           }
         });
+        if (hasFinish) setProgressNow(progresses.length);
 
         setTimestamp(progresses);
       });
@@ -108,13 +136,11 @@ const FatherProjectProgress = () => {
     if (!endTime) return console.log('请先填写当前流程实际完成时间');
 
     httpUtil
-      .pushFatherProjectToNextProgress({ fatherId: String(projectId) })
+      .pushProjectToNextProgress({ project_id: String(projectId) })
       .then(() => {
         getData().then(() => {
           setIsOpenEndDateSele(false);
           setIsOpenOperateModal(false);
-
-          console.log('推进成功');
         });
       });
   };
@@ -136,7 +162,9 @@ const FatherProjectProgress = () => {
           <AtTag className={styles.tag} circle>
             项目详情
           </AtTag>
-          <View className={styles.name}>{projectName}</View>
+          <View className={styles.name}>
+            {fatherProName}/{proName}
+          </View>
           <View
             className={styles.operate}
             onClick={() => {
@@ -211,11 +239,11 @@ const FatherProjectProgress = () => {
         selectIndex={selectInfo?.selectIndex!}
         selectId={selectInfo?.selectId!}
         isStartTimeModalVisible={isOpenStartDateSele}
-        setIsStartTimeModalVisible={setIsOpenStartDataSele}
+        setIsStartTimeModalVisible={setIsOpenStartDateSele}
         getData={getData}
         timestamp={timestamp}
         projectId={Number(projectId)}
-        isFather={true}
+        isFather={false}
       />
       <PlanTimeModal
         isPlanTimeModalVisible={isOpenPlanDateSele}
@@ -231,7 +259,12 @@ const FatherProjectProgress = () => {
         curProgressInfo={curProgressInfo!}
         getData={getData}
       />
+      <UploadFile
+        isUploadVisible={isOpenLoadFile}
+        setIsUploadVisible={setIsOpenLoadFile}
+      />
     </>
   );
 };
-export default FatherProjectProgress;
+
+export default SonProjectProgress;

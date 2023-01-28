@@ -1,11 +1,16 @@
-import { message } from '@/common/functions';
+import { useEffect, useState } from 'react';
+import { AtTabs, AtTabsPane, AtTag } from 'taro-ui';
+import { getUnitsAC } from '@/redux/actionCreators';
+import httpUtil from '@/utils/httpUtil';
+import { message, transPersons } from '@/common/functions';
+import { useDispatch, useSelector } from '@/redux/hooks';
 import { View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useParams } from 'react-router-dom';
-import { AtTabs, AtTabsPane, AtTag } from 'taro-ui';
-import { ThreeListQuestionAuditTable } from './components';
-import { useDispatch, useSelector } from '../../../../../redux/hooks';
+
 import styles from './index.module.less';
+
+import { threeListName } from '../..';
 
 const Index: React.FC = () => {
   const projectName = Taro.getStorageSync('projectName');
@@ -54,7 +59,7 @@ const Index: React.FC = () => {
 
     const threeMap = ['problemId', 'protocolId', 'procedureId'];
     const problem_id = expandedRow[0][threeMap[curPage]];
-    message.loading('请求中');
+    message('请求中', 'warning');
     httpUtil
       .passThreeListItem({
         itemName: curListName,
@@ -68,7 +73,7 @@ const Index: React.FC = () => {
           getThreeList();
           setVisible(false);
         } else {
-          message.error(res.message);
+          message(res.message, 'error');
         }
       });
   };
@@ -93,11 +98,11 @@ const Index: React.FC = () => {
           项目清单
         </AtTag>
         <View className='project-title'>
-          {fatherName}/{projectName}/{typeName[type]}
+          {fatherName}/{projectName}
         </View>
       </View>
       <View>
-        <AtTabs
+        {/* <AtTabs
           scroll
           current={selectTab}
           tabList={tabList}
@@ -110,7 +115,6 @@ const Index: React.FC = () => {
               index={1}
               fresh={getTimeDetail}
             />
-            {/* 问题清单 */}
           </AtTabsPane>
           <AtTabsPane
             current={selectTab}
@@ -120,7 +124,6 @@ const Index: React.FC = () => {
               index={2}
               fresh={getTimeDetail}
             />
-            {/* 协议清单 */}
           </AtTabsPane>
           <AtTabsPane
             current={selectTab}
@@ -130,9 +133,8 @@ const Index: React.FC = () => {
               index={3}
               fresh={getTimeDetail}
             />
-            {/* 手续清单 */}
           </AtTabsPane>
-        </AtTabs>
+        </AtTabs> */}
       </View>
     </>
   );
