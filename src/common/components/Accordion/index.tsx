@@ -18,7 +18,7 @@ import httpUtil from '../../../utils/httpUtil';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
-  const { data, index, setIsCheckModal } = selfProps;
+  const { data, index, setIsCheckModal, setIsManageModal } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reasonId, setReasonId] = useState<number>(0);
@@ -50,7 +50,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   };
   const lookReply = (question_id: string) => {
     message('请稍等', 'warning');
-    setIsCheckModal(true);
     httpUtil
       .lookAllListReply({
         project_id: Taro.getStorageSync('projectId')!,
@@ -71,7 +70,9 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     lookReply(String(record.key));
     setIsCheckModal(true);
   };
-
+  const showManageSelector = async (record: Item) => {
+    setIsManageModal(true);
+  };
   const GetOperationForUnite: React.FC<any> = props => {
     const { records } = props;
     const { manageId, code } = records;
@@ -90,12 +91,12 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       ) : (
         // 工程审核有权限回复清单的经理
         <>
-          <View
+          <AtButton
             className={styles['pass-btn']}
-            onClick={() => showApplyModal(records)}>
+            onClick={() => showManageSelector(records)}>
             <View>指定</View>
             <View>负责人</View>
-          </View>
+          </AtButton>
         </>
       )
     ) : ((code === 2 || code === 3) && manageId.includes(id)) ||

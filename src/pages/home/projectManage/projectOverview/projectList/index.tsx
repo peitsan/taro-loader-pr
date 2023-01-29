@@ -1,5 +1,8 @@
 import Taro from '@tarojs/taro';
-import { useState, useEffect } from 'react';
+import { useSelector } from '@/redux/hooks';
+import PersonSelector from '@/common/components/personSelector/personSelector';
+import { UnitsType } from '@/redux/units/slice';
+import { useState, useEffect, useRef } from 'react';
 import {
   AtButton,
   AtIcon,
@@ -7,6 +10,7 @@ import {
   AtModal,
   AtModalAction,
   AtModalContent,
+  AtModalHeader,
   AtTabs,
   AtTabsPane,
   AtTextarea,
@@ -26,8 +30,10 @@ import {
   proceduresItem,
   protocolsItem,
   tabListItem,
+  SelectResponsibleProps,
 } from './projectListType/projectListType';
 import { BackPrePage, message } from '../../../../../common/index';
+import SelectResponsible from './components/selectResponsible';
 import './index.less';
 
 function ProjectList() {
@@ -50,7 +56,8 @@ function ProjectList() {
   const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
-  // setFresh(false);
+
+  const [isManageModal, setIsManageModal] = useState<boolean>(false);
   const typeName = [
     '可研启动会',
     '中间成果评审会',
@@ -100,9 +107,11 @@ function ProjectList() {
   const flush = (flsh: boolean) => {
     setFlag(flsh);
   };
+  //监听Tab页切换事件
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
   };
+  //动态鉴权生成Tab标签
   const effectTabList = () => {
     const TabList: tabListItem[] = [
       { title: '统一任务' },
@@ -177,10 +186,11 @@ function ProjectList() {
     }
     setTableList(TabList);
   };
-
+  //关闭查看清单回复模态框
   const okCheckModal = () => {
     setIsCheckModal(false);
   };
+  // 查看清单模态框
   const CheckModal: React.FC = () => {
     const [canDownload, setCanDownload] = useState(false);
     // 文件下载的URL和name
@@ -248,6 +258,47 @@ function ProjectList() {
       </AtModal>
     );
   };
+  //关闭指定负责人模态框
+  const okManageModal = () => {
+    setIsManageModal(false);
+  };
+  //   const onConfirmManage = () => {
+  //     okManageModal();
+  //   };
+  //   return (
+  //     <AtModal isOpened={isManageModal} onClose={okManageModal}>
+  //       <AtModalHeader> 确认责任人-报警人</AtModalHeader>
+  //       <AtModalContent>
+  //         <View className='reply-wrapper'>
+  //           <PersonSelector
+  //             title='负责人'
+  //             ref={ResponserVal}
+  //             data={units as UnitsType}
+  //             placeholder='请选择负责人'
+  //             width={354}
+  //             multiple
+  //           />
+  //         </View>
+  //         <View className='reply-wrapper'>
+  //           <PersonSelector
+  //             title='报警人'
+  //             ref={AlerterVal}
+  //             data={units as UnitsType}
+  //             placeholder='请选择报警人'
+  //             width={354}
+  //             multiple
+  //           />
+  //         </View>
+  //         <View className='reply-wrapper'>{/* <PersonSelector /> */}</View>
+  //       </AtModalContent>
+  //       <AtModalAction>
+  //         {' '}
+  //         <Button onClick={okManageModal}>取消</Button>
+  //         <Button onClick={onConfirmManage}>确定</Button>{' '}
+  //       </AtModalAction>
+  //     </AtModal>
+  //   );
+  // };
   useEffect(() => {
     getTimeDetail();
     // 生成tabList
@@ -291,6 +342,10 @@ function ProjectList() {
         // 两个清单组件操作模态框调不出来
         <View>
           <CheckModal />
+          <SelectResponsible
+            isManageModal={isManageModal}
+            okManageModal={okManageModal}
+          />
           <AtTabs
             scroll
             current={selectTab}
@@ -305,6 +360,7 @@ function ProjectList() {
                     issuesItems={issue}
                     index={4}
                     setIsCheckModal={setIsCheckModal}
+                    setIsManageModal={setIsManageModal}
                     fresh={getTimeDetail}
                   />
                 </View>

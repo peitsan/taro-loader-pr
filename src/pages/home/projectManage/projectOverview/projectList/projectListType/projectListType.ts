@@ -1,4 +1,9 @@
 //公共
+export interface SelectResponsibleProps {
+  isManageModal: boolean;
+  okManageModal: Function;
+}
+
 export interface responsible {
   id: number;
   nickname: string;
