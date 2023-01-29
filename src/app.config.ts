@@ -65,7 +65,10 @@ export default defineAppConfig({
       // 上报审核
       pages: [
         'index',
-        // 上报审核
+        // 问题完成时间调整表格
+        'questionTable/index',
+        // 节点预计完成时间调整表格
+        'nodeTable/index'
       ],
     },
     /* 
@@ -90,7 +93,7 @@ export default defineAppConfig({
       pages: ['index'],
     },
   ],
-  // entryPagePath: 'pages/home/typicalExperience/index',
+  // entryPagePath: 'pages/home/projectManage/applyAudit/index',
   entryPagePath: 'pages/login/index',
   window: {
     backgroundTextStyle: 'dark',
