@@ -629,6 +629,7 @@ const AccordionForSpecialist: React.FC<
             <View
               style={{
                 width: '30%',
+                lineHeight: '50rpx',
                 textAlign: 'center',
                 fontSize: '32rpx',
               }}>
@@ -637,7 +638,7 @@ const AccordionForSpecialist: React.FC<
             <View
               style={{
                 fontSize: '32rpx',
-                lineHeight: '70rpx',
+                lineHeight: '50rpx',
                 width: '35%',
                 textAlign: 'center',
                 color: '#52c41a',
@@ -653,7 +654,7 @@ const AccordionForSpecialist: React.FC<
           <CheckModal />
           {/* 子列表 */}
           <View className={styles['board-list']}>
-            <View className={styles['boardw-subList']} style={{ width: '30%' }}>
+            <View className={styles['boardw-subList']} style={{ width: '20%' }}>
               提资
             </View>
             <View className={styles['boardw-subList']} style={{ width: '20%' }}>
@@ -665,7 +666,7 @@ const AccordionForSpecialist: React.FC<
             <View className={styles['boardw-subList']} style={{ width: '10%' }}>
               状态
             </View>
-            <View className={styles['boardw-subList']} style={{ width: '10%' }}>
+            <View className={styles['boardw-subList']} style={{ width: '20%' }}>
               操作
             </View>
           </View>
@@ -677,7 +678,7 @@ const AccordionForSpecialist: React.FC<
                   key={'reason-row' + ids}>
                   <View
                     className={styles['boardw-subList']}
-                    style={{ width: '35%' }}>
+                    style={{ width: '25%' }}>
                     {list.atizi}
                   </View>
                   <View
@@ -697,7 +698,7 @@ const AccordionForSpecialist: React.FC<
                   </View>
                   <View
                     className={styles['boardw-subList']}
-                    style={{ width: '20%' }}>
+                    style={{ width: '30%' }}>
                     {codeMapOperator(list.status as number, list)}
                   </View>
                 </View>
@@ -705,16 +706,16 @@ const AccordionForSpecialist: React.FC<
             })
           ) : (
             <View className={styles['boardw-list']}>
-            <View
-              style={{
-                textAlign: 'center',
-                lineHeight: '30rpx',
-                fontSize: '30rpx',
-                color: '#9A9A9A',
-              }}>
-              暂无数据
+              <View
+                style={{
+                  textAlign: 'center',
+                  lineHeight: '30rpx',
+                  fontSize: '30rpx',
+                  color: '#9A9A9A',
+                }}>
+                暂无数据
+              </View>
             </View>
-          </View>
           )}
         </View>
       ) : (
@@ -723,7 +724,7 @@ const AccordionForSpecialist: React.FC<
             <View
               style={{
                 fontSize: '32rpx',
-                lineHeight: '70rpx',
+                lineHeight: '50rpx',
                 width: '30%',
                 textAlign: 'center',
               }}>
@@ -732,6 +733,7 @@ const AccordionForSpecialist: React.FC<
             <View
               style={{
                 fontSize: '32rpx',
+                lineHeight: '50rpx',
                 width: '35%',
                 textAlign: 'center',
                 color: '#52c41a',

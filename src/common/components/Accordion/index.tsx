@@ -142,26 +142,92 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       </AtModal>
     );
   };
-  const GetOperation: React.FC<any> = props => {
+  const GetOperationForUnite: React.FC<any> = props => {
     const { records } = props;
     const { manageId, code } = records;
     const { id } = JSON.parse(Taro.getStorageSync('user')!);
-    return code === 1 && manageId.includes(id) ? (
-      <>
-        <AtButton
-          size='small'
-          type='primary'
-          onClick={() => showModal(records)}>
-          回复
-        </AtButton>
+    return code === 0 ? ( //判断是否有权限
+      ModalName === 'projectOverview' ? ( //判断流程是否在工程总览阶段
+        // 工程总览有权限回复清单的经理
+        <>
+          {/* <View
+            className={styles['pass-btn ']}
+            onClick={() => showModal(records)}>
+            回复
+          </View> */}
+          <View>无</View>
+        </>
+      ) : (
+        // 工程审核有权限回复清单的经理
+        <>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showApplyModal(records)}>
+            <View>指定</View>
+            <View>负责人</View>
+          </View>
+        </>
+      )
+    ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
+      (code === 3 &&
+        canCheckOtherReply(Number(Taro.getStorageSync('fatherId')))) ? (
+      <AtButton
+        size='small'
+        type='primary'
+        onClick={() => showCheckModal(records)}>
+        查看回复
+      </AtButton>
+    ) : (
+      <View>无</View>
+    );
+  };
+  const GetOperationForList: React.FC<any> = props => {
+    const { records } = props;
+    // console.log('List', records);
+    const { manageId, code } = records;
+    const { id } = JSON.parse(Taro.getStorageSync('user')!);
+    return code === 1 && //流程在待回复(负责人已指定)
+      manageId.includes(id) ? ( //判断是否有权限
+      ModalName === 'projectOverview' ? ( //判断流程是否在工程总览阶段
+        // 工程总览有权限回复清单的经理
+        <>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showModal(records)}>
+            回复
+          </View>
 
-        <AtButton
-          size='small'
-          type='primary'
-          onClick={() => showApplyModal(records)}>
-          申请调整时间
-        </AtButton>
-      </>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showApplyModal(records)}>
+            调整时间
+          </View>
+        </>
+      ) : (
+        // 工程审核有权限回复清单的经理
+        <>
+          <View
+            className={styles['look-btn']}
+            onClick={() => showModal(records)}>
+            查看
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showApplyModal(records)}>
+            通过
+          </View>
+          <View
+            className={styles['back-btn']}
+            onClick={() => showApplyModal(records)}>
+            驳回
+          </View>
+          <View
+            className={styles['cofirm-btn']}
+            onClick={() => showApplyModal(records)}>
+            上报
+          </View>{' '}
+        </>
+      )
     ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
       (code === 3 &&
         canCheckOtherReply(Number(Taro.getStorageSync('fatherId')))) ? (
@@ -224,24 +290,25 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       {active && active ? (
         <View className={styles['boardw']}>
           {index === 4 ? (
-            <View className={styles['boardw-list']}>
+            <View className={styles['board-list']}>
               <View
                 style={{
                   width: '30%',
                   textAlign: 'center',
                   fontSize: '32rpx',
+                  lineHeight: '50rpx',
                 }}>
                 {data.issueOverView}
               </View>
               <View
                 style={{
                   fontSize: '32rpx',
-                  lineHeight: '70rpx',
+                  lineHeight: '50rpx',
                   width: '35%',
                   textAlign: 'center',
                   color: '#52c41a',
                 }}>
-                {len}
+                {data.len}
               </View>
               <View style={{ width: '35%' }} onClick={() => setActive(false)}>
                 <View style={{ float: 'right' }}>
@@ -250,7 +317,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
             </View>
           ) : (
-            <View className={styles['boardw-list']}>
+            <View className={styles['board-list']}>
               <View
                 style={{
                   fontSize: '32rpx',
@@ -298,20 +365,20 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
           )}
           {/* <CheckModal /> */}
           {/* 子列表 */}
-          <View className={styles['boardw-list']}>
-            <View className={styles['boardw-subList']} style={{ width: '20%' }}>
-              原因
+          <View className={styles['board-list']}>
+            <View className={styles['board-subList']} style={{ width: '20%' }}>
+              {index == 4 ? '单项' : '原因'}
             </View>
-            <View className={styles['boardw-subList']} style={{ width: '25%' }}>
-              计划完成时间
+            <View className={styles['board-subList']} style={{ width: '25%' }}>
+              {index == 4 ? '截止时间' : '计划完成时间'}
             </View>
-            <View className={styles['boardw-subList']} style={{ width: '25%' }}>
-              责任人及责任单位
+            <View className={styles['board-subList']} style={{ width: '25%' }}>
+              {index == 4 ? '负责人及单位' : '责任人及责任单位'}
             </View>
-            <View className={styles['boardw-subList']} style={{ width: '15%' }}>
-              当前整改情况
+            <View className={styles['board-subList']} style={{ width: '15%' }}>
+              {index == 4 ? '状态' : '当前整改情况'}
             </View>
-            <View className={styles['boardw-subList']} style={{ width: '10%' }}>
+            <View className={styles['board-subList']} style={{ width: '10%' }}>
               操作
             </View>
           </View>
@@ -352,13 +419,28 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
                   <View
                     className={styles['boardw-subList']}
                     style={{ width: '20%' }}>
-                    <GetOperation records={list} />
+                    {index == 4 ? (
+                      <GetOperationForUnite records={list} />
+                    ) : (
+                      <GetOperationForList records={list} />
+                    )}
                   </View>
                 </View>
               );
             })
           ) : (
-            <View className={styles['boardw-list']}>暂无数据</View>
+            <View className={styles['board-list']}>
+              <View
+                style={{
+                  textAlign: 'center',
+                  padding: '0 40%',
+                  lineHeight: '30rpx',
+                  fontSize: '30rpx',
+                  color: '#9A9A9A',
+                }}>
+                暂无数据
+              </View>
+            </View>
           )}
         </View>
       ) : (
@@ -368,7 +450,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               <View
                 style={{
                   fontSize: '32rpx',
-                  lineHeight: '70rpx',
+                  lineHeight: '50rpx',
                   width: '30%',
                   textAlign: 'center',
                 }}>
@@ -377,11 +459,12 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               <View
                 style={{
                   fontSize: '32rpx',
+                  lineHeight: '50rpx',
                   width: '35%',
                   textAlign: 'center',
                   color: '#52c41a',
                 }}>
-                {len}
+                {data.len}
               </View>
               <View
                 style={{

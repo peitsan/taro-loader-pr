@@ -132,7 +132,10 @@ export const Intermediate: React.FC = () => {
                 {dataSource.map((item, ind) => {
                   return (
                     <View key={'Accordion-' + item + `-` + ind}>
-                      <AccordionForIntermediate data={item} />
+                      <AccordionForIntermediate
+                        data={item}
+                        getMediateList={getMediateList}
+                      />
                     </View>
                   );
                 })}
