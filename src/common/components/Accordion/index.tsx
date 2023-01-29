@@ -18,17 +18,16 @@ import httpUtil from '../../../utils/httpUtil';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
-  const { data, index } = selfProps;
+  const { data, index, setIsCheckModal } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reasonId, setReasonId] = useState<number>(0);
   const [isAdjustTime, setIsAdjustTime] = useState<boolean>(false);
   const [planTime, setPlanTime] = useState<string>('');
-  const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
+  // const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
   const ModalName = Taro.getStorageSync('ModalName');
-  // const Height = String(85 * (data.item.length + 1)) + `px`;
   const itemName = ['reason', 'opinion', 'condition', 'question'];
   const { item } = data;
   let len: number = 0;
@@ -39,6 +38,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       len++;
     }
   }
+
   const showModal = (record: Item) => {
     setIsModalVisible(true);
     setReasonId(Number(record.key));
@@ -67,81 +67,11 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
         setAttachmentUrl(attachment);
       });
   };
-
   const showCheckModal = (record: Item) => {
     lookReply(String(record.key));
     setIsCheckModal(true);
   };
-  const okCheckModal = () => {
-    setIsCheckModal(false);
-  };
-  const CheckModal: React.FC = () => {
-    const [canDownload, setCanDownload] = useState(false);
-    // 文件下载的URL和name
-    const [downloadURL, setDownloadURL] = useState('');
-    const [downloadName, setDownloadName] = useState('');
 
-    const downloadFile = () => {
-      setCanDownload(false);
-      const hiding = message('下载中', 'warning');
-      httpUtil.downloadFile({ replyFile: attachmentUrl }).then(res => {
-        const blob = new Blob([res.blob], {
-          type: 'application/octet-stream',
-        });
-        const URL = window.URL.createObjectURL(blob);
-        // const URL = Taro.downloadFile
-        const Name = res.fileName;
-        setDownloadURL(URL);
-        setDownloadName(Name);
-        setCanDownload(true);
-        hiding();
-      });
-    };
-    return (
-      <AtModal
-        isOpened={isCheckModal}
-        onConfirm={okCheckModal}
-        onCancel={okCheckModal}>
-        <AtModalContent>
-          <View className={styles['reply-wrapper']}>
-            <View className={styles['reply-title']}>文字内容：</View>
-            <AtTextarea
-              className={styles['reply-text-area']}
-              disabled
-              height={5}
-              value={replyText}
-              onChange={e => setReplyText(e)}
-            />
-            <View className={styles['reply-title']}>附件：</View>
-            <View className={styles['reply-files']}>
-              {attachmentUrl !== '' ? (
-                canDownload ? (
-                  <a href={downloadURL} download={downloadName}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载成功，点击查看
-                  </a>
-                ) : (
-                  <a onClick={downloadFile}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载附件
-                  </a>
-                )
-              ) : (
-                <a style={{ color: 'silver' }}>
-                  <AtIcon value='file-generic' size='30' color='#F00' />
-                  无附件
-                </a>
-              )}
-            </View>
-          </View>
-        </AtModalContent>
-        <AtModalAction>
-          {' '}
-          <AtButton>取消</AtButton> <AtButton>确定</AtButton>{' '}
-        </AtModalAction>
-      </AtModal>
-    );
-  };
   const GetOperationForUnite: React.FC<any> = props => {
     const { records } = props;
     const { manageId, code } = records;
@@ -245,48 +175,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   const statusColor = ['reply', 'approval', 'solve'];
   return (
     <>
-      <AtModal
-        isOpened={isCheckModal}
-        onConfirm={okCheckModal}
-        onClose={okCheckModal}>
-        <AtModalContent>
-          <View className={styles['reply-wrapper']}>
-            <View className={styles['reply-title']}>文字内容：</View>
-            <AtTextarea
-              className={styles['reply-text-area']}
-              disabled
-              height={5}
-              value={replyText}
-              onChange={e => setReplyText(e)}
-            />
-            <View className={styles['reply-title']}>附件：</View>
-            <View className={styles['reply-files']}>
-              {/* {attachmentUrl !== '' ? (
-                canDownload ? (
-                  <a href={downloadURL} download={downloadName}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载成功，点击查看
-                  </a>
-                ) : (
-                  <a onClick={downloadFile}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载附件
-                  </a>
-                )
-              ) : (
-                <a style={{ color: 'silver' }}>
-                  <AtIcon value='file-generic' size='30' color='#F00' />
-                  无附件
-                </a>
-              )} */}
-            </View>
-          </View>
-        </AtModalContent>
-        <AtModalAction>
-          {' '}
-          <AtButton>取消</AtButton> <AtButton>确定</AtButton>{' '}
-        </AtModalAction>
-      </AtModal>
       {active && active ? (
         <View className={styles['boardw']}>
           {index === 4 ? (

@@ -12,8 +12,14 @@ import {
 import style from './allIssueList.module.css';
 
 export const AllIssueList: React.FC<IProps> = props => {
-  const { issuesItems, problemsItem, proceduresItem, protocolsItem, index } =
-    props;
+  const {
+    issuesItems,
+    problemsItem,
+    proceduresItem,
+    protocolsItem,
+    setIsCheckModal,
+    index,
+  } = props;
   const listItem = [problemsItem, protocolsItem, proceduresItem, issuesItems];
   const titleList = ['问题概述', '协议清单', '手续清单', '问题概述'];
   const itemListFunction = (
@@ -150,7 +156,11 @@ export const AllIssueList: React.FC<IProps> = props => {
             {dataSource.map((item, ind) => {
               return (
                 <View key={'Accordion-' + item + `-` + ind}>
-                  <Accordion data={item} index={index} />
+                  <Accordion
+                    data={item}
+                    index={index}
+                    setIsCheckModal={setIsCheckModal}
+                  />
                 </View>
               );
             })}

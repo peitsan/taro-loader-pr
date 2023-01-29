@@ -1,7 +1,17 @@
 import Taro from '@tarojs/taro';
 import { useState, useEffect } from 'react';
-import { AtLoadMore, AtTabs, AtTabsPane } from 'taro-ui';
-import { View } from '@tarojs/components';
+import {
+  AtButton,
+  AtIcon,
+  AtLoadMore,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtTabs,
+  AtTabsPane,
+  AtTextarea,
+} from 'taro-ui';
+import { Button, View } from '@tarojs/components';
 import {
   AllIssueList,
   TechnologyTable,
@@ -17,7 +27,7 @@ import {
   protocolsItem,
   tabListItem,
 } from './projectListType/projectListType';
-import { BackPrePage } from '../../../../../common/index';
+import { BackPrePage, message } from '../../../../../common/index';
 import './index.less';
 
 function ProjectList() {
@@ -37,6 +47,9 @@ function ProjectList() {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectTab, setSelectTab] = useState<number>(0);
   const [tabList, setTableList] = useState<tabListItem[]>([]);
+  const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
+  const [attachmentUrl, setAttachmentUrl] = useState<string>('');
+  const [replyText, setReplyText] = useState<string>('空');
   // setFresh(false);
   const typeName = [
     '可研启动会',
@@ -164,6 +177,77 @@ function ProjectList() {
     }
     setTableList(TabList);
   };
+
+  const okCheckModal = () => {
+    setIsCheckModal(false);
+  };
+  const CheckModal: React.FC = () => {
+    const [canDownload, setCanDownload] = useState(false);
+    // 文件下载的URL和name
+    const [downloadURL, setDownloadURL] = useState('');
+    const [downloadName, setDownloadName] = useState('');
+
+    const downloadFile = () => {
+      setCanDownload(false);
+      const hiding = message('下载中', 'warning');
+      httpUtil.downloadFile({ replyFile: attachmentUrl }).then(res => {
+        const blob = new Blob([res.blob], {
+          type: 'application/octet-stream',
+        });
+        const URL = window.URL.createObjectURL(blob);
+        // const URL = Taro.downloadFile
+        const Name = res.fileName;
+        setDownloadURL(URL);
+        setDownloadName(Name);
+        setCanDownload(true);
+        hiding();
+      });
+    };
+    return (
+      <AtModal
+        isOpened={isCheckModal}
+        onConfirm={okCheckModal}
+        onClose={okCheckModal}>
+        <AtModalContent>
+          <View className='reply-wrapper'>
+            <View className='reply-title'>文字内容：</View>
+            <AtTextarea
+              className='reply-text-area'
+              disabled
+              height={5}
+              value={replyText}
+              onChange={e => setReplyText(e)}
+            />
+            <View className='reply-title'>附件：</View>
+            <View className='reply-files'>
+              {attachmentUrl !== '' ? (
+                canDownload ? (
+                  <a href={downloadURL} download={downloadName}>
+                    <AtIcon value='file-generic' size='30' color='#F00' />
+                    下载成功，点击查看
+                  </a>
+                ) : (
+                  <a onClick={downloadFile}>
+                    <AtIcon value='file-generic' size='30' color='#F00' />
+                    下载附件
+                  </a>
+                )
+              ) : (
+                <a style={{ color: 'silver' }}>
+                  <AtIcon value='file-generic' size='30' color='#F00' />
+                  无附件
+                </a>
+              )}
+            </View>
+          </View>
+        </AtModalContent>
+        <AtModalAction>
+          {' '}
+          <Button onClick={okCheckModal}>确定</Button>{' '}
+        </AtModalAction>
+      </AtModal>
+    );
+  };
   useEffect(() => {
     getTimeDetail();
     // 生成tabList
@@ -206,6 +290,7 @@ function ProjectList() {
       ) : (
         // 两个清单组件操作模态框调不出来
         <View>
+          <CheckModal />
           <AtTabs
             scroll
             current={selectTab}
@@ -219,6 +304,7 @@ function ProjectList() {
                   <AllIssueList
                     issuesItems={issue}
                     index={4}
+                    setIsCheckModal={setIsCheckModal}
                     fresh={getTimeDetail}
                   />
                 </View>

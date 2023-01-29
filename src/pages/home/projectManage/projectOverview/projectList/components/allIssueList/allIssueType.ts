@@ -31,6 +31,7 @@ export interface IProps {
   problemsItem?: problemsItem[];
   protocolsItem?: protocolsItem[];
   proceduresItem?: proceduresItem[];
+  setIsCheckModal?: Function;
   index: number;
   fresh: Function;
 }

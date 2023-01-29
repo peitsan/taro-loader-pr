@@ -10,4 +10,5 @@ export interface Item {
 export interface AccordionProps {
   data: any;
   index: number;
+  setIsCheckModal: any;
 }
