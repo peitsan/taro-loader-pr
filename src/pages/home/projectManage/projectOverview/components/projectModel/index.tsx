@@ -36,7 +36,7 @@ export const ProjectModel: React.FC<IProps> = ({ refresh }: IProps) => {
 
   return (
     <View>
-      {permission ? (
+      {permission === 'manager' ? (
         <Button
           type='primary'
           onClick={showModal}

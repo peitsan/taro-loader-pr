@@ -17,7 +17,7 @@ const ProjectItem = (data: IData) => {
     e.stopPropagation();
 
     Taro.navigateTo({
-      url: `/pages/home/projectManage/projectOverview/fatherProjectProgress/index?name=${projectName}&projectId=${projectId}&permission=${'worker'}`,
+      url: `/pages/home/projectManage/projectOverview/fatherProjectProgress/index?name=${projectName}&projectId=${projectId}&permission=${'manager'}`,
     });
   };
 

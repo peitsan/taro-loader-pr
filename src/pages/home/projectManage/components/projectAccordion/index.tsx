@@ -11,6 +11,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
   const itemRef = useRef();
   const [isShow, setIsShow] = useState(false);
   const [arrType, setArrType] = useState<'left' | 'down'>('left');
+  const permission = Taro.getStorageSync('permission');
   let fullQuestion = 0;
   // 设置过渡动画
   const clickHandler = e => {
@@ -71,8 +72,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
             )}
 
             {/* 新建小项目 */}
-            {/* 还没有设置权限 */}
-            {createProject && (
+            {createProject && permission === 'manager' && (
               <View
                 className={styles.addChPro}
                 onClick={e => {
@@ -91,47 +91,51 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
           </View>
         </View>
         <View ref={itemRef} className={`${styles.items}`}>
-          {sonProject.map((item, index) => {
-            return (
-              <View className={styles.sonPro} key={index}>
-                <View
-                  className={styles.sonProName}
-                  onClick={e => {
-                    naviToSonPro &&
-                      naviToSonPro(
-                        e,
-                        item.id,
-                        item.name,
-                        fatherProject.id,
-                        fatherProject.name,
-                      );
-                  }}>
-                  {item.name}
-                </View>
-                {showQuestion && (
-                  <View>
-                    {`未审批问题数量: ` + item.uncheckedQuestionCount}
-                  </View>
-                )}
-                {clickShowSonMore && (
+          {sonProject.length !== 0 ? (
+            sonProject.map((item, index) => {
+              return (
+                <View className={styles.sonPro} key={index}>
                   <View
-                    className={styles.moreInfo}
+                    className={styles.sonProName}
                     onClick={e => {
-                      clickShowSonMore(e, {
-                        startTime: item.startTime,
-                        scope: item.scope,
-                        progressNow: item.progressNow?.name,
-                      });
+                      naviToSonPro &&
+                        naviToSonPro(
+                          e,
+                          item.id,
+                          item.name,
+                          fatherProject.id,
+                          fatherProject.name,
+                        );
                     }}>
-                    更多信息
+                    {item.name}
                   </View>
-                )}
-                {sonScope && (
-                  <View className={styles.addChPro}>{sonScope}</View>
-                )}
-              </View>
-            );
-          })}
+                  {showQuestion && (
+                    <View>
+                      {`未审批问题数量: ` + item.uncheckedQuestionCount}
+                    </View>
+                  )}
+                  {clickShowSonMore && (
+                    <View
+                      className={styles.moreInfo}
+                      onClick={e => {
+                        clickShowSonMore(e, {
+                          startTime: item.startTime,
+                          scope: item.scope,
+                          progressNow: item.progressNow?.name,
+                        });
+                      }}>
+                      更多信息
+                    </View>
+                  )}
+                  {sonScope && (
+                    <View className={styles.addChPro}>{sonScope}</View>
+                  )}
+                </View>
+              );
+            })
+          ) : (
+            <View className={styles.noChild}>暂无子项目</View>
+          )}
         </View>
       </View>
     </>

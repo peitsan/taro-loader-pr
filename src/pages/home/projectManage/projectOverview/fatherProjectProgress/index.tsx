@@ -31,11 +31,7 @@ export interface INowProgressInfo {
 
 const FatherProjectProgress = () => {
   // 获取父项目id，name，permission
-  const {
-    projectId = 74,
-    projectName = 'mzy Test',
-    permission = 'manager',
-  } = useRouter().params;
+  const { projectId, name, permission } = useRouter().params;
   // 存储目前进行到的步骤，默认是1
   const [progressNow, setProgressNow] = useState<number>(1);
   // 轻提示的显示与隐藏
@@ -124,26 +120,20 @@ const FatherProjectProgress = () => {
   return (
     <>
       <View>
-        <View
-          className={styles.top}
-          onClick={() => {
-            console.log('后退');
-          }}>
-          <AtIcon value='chevron-left' />
-          <View>返回</View>
-        </View>
         <View className={styles['name-div']}>
           <AtTag className={styles.tag} circle>
             项目详情
           </AtTag>
-          <View className={styles.name}>{projectName}</View>
-          <View
-            className={styles.operate}
-            onClick={() => {
-              setIsOpenOperateModal(true);
-            }}>
-            相关操作
-          </View>
+          <View className={styles.name}>{name}</View>
+          {permission === 'manager' && (
+            <View
+              className={styles.operate}
+              onClick={() => {
+                setIsOpenOperateModal(true);
+              }}>
+              相关操作
+            </View>
+          )}
         </View>
         <View className={styles['progress-div']}>
           {timestamp && (
@@ -207,30 +197,34 @@ const FatherProjectProgress = () => {
         </AtModalContent>
       </AtModal>
       {/* 确定相应时间 */}
-      <StartTimeModal
-        selectIndex={selectInfo?.selectIndex!}
-        selectId={selectInfo?.selectId!}
-        isStartTimeModalVisible={isOpenStartDateSele}
-        setIsStartTimeModalVisible={setIsOpenStartDataSele}
-        getData={getData}
-        timestamp={timestamp}
-        projectId={Number(projectId)}
-        isFather={true}
-      />
-      <PlanTimeModal
-        isPlanTimeModalVisible={isOpenPlanDateSele}
-        setIsPlanTimeModalVisible={setIsOpenPlanDateSele}
-        projectId={Number(projectId)}
-        curProgressInfo={curProgressInfo!}
-        getData={getData}
-      />
-      <EndTimeModal
-        isEndTimeModalVisible={isOpenEndDateSele}
-        setIsEndTimeModalVisible={setIsOpenEndDateSele}
-        projectId={Number(projectId)}
-        curProgressInfo={curProgressInfo!}
-        getData={getData}
-      />
+      {permission === 'manager' && (
+        <>
+          <StartTimeModal
+            selectIndex={selectInfo?.selectIndex!}
+            selectId={selectInfo?.selectId!}
+            isStartTimeModalVisible={isOpenStartDateSele}
+            setIsStartTimeModalVisible={setIsOpenStartDataSele}
+            getData={getData}
+            timestamp={timestamp}
+            projectId={Number(projectId)}
+            isFather={true}
+          />
+          <PlanTimeModal
+            isPlanTimeModalVisible={isOpenPlanDateSele}
+            setIsPlanTimeModalVisible={setIsOpenPlanDateSele}
+            projectId={Number(projectId)}
+            curProgressInfo={curProgressInfo!}
+            getData={getData}
+          />
+          <EndTimeModal
+            isEndTimeModalVisible={isOpenEndDateSele}
+            setIsEndTimeModalVisible={setIsOpenEndDateSele}
+            projectId={Number(projectId)}
+            curProgressInfo={curProgressInfo!}
+            getData={getData}
+          />
+        </>
+      )}
     </>
   );
 };

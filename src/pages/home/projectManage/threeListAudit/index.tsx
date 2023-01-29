@@ -6,14 +6,23 @@ import styles from './index.module.less';
 import { ProjectLists } from './components/projectLists';
 
 const ThreeListAudit = () => {
+  const permission = Taro.getStorageSync('permission');
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
-          清单审核
-        </AtTag>
-      </View>
-      <ProjectLists />
+      {permission === 'manager' ? (
+        <>
+          <View className={styles.top}>
+            <AtTag className={styles.tag} circle>
+              清单审核
+            </AtTag>
+          </View>
+          <ProjectLists />
+        </>
+      ) : (
+        <View style={{ margin: '50px auto', textAlign: 'center' }}>
+          该模块只对管理员开放
+        </View>
+      )}
     </>
   );
 };
