@@ -21,7 +21,7 @@ const Index: React.FC = () => {
         </>
       ) : (
         <View style={{ margin: '50px auto', textAlign: 'center' }}>
-          该模块只对管理员开放
+          该模块只对项目经理开放
         </View>
       )}
     </>
