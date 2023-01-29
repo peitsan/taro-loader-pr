@@ -169,24 +169,26 @@ function ProjectList() {
     // 生成tabList
     effectTabList();
   }, [flag, fresh]);
-
   return (
     <View className='projectView-container'>
       <View className='project-title'>
         {fatherName}/{projectName}/{progressName}
       </View>
-      <BackPrePage />
+      {/* <BackPrePage /> */}
       <View className='projectView-title-wrp'>
-        {indexKey !== '1' &&
-        indexKey !== '5' &&
-        indexKey !== '6' &&
-        indexKey !== '7' &&
-        !JSON.parse(Taro.getStorageSync('progress')!) ? (
+        {(selectTab == tabList.findIndex(val => val.title === '问题清单') ||
+          selectTab == tabList.findIndex(val => val.title === '手续清单') ||
+          selectTab == tabList.findIndex(val => val.title === '协议清单')) &&
+        Taro.getStorageSync('ModalName') === 'projectOverview' &&
+        !JSON.parse(Taro.getStorageSync('progress')) ? (
           <View
             className='projectModel-container'
-            style={{ position: 'absolute', right: '30px', top: '100px' }}>
+            style={{ position: 'absolute', right: '30px', top: '10px' }}>
             {/* 这个还有很多bug */}
-            <ProjectModel flushFunction={flush} indexKey={Number(indexKey)} />
+            <ProjectModel
+              flushFunction={flush}
+              selectList={tabList[selectTab].title}
+            />
           </View>
         ) : null}
       </View>

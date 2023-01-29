@@ -83,16 +83,15 @@ const TableForExperience: React.FC<TableForExperienceProps> = selfProps => {
             );
           })
         ) : (
-          <View className={style['board-list']}>
-            <View
-              style={{
-                textAlign: 'center',
-                lineHeight: '30rpx',
-                fontSize: '30rpx',
-                color: '#9A9A9A',
-              }}>
-              暂无数据
-            </View>
+          <View
+            style={{
+              width: '750rpx',
+              textAlign: 'center',
+              lineHeight: '30rpx',
+              fontSize: '30rpx',
+              color: '#9A9A9A',
+            }}>
+            暂无数据
           </View>
         )}
       </>

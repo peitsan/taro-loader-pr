@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
-import { AtButton, AtIcon, AtModal } from 'taro-ui';
-import { View } from '@tarojs/components';
+import {
+  AtIcon,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtModalHeader,
+} from 'taro-ui';
+import { Button, View } from '@tarojs/components';
 import { ProjectForm } from '../projectForm/projectForm';
 import styles from './projectModel.module.css';
 
 interface IProps {
-  indexKey: number;
+  selectList: string;
   flushFunction: Function;
 }
 export const ProjectModel: React.FC<IProps> = ({
-  indexKey,
+  selectList,
   flushFunction,
 }: IProps) => {
-  const modelType = ['问题', '协议', '手续'];
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -29,21 +34,22 @@ export const ProjectModel: React.FC<IProps> = ({
   };
 
   return (
-    <View>
-      <AtIcon value='edit' size='30' color='#F00' />
-      <AtButton
-        type='primary'
-        size='normal'
-        className={styles['ant-btn-primary']}
-        onClick={showModal}>
-        新建
-      </AtButton>
+    <>
+      <View className={styles['btn-container']}>
+        <View className={styles['pass-btn']} onClick={showModal}>
+          <AtIcon value='edit' size='18' color='#fff' />
+          新建
+        </View>
+      </View>
       <AtModal
-        title={`新建${modelType[indexKey - 2]}清单`}
         isOpened={isModalVisible}
-        onCancel={handleCancel}>
-        <ProjectForm indexKey={indexKey} handleOk={handleOk} />
+        onCancel={handleCancel}
+        onClose={handleCancel}>
+        <AtModalHeader>{`新建${selectList}`}</AtModalHeader>
+        <AtModalContent>
+          <ProjectForm selectList={selectList} handleOk={handleOk} />
+        </AtModalContent>
       </AtModal>
-    </View>
+    </>
   );
 };
