@@ -1,16 +1,13 @@
 import Taro from '@tarojs/taro';
 import { useDispatch, useSelector } from '@/redux/hooks';
 import { getUnitsAC } from '@/redux/actionCreators';
-import { UnitsType } from '@/redux/units/slice';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  AtButton,
   AtIcon,
   AtLoadMore,
   AtModal,
   AtModalAction,
   AtModalContent,
-  AtModalHeader,
   AtTabs,
   AtTabsPane,
   AtTextarea,
@@ -34,6 +31,8 @@ import {
 } from './projectListType/projectListType';
 import { BackPrePage, message } from '../../../../../common/index';
 import SelectResponsible from './components/selectResponsible';
+import AdjustDeadline from './components/AdjustDeadline';
+import FillTechnology from './components/technologyTable/technologyModal';
 import './index.less';
 
 function ProjectList() {
@@ -58,9 +57,17 @@ function ProjectList() {
   const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
-
-  const [isManageModal, setIsManageModal] = useState<boolean>(false);
+  // 暂存获取选中数据
   const [selectRecord, setSelectRecord] = useState();
+  const [selectIndex, setSelectIndex] = useState<number>();
+  // 控制指定负责人模态框
+  const [isManageModal, setIsManageModal] = useState<boolean>(false);
+  // 控制申请调整时间模态框
+  const [isAdjustModal, setIsAdjustModal] = useState<boolean>(false);
+  // 控制可研技术收口模态框
+  const [isTechModal, setIsTechModal] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<number>();
+  const [sheetId, setSheetId] = useState<number | null>(null);
   // 员工列表
   const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(state => state.units.data.searchUnits);
@@ -269,43 +276,16 @@ function ProjectList() {
     setIsManageModal(false);
     getTimeDetail();
   };
-  //   const onConfirmManage = () => {
-  //     okManageModal();
-  //   };
-  //   return (
-  //     <AtModal isOpened={isManageModal} onClose={okManageModal}>
-  //       <AtModalHeader> 确认责任人-报警人</AtModalHeader>
-  //       <AtModalContent>
-  //         <View className='reply-wrapper'>
-  //           <PersonSelector
-  //             title='负责人'
-  //             ref={ResponserVal}
-  //             data={units as UnitsType}
-  //             placeholder='请选择负责人'
-  //             width={354}
-  //             multiple
-  //           />
-  //         </View>
-  //         <View className='reply-wrapper'>
-  //           <PersonSelector
-  //             title='报警人'
-  //             ref={AlerterVal}
-  //             data={units as UnitsType}
-  //             placeholder='请选择报警人'
-  //             width={354}
-  //             multiple
-  //           />
-  //         </View>
-  //         <View className='reply-wrapper'>{/* <PersonSelector /> */}</View>
-  //       </AtModalContent>
-  //       <AtModalAction>
-  //         {' '}
-  //         <Button onClick={okManageModal}>取消</Button>
-  //         <Button onClick={onConfirmManage}>确定</Button>{' '}
-  //       </AtModalAction>
-  //     </AtModal>
-  //   );
-  // };
+  //关闭申请调整时间模态框
+  const okAdjustModal = () => {
+    setIsAdjustModal(false);
+    getTimeDetail();
+  };
+  //关闭可研技术收口填写模态框
+  const okTechModal = () => {
+    setIsTechModal(false);
+    getTimeDetail();
+  };
   useEffect(() => {
     dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getTimeDetail();
@@ -349,13 +329,31 @@ function ProjectList() {
       ) : (
         // 两个清单组件操作模态框调不出来
         <View>
+          {/* 填报查看回复清单 */}
           <CheckModal />
+          {/* 指定负责人 */}
           <SelectResponsible
             isManageModal={isManageModal}
             okManageModal={okManageModal}
             selectRecord={selectRecord}
             units={units}
           />
+          {/* 申请调整时间 */}
+          <AdjustDeadline
+            isAdjustModal={isAdjustModal}
+            okAdjustModal={okAdjustModal}
+            selectRecord={selectRecord}
+            selectIndex={selectIndex as number}
+          />
+          {/* 填写可研技术收口 */}
+          <FillTechnology
+            isTechModal={isTechModal}
+            okTechModal={okTechModal}
+            setCurrentTab={setCurrentTab}
+            sheetId={sheetId}
+            currentTab={currentTab}
+          />
+          {/* 申请调整时间 */}
           <AtTabs
             scroll
             current={selectTab}
@@ -371,7 +369,9 @@ function ProjectList() {
                     index={4}
                     setIsCheckModal={setIsCheckModal}
                     setIsManageModal={setIsManageModal}
+                    setIsAdjustModal={setIsAdjustModal}
                     setSelectRecord={setSelectRecord}
+                    setSelectIndex={setSelectIndex}
                     fresh={getTimeDetail}
                   />
                 </View>
@@ -442,7 +442,13 @@ function ProjectList() {
                   val => val.title === '建设专业可研反馈记录表',
                 )}>
                 <View style='background-color: #FAFBFC;'>
-                  <TechnologyTable />
+                  <TechnologyTable
+                    setSheetId={setSheetId}
+                    isTechModal={isTechModal}
+                    setIsTechModal={setIsTechModal}
+                    setSelectRecord={setSelectRecord}
+                    setCurrentTab={setCurrentTab}
+                  />
                 </View>
               </AtTabsPane>
             ) : null}

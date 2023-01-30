@@ -13,4 +13,6 @@ export interface AccordionProps {
   setIsCheckModal?: any;
   setIsManageModal?: any;
   setSelectRecord?: any;
+  setSelectIndex?: any;
+  setIsAdjustModal?: any;
 }

@@ -2,15 +2,7 @@
 import Taro from '@tarojs/taro';
 import { useState } from 'react';
 import { View } from '@tarojs/components';
-import {
-  AtIcon,
-  AtButton,
-  AtModal,
-  AtTextarea,
-  AtModalContent,
-  AtModalAction,
-  AtMessage,
-} from 'taro-ui';
+import { AtIcon, AtButton, AtMessage } from 'taro-ui';
 import { Item, AccordionProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
@@ -18,8 +10,15 @@ import httpUtil from '../../../utils/httpUtil';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
-  const { data, index, setIsCheckModal, setIsManageModal, setSelectRecord } =
-    selfProps;
+  const {
+    data,
+    index,
+    setIsCheckModal,
+    setIsManageModal,
+    setSelectRecord,
+    setIsAdjustModal,
+    setSelectIndex,
+  } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reasonId, setReasonId] = useState<number>(0);
@@ -75,6 +74,11 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setSelectRecord(record);
     setIsManageModal(true);
   };
+  const showAdjustDeadline = async (record: Item, index: number) => {
+    setSelectRecord(record);
+    setSelectIndex(index);
+    setIsAdjustModal(true);
+  };
   const GetOperationForUnite: React.FC<any> = props => {
     const { records } = props;
     const { manageId, code } = records;
@@ -109,7 +113,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
 
         <View
           className={styles['pass-btn']}
-          onClick={() => showApplyModal(records)}>
+          onClick={() => showAdjustDeadline(records, index)}>
           调整时间
         </View>
       </>

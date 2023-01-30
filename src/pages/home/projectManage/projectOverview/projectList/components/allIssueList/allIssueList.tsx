@@ -20,6 +20,8 @@ export const AllIssueList: React.FC<IProps> = props => {
     setIsCheckModal,
     setIsManageModal,
     setSelectRecord,
+    setIsAdjustModal,
+    setSelectIndex,
     index,
   } = props;
   const listItem = [problemsItem, protocolsItem, proceduresItem, issuesItems];
@@ -164,6 +166,8 @@ export const AllIssueList: React.FC<IProps> = props => {
                     setIsCheckModal={setIsCheckModal}
                     setIsManageModal={setIsManageModal}
                     setSelectRecord={setSelectRecord}
+                    setIsAdjustModal={setIsAdjustModal}
+                    setSelectIndex={setSelectIndex}
                   />
                 </View>
               );

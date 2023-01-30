@@ -11,3 +11,27 @@ export interface technologyList {
   问题处置: string | null;
   主要建议意见: string | null;
 }
+
+export interface technologyModalProps {
+  isTechModal: boolean;
+  okTechModal: any;
+  currentTab?: number;
+  setCurrentTab?: Function;
+  getTechnologyList?: Function;
+  sheetId?: number | null;
+}
+
+export interface technologyTableProps {
+  isTechModal: boolean;
+  setIsTechModal: Function;
+  setSelectRecord: Function;
+  setCurrentTab: Function;
+  setSheetId: Function;
+}
+export interface updateSheet {
+  projectId: number;
+  progressId: number;
+  sheetId?: number;
+  opinion?: string;
+  situation?: string;
+}
