@@ -1,9 +1,7 @@
 import Taro from '@tarojs/taro';
-import { useEffect, useState } from 'react';
-import { View, Button } from '@tarojs/components';
+import { useState } from 'react';
+import { Button } from '@tarojs/components';
 import {
-  AtMessage,
-  AtIcon,
   AtInput,
   AtForm,
   AtModal,
@@ -19,9 +17,6 @@ const TechnologyModal: React.FC<technologyModalProps> = selfProps => {
   const { isTechModal, okTechModal, currentTab, getTechnologyList, sheetId } =
     selfProps;
   const [tmp, setTmp] = useState<string | null>(null);
-  const [opinion, setOpinion] = useState<string | null>(null);
-  const [situation, setSituation] = useState<string | null>(null);
-  const ModalName = Taro.getStorageSync('ModalName')!;
   const projectId = Taro.getStorageSync('projectId')!;
   const progressId = Taro.getStorageSync('progressId')!;
   const titleList = ['审核意见', '闭环情况', '主要建议意见', '问题处置'];
@@ -38,9 +33,13 @@ const TechnologyModal: React.FC<technologyModalProps> = selfProps => {
       progressId: Number(progressId),
       sheetId: sheetId,
     };
-    if (!opinion) values['opinion'] = tmp;
-    if (!situation) values['opinion'] = tmp;
-    console.log(values);
+    if (parameterList[currentTab!] === 'opinion') values['opinion'] = tmp;
+    if (parameterList[currentTab!] === 'situation') values['situation'] = tmp;
+    if (parameterList[currentTab!] === 'mainAdviceOpinion')
+      values['mainAdviceOpinion'] = tmp;
+    if (parameterList[currentTab!] === 'questionExecute')
+      values['questionExecute'] = tmp;
+    setTmp(null);
     try {
       const res = await httpUtil.updateSheet(values as updateSheet);
       if (res.code === 200) {
@@ -57,20 +56,6 @@ const TechnologyModal: React.FC<technologyModalProps> = selfProps => {
   };
   const setValue = (type: string, value: string) => {
     setTmp(value);
-    switch (type) {
-      case 'opinion':
-        setOpinion(value);
-        break;
-      case 'situation':
-        setSituation(value);
-        break;
-      case 'mainAdviceOpinion':
-        setOpinion(value);
-        break;
-      case 'questionExecute':
-        setSituation(value);
-        break;
-    }
   };
   return (
     <AtModal

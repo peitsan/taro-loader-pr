@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 import { useDispatch, useSelector } from '@/redux/hooks';
 import { getUnitsAC } from '@/redux/actionCreators';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   AtIcon,
   AtLoadMore,
@@ -27,13 +27,14 @@ import {
   proceduresItem,
   protocolsItem,
   tabListItem,
-  SelectResponsibleProps,
+  TechRefProps,
 } from './projectListType/projectListType';
 import { BackPrePage, message } from '../../../../../common/index';
 import SelectResponsible from './components/selectResponsible';
 import AdjustDeadline from './components/AdjustDeadline';
 import FillTechnology from './components/technologyTable/technologyModal';
 import './index.less';
+
 
 function ProjectList() {
   const dispatch = useDispatch();
@@ -68,6 +69,7 @@ function ProjectList() {
   const [isTechModal, setIsTechModal] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<number>();
   const [sheetId, setSheetId] = useState<number | null>(null);
+  const TechRef = useRef<TechRefProps>();
   // 员工列表
   const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(state => state.units.data.searchUnits);
@@ -347,6 +349,7 @@ function ProjectList() {
           />
           {/* 填写可研技术收口 */}
           <FillTechnology
+            getTechnologyList={TechRef.current?.getList as Function}
             isTechModal={isTechModal}
             okTechModal={okTechModal}
             setCurrentTab={setCurrentTab}
@@ -443,6 +446,7 @@ function ProjectList() {
                 )}>
                 <View style='background-color: #FAFBFC;'>
                   <TechnologyTable
+                    ref={TechRef}
                     setSheetId={setSheetId}
                     isTechModal={isTechModal}
                     setIsTechModal={setIsTechModal}

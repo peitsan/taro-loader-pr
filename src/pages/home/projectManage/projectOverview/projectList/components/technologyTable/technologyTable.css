@@ -79,7 +79,9 @@
     border-right: none;
 }
 .btn-background{
-    background-color: var(--first-theme-color)!important;
+    background-color: rgb(1, 47, 5);
+    margin: 20px 0;
+    color: white;
     border: none !important;
 }
 .signature-container{
@@ -119,23 +121,3 @@
 .all-content{
     padding: 0 10%;
 }
-/* .signature-input View TextArea{
-    height: 200px;
-    outline: none !important;
-    border: 1px solid #F0F0F0 !important;
-    transition: none !important;
-}
-
-.signature-input View TextArea:focus{
-    box-shadow: none !important;
-    outline: none!important;
-    border: none !important;
-    transition: none !important;
-}
-
-.signature-input View TextArea:hover{
-    box-shadow: none !important;
-    outline: none !important;
-    border: none !important;
-    transition: none !important;
-} */

@@ -17,11 +17,12 @@ export interface technologyModalProps {
   okTechModal: any;
   currentTab?: number;
   setCurrentTab?: Function;
-  getTechnologyList?: Function;
+  getTechnologyList?: any;
   sheetId?: number | null;
 }
 
 export interface technologyTableProps {
+  ref: any;
   isTechModal: boolean;
   setIsTechModal: Function;
   setSelectRecord: Function;

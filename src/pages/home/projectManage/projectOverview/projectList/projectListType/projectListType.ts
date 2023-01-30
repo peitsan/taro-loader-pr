@@ -1,4 +1,7 @@
 //公共
+export interface TechRefProps {
+  getList: Function;
+}
 export interface SelectResponsibleProps {
   isManageModal: boolean;
   okManageModal: Function;
