@@ -12,4 +12,5 @@ export interface AccordionProps {
   index: number;
   setIsCheckModal?: any;
   setIsManageModal?: any;
+  setSelectRecord?: any;
 }

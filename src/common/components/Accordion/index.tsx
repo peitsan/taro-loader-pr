@@ -18,7 +18,8 @@ import httpUtil from '../../../utils/httpUtil';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
-  const { data, index, setIsCheckModal, setIsManageModal } = selfProps;
+  const { data, index, setIsCheckModal, setIsManageModal, setSelectRecord } =
+    selfProps;
   const [active, setActive] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [reasonId, setReasonId] = useState<number>(0);
@@ -71,6 +72,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setIsCheckModal(true);
   };
   const showManageSelector = async (record: Item) => {
+    setSelectRecord(record);
     setIsManageModal(true);
   };
   const GetOperationForUnite: React.FC<any> = props => {
@@ -78,27 +80,39 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     const { manageId, code } = records;
     const { id } = JSON.parse(Taro.getStorageSync('user')!);
     return code === 0 ? ( //判断是否有权限
-      ModalName === 'projectOverview' ? ( //判断流程是否在工程总览阶段
-        // 工程总览有权限回复清单的经理
-        <>
-          {/* <View
-            className={styles['pass-btn ']}
-            onClick={() => showModal(records)}>
-            回复
-          </View> */}
-          <View>无</View>
-        </>
-      ) : (
+      ModalName === 'projectAudit' ? ( //判断流程是否在工程总览阶段
         // 工程审核有权限回复清单的经理
         <>
-          <AtButton
+          <View
             className={styles['pass-btn']}
             onClick={() => showManageSelector(records)}>
             <View>指定</View>
             <View>负责人</View>
-          </AtButton>
+          </View>
+        </>
+      ) : (
+        // 工程总览有权限回复清单的经理
+        <>
+          {/* <View
+          className={styles['pass-btn ']}
+          onClick={() => showModal(records)}>
+          回复
+        </View> */}
+          <View>无</View>
         </>
       )
+    ) : code === 1 && manageId.includes(id) ? (
+      <>
+        <View className={styles['pass-btn']} onClick={() => showModal(records)}>
+          回复
+        </View>
+
+        <View
+          className={styles['pass-btn']}
+          onClick={() => showApplyModal(records)}>
+          调整时间
+        </View>
+      </>
     ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
       (code === 3 &&
         canCheckOtherReply(Number(Taro.getStorageSync('fatherId')))) ? (
@@ -109,7 +123,9 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
         查看回复
       </AtButton>
     ) : (
-      <View>无</View>
+      <>
+        <View>无</View>
+      </>
     );
   };
   const GetOperationForList: React.FC<any> = props => {
@@ -119,22 +135,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     const { id } = JSON.parse(Taro.getStorageSync('user')!);
     return code === 1 && //流程在待回复(负责人已指定)
       manageId.includes(id) ? ( //判断是否有权限
-      ModalName === 'projectOverview' ? ( //判断流程是否在工程总览阶段
-        // 工程总览有权限回复清单的经理
-        <>
-          <View
-            className={styles['pass-btn']}
-            onClick={() => showModal(records)}>
-            回复
-          </View>
-
-          <View
-            className={styles['pass-btn']}
-            onClick={() => showApplyModal(records)}>
-            调整时间
-          </View>
-        </>
-      ) : (
+      ModalName === 'projectAudit' ? (
         // 工程审核有权限回复清单的经理
         <>
           <View
@@ -157,6 +158,22 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
             onClick={() => showApplyModal(records)}>
             上报
           </View>{' '}
+        </>
+      ) : (
+        //判断流程是否在工程总览阶段
+        // 工程总览有权限回复清单的经理
+        <>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showModal(records)}>
+            回复
+          </View>
+
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showApplyModal(records)}>
+            调整时间
+          </View>
         </>
       )
     ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
@@ -197,7 +214,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
                   textAlign: 'center',
                   color: '#52c41a',
                 }}>
-                {data.len}
+                {len}
               </View>
               <View style={{ width: '35%' }} onClick={() => setActive(false)}>
                 <View style={{ float: 'right' }}>
@@ -353,7 +370,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
                   textAlign: 'center',
                   color: '#52c41a',
                 }}>
-                {data.len}
+                {len}
               </View>
               <View
                 style={{

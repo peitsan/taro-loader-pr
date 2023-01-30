@@ -1,26 +1,68 @@
-import { useRef } from 'react';
-import { AtModal, AtModalAction, AtModalContent, AtModalHeader } from 'taro-ui';
+import { getStorageSync } from '@tarojs/taro';
+import { useEffect, useRef, useState } from 'react';
+import {
+  AtInputNumber,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtModalHeader,
+} from 'taro-ui';
 import { Button, View } from '@tarojs/components';
-import { useSelector } from '@/redux/hooks';
 import { UnitsType } from '@/redux/units/slice';
 import PersonSelector from '@/common/components/personSelector/personSelector';
+import { message } from '@/common/functions';
+import httpUtil from '@/utils/httpUtil';
 import { SelectResponsibleProps } from './indexProps';
 import styles from './index.module.less';
 
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
-  const { isManageModal, okManageModal } = selfProps;
-  const units = useSelector(state => state.units.data.units);
-  const searchUnits = useSelector(state => state.units.data.searchUnits);
-  const ResponserVal = useRef();
-  const AlerterVal = useRef();
+  const { isManageModal, okManageModal, selectRecord, units } = selfProps;
+  const ResponserVal = useRef<any>();
+  const AlerterVal = useRef<any>();
+  const [AlertDeadline, setAlertDeadline] = useState<number>(0);
+  const onCreate = () => {
+    // const responsibleId = ;
+    // const responsibleId = ;
+    message('请求中', 'warning');
+    httpUtil
+      .comfirmResponsible({
+        project_id: getStorageSync('projectId'),
+        question_id: selectRecord.key,
+        relevantors: [units[ResponserVal?.current?.state.value[0]]?.depts[
+          ResponserVal?.current?.state.value[1]
+          ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
+        ],
+        responsibles: [units[AlerterVal?.current?.state.value[0]]?.depts[
+          AlerterVal?.current?.state.value[1]
+          ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
+        ],
+        advanceDay: AlertDeadline,
+      })
+      .then(res => {
+        if (res.code === 500) {
+          message('请求错误', 'error');
+        } else {
+          // getSpecial();
+          message('请求中', 'warning');
+          message('指定成功', 'success');
+          okManageModal();
+        }
+      });
+  };
   const onConfirmManage = () => {
+    // console.log(selectRecord);
+    onCreate();
     okManageModal();
   };
+  // 人员好像数据不太对
   return (
     <AtModal isOpened={isManageModal} onClose={okManageModal}>
       <AtModalHeader> 确认责任人-报警人</AtModalHeader>
       <AtModalContent>
-        <View className='reply-wrapper'>
+        <View className={styles['reply-title']}>
+          {selectRecord?.reason + ':'}
+        </View>
+        <View>
           <PersonSelector
             title='负责人'
             ref={ResponserVal}
@@ -30,7 +72,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
             multiple
           />
         </View>
-        <View className='reply-wrapper'>
+        <View>
           <PersonSelector
             title='报警人'
             ref={AlerterVal}
@@ -40,8 +82,15 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
             multiple
           />
         </View>
-        <View className='reply-wrapper'>
-          {/* <Picker title='提前提醒天数'></Picker> */}
+        <View className={styles['reply-title']}>
+          提前提醒天数:{' '}
+          <AtInputNumber
+            min={0}
+            max={10}
+            step={1}
+            value={AlertDeadline}
+            onChange={e => setAlertDeadline(e)}
+          />
         </View>
       </AtModalContent>
       <AtModalAction>
@@ -52,4 +101,5 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     </AtModal>
   );
 };
+
 export default SelectResponsible;

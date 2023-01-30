@@ -14,13 +14,13 @@ import {
   AtModalHeader,
 } from 'taro-ui';
 import { TeamPersonType } from './indexProps';
-import { message, transPersons } from '../../../../common/functions/index';
+import { message } from '../../../../common/functions/index';
 import PersonSelector from '../../../../common/components/personSelector/personSelector';
 import { UnitType, UnitsType } from '../../../../redux/units/slice';
 import { useSelector, useDispatch } from '../../../../redux/hooks';
 import { getUnitsAC } from '../../../../redux/actionCreators';
-// import { addManagerProjectTeamPerson } from '../../../../utils/params';
 import style from './index.module.less';
+import { OperationProps } from '../teamList/indexProps';
 
 const TeamList: React.FC = () => {
   const { router } = Taro.getCurrentInstance(); //获取路由传入的index参数

@@ -93,6 +93,7 @@ const SonProjectProgress = () => {
       Taro.setStorageSync('fatherName', fatherProName);
       Taro.setStorageSync('projectId', projectId);
       Taro.setStorageSync('progressId', id);
+      Taro.setStorageSync('fatherId', fatherId);
       Taro.setStorageSync('status', '已结束');
       Taro.setStorageSync('name', name);
       Taro.setStorageSync('type', String(type));
@@ -108,6 +109,7 @@ const SonProjectProgress = () => {
       Taro.setStorageSync('projectName', proName);
       Taro.setStorageSync('fatherName', fatherProName);
       Taro.setStorageSync('projectId', projectId);
+      Taro.setStorageSync('fatherId', fatherId);
       Taro.setStorageSync('progressId', id);
       Taro.setStorageSync('status', '进行中');
       Taro.setStorageSync('name', name);

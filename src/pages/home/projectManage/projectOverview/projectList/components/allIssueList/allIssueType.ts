@@ -33,6 +33,7 @@ export interface IProps {
   proceduresItem?: proceduresItem[];
   setIsCheckModal?: Function;
   setIsManageModal?: Function;
+  setSelectRecord?: Function;
   index: number;
   fresh: Function;
 }

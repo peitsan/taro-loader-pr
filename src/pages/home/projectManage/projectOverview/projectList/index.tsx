@@ -1,6 +1,6 @@
 import Taro from '@tarojs/taro';
-import { useSelector } from '@/redux/hooks';
-import PersonSelector from '@/common/components/personSelector/personSelector';
+import { useDispatch, useSelector } from '@/redux/hooks';
+import { getUnitsAC } from '@/redux/actionCreators';
 import { UnitsType } from '@/redux/units/slice';
 import { useState, useEffect, useRef } from 'react';
 import {
@@ -37,10 +37,12 @@ import SelectResponsible from './components/selectResponsible';
 import './index.less';
 
 function ProjectList() {
+  const dispatch = useDispatch();
   const projectName = Taro.getStorageSync('projectName');
   const progressName = Taro.getStorageSync('name');
   const fatherName = Taro.getStorageSync('fatherName');
   const type = Number(Taro.getStorageSync('type'));
+  const fatherId = Taro.getStorageSync('fatherId');
   // 此处为了方便调试
   const defaultKey = type === 8 ? '4' : '1';
   const [indexKey, setIndexKey] = useState<string>(defaultKey);
@@ -58,6 +60,10 @@ function ProjectList() {
   const [replyText, setReplyText] = useState<string>('空');
 
   const [isManageModal, setIsManageModal] = useState<boolean>(false);
+  const [selectRecord, setSelectRecord] = useState();
+  // 员工列表
+  const units = useSelector(state => state.units.data.units);
+  const searchUnits = useSelector(state => state.units.data.searchUnits);
   const typeName = [
     '可研启动会',
     '中间成果评审会',
@@ -261,6 +267,7 @@ function ProjectList() {
   //关闭指定负责人模态框
   const okManageModal = () => {
     setIsManageModal(false);
+    getTimeDetail();
   };
   //   const onConfirmManage = () => {
   //     okManageModal();
@@ -300,6 +307,7 @@ function ProjectList() {
   //   );
   // };
   useEffect(() => {
+    dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
     getTimeDetail();
     // 生成tabList
     effectTabList();
@@ -345,6 +353,8 @@ function ProjectList() {
           <SelectResponsible
             isManageModal={isManageModal}
             okManageModal={okManageModal}
+            selectRecord={selectRecord}
+            units={units}
           />
           <AtTabs
             scroll
@@ -361,6 +371,7 @@ function ProjectList() {
                     index={4}
                     setIsCheckModal={setIsCheckModal}
                     setIsManageModal={setIsManageModal}
+                    setSelectRecord={setSelectRecord}
                     fresh={getTimeDetail}
                   />
                 </View>
