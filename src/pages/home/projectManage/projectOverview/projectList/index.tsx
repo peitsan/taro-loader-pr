@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   AtIcon,
   AtLoadMore,
+  AtMessage,
   AtModal,
   AtModalAction,
   AtModalContent,
@@ -324,7 +325,6 @@ function ProjectList() {
     setIsRejetModal(false);
   };
   const pass = (question_id: string) => {
-    console.log(question_id);
     message('请求中', 'warning');
     httpUtil
       .passReplyApprove({
@@ -333,13 +333,37 @@ function ProjectList() {
         itemName: itemName[(selectIndex as number) - 1],
       })
       .then(res => {
-        message('成功', 'success');
-        console.log(res);
+        if (res.code === 200) {
+          message('通过成功', 'success');
+        } else {
+          message('通过失败', 'error');
+        }
       });
   };
-
+  const passSpecial = () => {
+    message('请求中', 'warning');
+    let approvalId = 0;
+    zxpgData.map(item => {
+      if (item.id == selectRecord.id) {
+        const { aid, bid, cid, eid, did } = item;
+        const idList = ['', aid, bid, cid, did, '', '', '', eid];
+        approvalId = idList[type];
+      }
+    });
+    httpUtil
+      .specialPass({
+        projectId: String(Taro.getStorageSync('projectId')),
+        zxpgId: approvalId,
+      })
+      .then(res => {
+        if (res.code === 200) {
+          message('通过成功', 'success');
+        } else {
+          message('通过失败', 'error');
+        }
+      });
+  };
   const reject = (question_id: string) => {
-    console.log(question_id);
     message('请求中', 'warning');
     httpUtil
       .backReplyApprove({
@@ -348,18 +372,50 @@ function ProjectList() {
         itemName: itemName[(selectIndex as number) - 1],
       })
       .then(res => {
-        message('成功', 'success');
-        console.log(res);
+        if (res.code === 200) {
+          message('驳回成功', 'success');
+        } else {
+          message('驳回失败', 'error');
+        }
+      });
+  };
+  const rejectSpecial = () => {
+    message('请求中', 'warning');
+    let approvalId = 0;
+    zxpgData.map(item => {
+      if (item.id == selectRecord.id) {
+        const { aid, bid, cid, eid, did } = item;
+        const idList = ['', aid, bid, cid, did, '', '', '', eid];
+        approvalId = idList[type];
+      }
+    });
+    httpUtil
+      .specialReject({
+        projectId: String(Taro.getStorageSync('projectId')),
+        zxpgId: approvalId,
+      })
+      .then(res => {
+        if (res.code === 200) {
+          message('驳回成功', 'success');
+        } else {
+          message('驳回失败', 'error');
+        }
       });
   };
   const onConfirmPass = () => {
-    console.log('1');
-    console.log(selectRecord);
-    if (selectRecord !== null) pass((selectRecord as Item).key as string);
+    if (selectRecord !== null && selectIndex !== 7)
+      pass((selectRecord as Item).key as string);
+    else if (selectRecord !== null && selectIndex == 7) {
+      passSpecial();
+    }
     okPassModal();
   };
   const onConfirmReject = () => {
-    if (selectRecord !== null) reject((selectRecord as Item).key as string);
+    if (selectRecord !== null && selectIndex !== 7)
+      reject((selectRecord as Item).key as string);
+    else if (selectRecord !== null && selectIndex == 7) {
+      rejectSpecial();
+    }
     okRejetModal();
   };
   useEffect(() => {
@@ -370,6 +426,7 @@ function ProjectList() {
   }, [flag, fresh]);
   return (
     <View className='projectView-container'>
+      <AtMessage />
       <View className='project-title'>
         {fatherName}/{projectName}/{progressName}
       </View>
