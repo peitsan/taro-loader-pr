@@ -52,10 +52,13 @@ const AccordionForSpecialist: React.FC<
   let len: number = 0;
   const { status } = data;
   if (
-    ModalName !== 'projectOverview' &&
-    status !== 1 &&
-    status !== 3 &&
-    status !== 5
+    ModalName === 'projectOverview' &&
+    (status == 1 || status == 3 || status == 5)
+  ) {
+    len = 1;
+  } else if (
+    ModalName === 'projectAudit' &&
+    (status == 0 || status == 2 || status == 4)
   ) {
     len = 1;
   }
@@ -288,6 +291,7 @@ const AccordionForSpecialist: React.FC<
       setQuestion_id(approvalId);
     };
     const lookReply = (question_id: string) => {
+      console.log(question_id);
       message('请稍等', 'warning');
       httpUtil
         .specialCheckReply({
@@ -295,17 +299,27 @@ const AccordionForSpecialist: React.FC<
           zxpgId: Number(question_id),
         })
         .then(res => {
-          const {
-            data: {
-              reply: { text, attachment },
-            },
-          } = res;
+          let replyObj;
+          if (type === 1) {
+            replyObj = res.data.reply.a[0];
+          } else if (type === 2) {
+            replyObj = res.data.reply.b[0];
+          } else if (type === 3) {
+            replyObj = res.data.reply.c[0];
+          } else if (type === 4) {
+            replyObj = res.data.reply.d[0];
+          } else if (type === 8) {
+            replyObj = res.data.reply.e[0];
+          }
+          const { text, attachment } = replyObj;
+          // 返回回复信息
+          setSelectRecord(replyObj);
           setReplyText(text);
           setAttachments(attachment);
         });
     };
     const showCheckModal = (record: Item) => {
-      lookReply(String(record.key));
+      lookReply(question_id);
       setSelectIndex(7);
       setIsCheckModal(true);
     };

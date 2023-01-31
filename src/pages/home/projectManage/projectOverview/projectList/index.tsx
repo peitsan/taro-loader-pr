@@ -217,11 +217,17 @@ function ProjectList() {
   };
   // 查看清单模态框
   const CheckModal: React.FC = () => {
+    let reply = '回复为空';
+    let URL = '';
     const [canDownload, setCanDownload] = useState(false);
     // 文件下载的URL和name
     const [downloadURL, setDownloadURL] = useState('');
     const [downloadName, setDownloadName] = useState('');
-
+    if (selectRecord) {
+      console.log(selectRecord);
+      URL = selectRecord.attachment;
+      reply = selectRecord.text;
+    }
     const downloadFile = () => {
       setCanDownload(false);
       const hiding = message('下载中', 'warning');
@@ -249,8 +255,8 @@ function ProjectList() {
             <AtTextarea
               className='reply-text-area'
               disabled
-              height={5}
-              value={replyText}
+              height={50}
+              value={selectRecord ? selectRecord.text : ''}
               onChange={e => setReplyText(e)}
             />
             <View className='reply-title'>附件：</View>

@@ -28,7 +28,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   const [reasonId, setReasonId] = useState<number>(0);
   const [isAdjustTime, setIsAdjustTime] = useState<boolean>(false);
   const [planTime, setPlanTime] = useState<string>('');
-  // const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
   const ModalName = Taro.getStorageSync('ModalName');
@@ -49,7 +48,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       .lookAllListReply({
         project_id: Taro.getStorageSync('projectId')!,
         question_id: question_id,
-        itemName: 'special',
+        itemName: itemName[index - 1],
       })
       .then(res => {
         const {
@@ -57,12 +56,17 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
             reply: { text, attachment },
           },
         } = res;
+        setSelectRecord(res.data.reply);
         setReplyText(text);
         setAttachmentUrl(attachment);
       });
   };
   const showCheckModal = (record: Item) => {
     lookReply(String(record.key));
+    const recd = {
+      replyText: replyText,
+      attachmentUrl: attachmentUrl,
+    };
     setIsCheckModal(true);
   };
   const showManageSelector = async (record: Item) => {
