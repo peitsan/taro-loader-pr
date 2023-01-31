@@ -1,6 +1,8 @@
 import Taro from '@tarojs/taro';
 import { useDispatch, useSelector } from '@/redux/hooks';
 import { getUnitsAC } from '@/redux/actionCreators';
+import PopConfirm from '@/common/components/PopConfirm';
+import { Item } from '@/common/components/Accordion/indexProps';
 import { useState, useEffect, useRef } from 'react';
 import {
   AtIcon,
@@ -29,12 +31,13 @@ import {
   tabListItem,
   TechRefProps,
 } from './projectListType/projectListType';
-import { BackPrePage, message } from '../../../../../common/index';
+import { message } from '../../../../../common/index';
+import ApplyUpper from './components/applyUpper';
 import SelectResponsible from './components/selectResponsible';
 import AdjustDeadline from './components/AdjustDeadline';
+import ReplyQuestion from './components/replyQuestion';
 import FillTechnology from './components/technologyTable/technologyModal';
 import './index.less';
-
 
 function ProjectList() {
   const dispatch = useDispatch();
@@ -43,6 +46,7 @@ function ProjectList() {
   const fatherName = Taro.getStorageSync('fatherName');
   const type = Number(Taro.getStorageSync('type'));
   const fatherId = Taro.getStorageSync('fatherId');
+  const itemName = ['reason', 'opinion', 'condition', 'question'];
   // 此处为了方便调试
   const defaultKey = type === 8 ? '4' : '1';
   const [indexKey, setIndexKey] = useState<string>(defaultKey);
@@ -70,6 +74,10 @@ function ProjectList() {
   const [currentTab, setCurrentTab] = useState<number>();
   const [sheetId, setSheetId] = useState<number | null>(null);
   const TechRef = useRef<TechRefProps>();
+  // 控制员工回复清单问题
+  const [isReplyModal, setIsReplyModal] = useState<boolean>(false);
+  // 控制上报领导
+  const [isApplyUpper, setIsApplyUpper] = useState<boolean>(false);
   // 员工列表
   const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(state => state.units.data.searchUnits);
@@ -288,8 +296,66 @@ function ProjectList() {
     setIsTechModal(false);
     getTimeDetail();
   };
+  //关闭可研技术收口填写模态框
+  const okReplyModal = () => {
+    setIsReplyModal(false);
+    getTimeDetail();
+  };
+  //关闭选择领导上报模态框
+  const okApplyUpper = () => {
+    setIsApplyUpper(false);
+    getTimeDetail();
+  };
+
+  const [isRejetModal, setIsRejetModal] = useState<boolean>(false);
+  const [isPassModal, setIsPassModal] = useState<boolean>(false);
+  const okPassModal = () => {
+    setIsPassModal(false);
+  };
+  const okRejetModal = () => {
+    setIsRejetModal(false);
+  };
+  const pass = (question_id: string) => {
+    console.log(question_id);
+    message('请求中', 'warning');
+    httpUtil
+      .passReplyApprove({
+        project_id: String(Taro.getStorageSync('projectId')),
+        question_id: question_id,
+        itemName: itemName[(selectIndex as number) - 1],
+      })
+      .then(res => {
+        message('成功', 'success');
+        console.log(res);
+      });
+  };
+
+  const reject = (question_id: string) => {
+    console.log(question_id);
+    message('请求中', 'warning');
+    httpUtil
+      .backReplyApprove({
+        project_id: String(Taro.getStorageSync('projectId')),
+        question_id: question_id,
+        itemName: itemName[(selectIndex as number) - 1],
+      })
+      .then(res => {
+        message('成功', 'success');
+        console.log(res);
+      });
+  };
+  const onConfirmPass = () => {
+    console.log('1');
+    console.log(selectRecord);
+    if (selectRecord !== null) pass((selectRecord as Item).key as string);
+    okPassModal();
+  };
+  const onConfirmReject = () => {
+    if (selectRecord !== null) reject((selectRecord as Item).key as string);
+    okRejetModal();
+  };
   useEffect(() => {
-    dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: false }));
+    dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: true }));
     getTimeDetail();
     // 生成tabList
     effectTabList();
@@ -356,7 +422,37 @@ function ProjectList() {
             sheetId={sheetId}
             currentTab={currentTab}
           />
-          {/* 申请调整时间 */}
+          {/* 员工回复清单问题 */}
+          <ReplyQuestion
+            isReplyModal={isReplyModal}
+            okReplyModal={okReplyModal}
+            selectIndex={selectIndex as number}
+            selectRecord={selectRecord}
+          />
+          {/* 通过审核 */}
+          <PopConfirm
+            isPop={isPassModal}
+            okIsPop={okPassModal}
+            operation='通过'
+            msg='确认通过前请查看回复信息!确认后将无法撤回！'
+            todo={onConfirmPass}
+          />
+          {/* 驳回审核 */}
+          <PopConfirm
+            isPop={isRejetModal}
+            okIsPop={okRejetModal}
+            operation='驳回'
+            msg='驳回通过前请查看回复信息!确认后将无法撤回！'
+            todo={onConfirmReject}
+          />
+          {/* 上报审批 */}
+          <ApplyUpper
+            isApplyUpper={isApplyUpper}
+            okApplyUpper={okApplyUpper}
+            selectIndex={selectIndex as number}
+            selectRecord={selectRecord}
+            units={units}
+          />
           <AtTabs
             scroll
             current={selectTab}
@@ -370,6 +466,10 @@ function ProjectList() {
                   <AllIssueList
                     issuesItems={issue}
                     index={4}
+                    setIsApplyUpper={setIsApplyUpper}
+                    setIsPassModal={setIsPassModal}
+                    setIsRejetModal={setIsRejetModal}
+                    setIsReplyModal={setIsReplyModal}
                     setIsCheckModal={setIsCheckModal}
                     setIsManageModal={setIsManageModal}
                     setIsAdjustModal={setIsAdjustModal}

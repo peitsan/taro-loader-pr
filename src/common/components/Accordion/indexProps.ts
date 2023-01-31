@@ -15,4 +15,8 @@ export interface AccordionProps {
   setSelectRecord?: any;
   setSelectIndex?: any;
   setIsAdjustModal?: any;
+  setIsReplyModal?: any;
+  setIsRejetModal?: any;
+  setIsPassModal?: any;
+  setIsApplyUpper?: any;
 }

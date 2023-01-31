@@ -28,12 +28,14 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
       .comfirmResponsible({
         project_id: getStorageSync('projectId'),
         question_id: selectRecord.key,
-        relevantors: [units[ResponserVal?.current?.state.value[0]]?.depts[
-          ResponserVal?.current?.state.value[1]
+        relevantors: [
+          units[ResponserVal?.current?.state.value[0]]?.depts[
+            ResponserVal?.current?.state.value[1]
           ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
         ],
-        responsibles: [units[AlerterVal?.current?.state.value[0]]?.depts[
-          AlerterVal?.current?.state.value[1]
+        responsibles: [
+          units[AlerterVal?.current?.state.value[0]]?.depts[
+            AlerterVal?.current?.state.value[1]
           ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
         ],
         advanceDay: AlertDeadline,

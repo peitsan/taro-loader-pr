@@ -21,7 +21,11 @@ export const AllIssueList: React.FC<IProps> = props => {
     setIsManageModal,
     setSelectRecord,
     setIsAdjustModal,
+    setIsReplyModal,
+    setIsPassModal,
+    setIsRejetModal,
     setSelectIndex,
+    setIsApplyUpper,
     index,
   } = props;
   const listItem = [problemsItem, protocolsItem, proceduresItem, issuesItems];
@@ -163,11 +167,15 @@ export const AllIssueList: React.FC<IProps> = props => {
                   <Accordion
                     data={item}
                     index={index}
+                    setIsApplyUpper={setIsApplyUpper}
+                    setIsRejetModal={setIsRejetModal}
+                    setIsPassModal={setIsPassModal}
                     setIsCheckModal={setIsCheckModal}
                     setIsManageModal={setIsManageModal}
                     setSelectRecord={setSelectRecord}
                     setIsAdjustModal={setIsAdjustModal}
                     setSelectIndex={setSelectIndex}
+                    setIsReplyModal={setIsReplyModal}
                   />
                 </View>
               );

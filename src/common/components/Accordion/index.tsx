@@ -6,7 +6,7 @@ import { AtIcon, AtButton, AtMessage } from 'taro-ui';
 import { Item, AccordionProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
-
+import PopConfirm from '../PopConfirm';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
@@ -17,7 +17,11 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setIsManageModal,
     setSelectRecord,
     setIsAdjustModal,
+    setIsRejetModal,
+    setIsPassModal,
     setSelectIndex,
+    setIsReplyModal,
+    setIsApplyUpper,
   } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -79,10 +83,32 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setSelectIndex(index);
     setIsAdjustModal(true);
   };
+  const showReplyModal = async (record: Item, index: number) => {
+    setSelectRecord(record);
+    setSelectIndex(index);
+    setIsReplyModal(true);
+  };
+  const showPassConfirm = async (record: Item, index: number) => {
+    setSelectRecord(record);
+    setSelectIndex(index);
+    setIsPassModal(true);
+    console.log('1');
+  };
+  const showRejetConfirm = async (record: Item, index: number) => {
+    setSelectRecord(record);
+    setSelectIndex(index);
+    setIsRejetModal(true);
+  };
+  const showApplyUpper = async (record: Item, index: number) => {
+    setSelectRecord(record);
+    setSelectIndex(index);
+    setIsApplyUpper(true);
+  };
   const GetOperationForUnite: React.FC<any> = props => {
     const { records } = props;
     const { manageId, code } = records;
     const { id } = JSON.parse(Taro.getStorageSync('user')!);
+
     return code === 0 ? ( //判断是否有权限
       ModalName === 'projectAudit' ? ( //判断流程是否在工程总览阶段
         // 工程审核有权限回复清单的经理
@@ -97,35 +123,91 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
       ) : (
         // 工程总览有权限回复清单的经理
         <>
-          {/* <View
-          className={styles['pass-btn ']}
-          onClick={() => showModal(records)}>
-          回复
-        </View> */}
           <View>无</View>
         </>
       )
-    ) : code === 1 && manageId.includes(id) ? (
-      <>
-        <View className={styles['pass-btn']} onClick={() => showModal(records)}>
-          回复
-        </View>
+    ) : code === 1 ? (
+      ModalName == 'projectOverview' ? (
+        <>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showReplyModal(records, index)}>
+            回复
+          </View>
 
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showAdjustDeadline(records, index)}>
+            调整时间
+          </View>
+        </>
+      ) : (
+        <>
+          <View>无</View>
+        </>
+      )
+    ) : code === 2 ? (
+      ModalName === 'projectAudit' ? (
+        // 这里还有详细问一下 不是项目的管理员能不能审核他的问题清单
+        // 管理员看到的2和3阶段的工程审核
+        <>
+          <View
+            className={styles['look-btn']}
+            onClick={() => showCheckModal(records)}>
+            查看
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showPassConfirm(records, index)}>
+            通过
+          </View>
+          <View
+            className={styles['back-btn']}
+            onClick={() => showRejetConfirm(records, index)}>
+            驳回
+          </View>
+        </>
+      ) : (
+        // 管理员看到的2和3阶段的工程总览
         <View
-          className={styles['pass-btn']}
-          onClick={() => showAdjustDeadline(records, index)}>
-          调整时间
+          className={styles['cofirm-btn']}
+          onClick={() => showCheckModal(records)}>
+          查看回复
         </View>
-      </>
-    ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
-      (code === 3 &&
+      )
+    ) : (code === 2 || code === 3) &&
+      (manageId.includes(id) ||
+        //普通员工(Boss)有权限问题已解决后也可以查看回复
         canCheckOtherReply(Number(Taro.getStorageSync('fatherId')))) ? (
-      <AtButton
-        size='small'
-        type='primary'
+      <View
+        className={styles['cofirm-btn']}
         onClick={() => showCheckModal(records)}>
         查看回复
-      </AtButton>
+      </View>
+    ) : code === 4 && ModalName === 'projectAudit' ? (
+      // 申请项目经理调整时间中且为管理员有权限
+      <>
+        <View
+          className={styles['look-btn']}
+          onClick={() => showCheckModal(records)}>
+          查看
+        </View>
+        <View
+          className={styles['pass-btn']}
+          onClick={() => showPassConfirm(records, index)}>
+          通过
+        </View>
+        <View
+          className={styles['back-btn']}
+          onClick={() => showRejetConfirm(records, index)}>
+          驳回
+        </View>
+        <View
+          className={styles['cofirm-btn']}
+          onClick={() => showApplyUpper(records, index)}>
+          上报
+        </View>
+      </>
     ) : (
       <>
         <View>无</View>

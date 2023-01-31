@@ -9,7 +9,7 @@ class UploadBtn extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      fileNum:0,
+      fileNum: 0,
       files: [],
       showUploadBtn: false,
       upLoadImg: [],

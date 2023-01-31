@@ -31,9 +31,13 @@ export interface IProps {
   problemsItem?: problemsItem[];
   protocolsItem?: protocolsItem[];
   proceduresItem?: proceduresItem[];
+  setIsApplyUpper?: Function;
   setIsCheckModal?: Function;
   setIsManageModal?: Function;
   setIsAdjustModal?: Function;
+  setIsReplyModal?: Function;
+  setIsRejetModal?: Function;
+  setIsPassModal?: Function;
   setSelectRecord?: Function;
   setSelectIndex?: Function;
   index: number;
