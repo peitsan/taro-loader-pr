@@ -62,6 +62,8 @@ function ProjectList() {
   const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
+  // 缓存专项评估数据
+  const [zxpgData, setZxpgData] = useState<any>();
   // 暂存获取选中数据
   const [selectRecord, setSelectRecord] = useState();
   const [selectIndex, setSelectIndex] = useState<number>();
@@ -401,9 +403,11 @@ function ProjectList() {
           <CheckModal />
           {/* 指定负责人 */}
           <SelectResponsible
+            zxpgData={zxpgData}
             isManageModal={isManageModal}
             okManageModal={okManageModal}
             selectRecord={selectRecord}
+            selectIndex={selectIndex as number}
             units={units}
           />
           {/* 申请调整时间 */}
@@ -487,6 +491,15 @@ function ProjectList() {
                 <AllIssueList
                   problemsItem={problem}
                   index={1}
+                  setIsApplyUpper={setIsApplyUpper}
+                  setIsPassModal={setIsPassModal}
+                  setIsRejetModal={setIsRejetModal}
+                  setIsReplyModal={setIsReplyModal}
+                  setIsCheckModal={setIsCheckModal}
+                  setIsManageModal={setIsManageModal}
+                  setIsAdjustModal={setIsAdjustModal}
+                  setSelectRecord={setSelectRecord}
+                  setSelectIndex={setSelectIndex}
                   fresh={getTimeDetail}
                 />
                 {/* 问题清单 */}
@@ -499,6 +512,15 @@ function ProjectList() {
                 <AllIssueList
                   protocolsItem={protocol}
                   index={2}
+                  setIsApplyUpper={setIsApplyUpper}
+                  setIsPassModal={setIsPassModal}
+                  setIsRejetModal={setIsRejetModal}
+                  setIsReplyModal={setIsReplyModal}
+                  setIsCheckModal={setIsCheckModal}
+                  setIsManageModal={setIsManageModal}
+                  setIsAdjustModal={setIsAdjustModal}
+                  setSelectRecord={setSelectRecord}
+                  setSelectIndex={setSelectIndex}
                   fresh={getTimeDetail}
                 />
                 {/* 协议清单 */}
@@ -511,6 +533,15 @@ function ProjectList() {
                 <AllIssueList
                   proceduresItem={procedure}
                   index={3}
+                  setIsApplyUpper={setIsApplyUpper}
+                  setIsPassModal={setIsPassModal}
+                  setIsRejetModal={setIsRejetModal}
+                  setIsReplyModal={setIsReplyModal}
+                  setIsCheckModal={setIsCheckModal}
+                  setIsManageModal={setIsManageModal}
+                  setIsAdjustModal={setIsAdjustModal}
+                  setSelectRecord={setSelectRecord}
+                  setSelectIndex={setSelectIndex}
                   fresh={getTimeDetail}
                 />
                 {/* 手续清单 */}
@@ -562,7 +593,20 @@ function ProjectList() {
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '专项评估')}>
                 <View style='50px;background-color: #FAFBFC;'></View>
-                <SpecialAssessment Type={type} />
+                <SpecialAssessment
+                  Type={type}
+                  setZxpgData={setZxpgData}
+                  setIsApplyUpper={setIsApplyUpper}
+                  setIsPassModal={setIsPassModal}
+                  setIsRejetModal={setIsRejetModal}
+                  setIsReplyModal={setIsReplyModal}
+                  setIsCheckModal={setIsCheckModal}
+                  setIsManageModal={setIsManageModal}
+                  setIsAdjustModal={setIsAdjustModal}
+                  setSelectRecord={setSelectRecord}
+                  setSelectIndex={setSelectIndex}
+                  fresh={getTimeDetail}
+                />
               </AtTabsPane>
             ) : null}
           </AtTabs>

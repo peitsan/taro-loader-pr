@@ -30,25 +30,47 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
     if (timer) {
       clearTimeout(timer);
     }
-    timer = setTimeout(async () => {
-      const hideLoading = message('请求中', 'warning');
-      try {
-        const data = {
-          text: replyText,
-          attachment: url,
-          reason_id: String(selectRecord.key),
-          type: reply[selectIndex - 1],
-        };
-        console.log('test', data);
-        const res = await httpUtil.replyQus(data);
-        if (res.code === 200) {
-          okReplyModal();
-          message('回复成功', 'success');
+    if (selectIndex !== 7) {
+      timer = setTimeout(async () => {
+        const hideLoading = message('请求中', 'warning');
+        try {
+          const data = {
+            text: replyText,
+            attachment: url,
+            reason_id: String(selectRecord.key),
+            type: reply[selectIndex - 1],
+          };
+          console.log('test', data);
+          const res = await httpUtil.replyQus(data);
+          if (res.code === 200) {
+            okReplyModal();
+            message('回复成功', 'success');
+          }
+        } finally {
+          hideLoading();
         }
-      } finally {
-        hideLoading();
-      }
-    }, 500);
+      }, 500);
+    } else {
+      timer = setTimeout(async () => {
+        const hideLoading = message('请求中', 'warning');
+        try {
+          const data = {
+            text: replyText,
+            attachment: url,
+            questionId: selectRecord.id,
+            progressId: getStorageSync('progressId'),
+          };
+          console.log('test', data);
+          const res = await httpUtil.specialReply(data);
+          if (res.code === 200) {
+            message('回复成功', 'success');
+            okReplyModal();
+          }
+        } finally {
+          hideLoading();
+        }
+      }, 500);
+    }
   };
   // 拿到子组件上传图片的路径数组
   const getOnFilesValue = (value: FileProps[]) => {
@@ -67,9 +89,13 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
     <AtModal isOpened={isReplyModal} onClose={okReplyModal}>
       <AtModalHeader>回复清单</AtModalHeader>
       <AtModalContent>
-        <View className={styles['reply-title']}>
-          {selectRecord?.reason + ':'}
-        </View>
+        {selectIndex === 7 ? (
+          <></>
+        ) : (
+          <View className={styles['reply-title']}>
+            {selectRecord?.reason + ':'}
+          </View>
+        )}
         <View>
           <View className={styles['reply-title']}>回复:</View>
           <View className={styles['reply-input']}>

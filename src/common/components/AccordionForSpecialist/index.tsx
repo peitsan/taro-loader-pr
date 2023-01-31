@@ -1,19 +1,9 @@
 /* eslint-disable react/jsx-key */
-import Taro from '@tarojs/taro';
+import Taro, { getStorageSync } from '@tarojs/taro';
 import { useState } from 'react';
 import { View } from '@tarojs/components';
 // import moment from 'moment';
-import {
-  AtIcon,
-  AtButton,
-  AtModal,
-  AtTextarea,
-  AtModalContent,
-  AtModalAction,
-  AtForm,
-  AtInput,
-  AtMessage,
-} from 'taro-ui';
+import { AtIcon, AtButton, AtMessage } from 'taro-ui';
 import { Item, AccordionForSpecialProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
@@ -25,13 +15,24 @@ import { useSelector } from '../../../redux/hooks';
 const AccordionForSpecialist: React.FC<
   AccordionForSpecialProps
 > = selfProps => {
-  const { data, type, getSpecial } = selfProps;
+  const {
+    data,
+    type,
+    getSpecial,
+    setIsCheckModal,
+    setIsManageModal,
+    setSelectRecord,
+    setIsAdjustModal,
+    setIsRejetModal,
+    setIsPassModal,
+    setSelectIndex,
+    setIsReplyModal,
+    setIsApplyUpper,
+  } = selfProps;
+  const ModalName = Taro.getStorageSync('ModalName');
   const [active, setActive] = useState<Boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isAdjustTime, setIsAdjustTime] = useState<boolean>(false);
   const [date, setDate] = useState<string>('');
   const [inDex, setInDex] = useState<number>();
-  const [isCheckModal, setIsCheckModal] = useState<boolean>(false);
   const [attachments, setAttachments] = useState<string>('');
   const projectId = Taro.getStorageSync('projectId')!;
   const progressId = Taro.getStorageSync('progressId')!;
@@ -39,10 +40,6 @@ const AccordionForSpecialist: React.FC<
   const [loading, setLoading] = useState(true);
   // 当前操作的question
   const [question_id, setQuestion_id] = useState<string>();
-
-  const [isReplyModalVisible, setIsReplyModalVisible] = useState(false);
-  const [isTimeApplyModalVisible, setTimeApplyModalVisible] = useState(false);
-  const [isSubmitModalVisible, setSubmitModalVisible] = useState(false);
 
   // 回复内容
   const [replyText, setReplyText] = useState<string>('空');
@@ -52,11 +49,14 @@ const AccordionForSpecialist: React.FC<
   const [timeApplyReason, setTimeApplyReason] = useState('');
   // const Height = String(85 * (data.item.length + 1)) + `px`;
   // const itemName = ['reason', 'opinion', 'condition', 'question'];
-
-  console.log(data);
   let len: number = 0;
   const { status } = data;
-  if (status !== 1 && status !== 3 && status !== 5) {
+  if (
+    ModalName !== 'projectOverview' &&
+    status !== 1 &&
+    status !== 3 &&
+    status !== 5
+  ) {
     len = 1;
   }
   const renderResponse = (text: any) => {
@@ -169,85 +169,13 @@ const AccordionForSpecialist: React.FC<
     // setIsSelectResponsibleModalVisible(true);
   };
 
-  // const handleSelectResponsibleCancel = () => {
-  //   setIsSelectResponsibleModalVisible(false);
-  // };
-
   const handleChooseTime = (question_id: number) => {
-    // console.log("xxx", question_id);
     setInDex(question_id!);
     setIsModalVisible(true);
   };
-  const CheckModal: React.FC = () => {
-    const [canDownload, setCanDownload] = useState(false);
-    // 文件下载的URL和name
-    const [downloadURL, setDownloadURL] = useState('');
-    const [downloadName, setDownloadName] = useState('');
-
-    const downloadFile = () => {
-      setCanDownload(false);
-      const hiding = message('下载中', 'warning');
-      httpUtil.downloadFile({ replyFile: attachments }).then(res => {
-        const blob = new Blob([res.blob], {
-          type: 'application/octet-stream',
-        });
-        const URL = window.URL.createObjectURL(blob);
-        // const URL = Taro.downloadFile
-        const Name = res.fileName;
-        setDownloadURL(URL);
-        setDownloadName(Name);
-        setCanDownload(true);
-        hiding();
-      });
-    };
-    return (
-      <AtModal
-        title='专项评估'
-        isOpened={isCheckModal}
-        onConfirm={okCheckModal}
-        onCancel={okCheckModal}>
-        <AtModalContent>
-          <View className={styles['reply-wrapper']}>
-            <View className={styles['reply-title']}>文字内容：</View>
-            <AtTextarea
-              className={styles['reply-text-area']}
-              disabled
-              height={5}
-              value={replyText}
-              onChange={e => setReplyText(e)}
-            />
-            <View className={styles['reply-title']}>附件：</View>
-            <View className={styles['reply-files']}>
-              {attachments !== '' ? (
-                canDownload ? (
-                  <a href={downloadURL} download={downloadName}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载成功，点击查看
-                  </a>
-                ) : (
-                  <a onClick={downloadFile}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载附件
-                  </a>
-                )
-              ) : (
-                <a style={{ color: 'silver' }}>
-                  <AtIcon value='file-generic' size='30' color='#F00' />
-                  无附件
-                </a>
-              )}
-            </View>
-          </View>
-        </AtModalContent>
-        <AtModalAction>
-          {' '}
-          <AtButton>取消</AtButton> <AtButton>确定</AtButton>{' '}
-        </AtModalAction>
-      </AtModal>
-    );
-  };
 
   const codeMapOperator = (code: number, record: any) => {
+    const uid = getStorageSync('id');
     const { id: question_id, adate, cdate, ddate, edate } = record;
     let flag;
     if (type === 3) {
@@ -307,7 +235,7 @@ const AccordionForSpecialist: React.FC<
           zxpgId: approvalId,
         });
         if (res.code === 200) {
-          setTimeApplyModalVisible(true);
+          setIsAdjustModal(true);
           const { reason, time } = res.data.adjust;
           setTimeApplyTime(time);
           setTimeApplyReason(reason);
@@ -356,8 +284,64 @@ const AccordionForSpecialist: React.FC<
       const { aid, bid, cid, eid, did } = records;
       const idList = ['', aid, bid, cid, did, '', '', '', eid];
       const approvalId = idList[type];
-      setSubmitModalVisible(true);
+      // setSubmitModalVisible(true);
       setQuestion_id(approvalId);
+    };
+    const lookReply = (question_id: string) => {
+      message('请稍等', 'warning');
+      httpUtil
+        .specialCheckReply({
+          projectId: Taro.getStorageSync('projectId')!,
+          zxpgId: Number(question_id),
+        })
+        .then(res => {
+          const {
+            data: {
+              reply: { text, attachment },
+            },
+          } = res;
+          setReplyText(text);
+          setAttachments(attachment);
+        });
+    };
+    const showCheckModal = (record: Item) => {
+      lookReply(String(record.key));
+      setSelectIndex(7);
+      setIsCheckModal(true);
+    };
+    const showManageSelector = async (record: Item) => {
+      // const { aid, bid, cid, eid, did } = record;
+      // const idList = ["", aid, bid, cid, did, "", "", "", eid];
+      // const approvalId = idList[Type];
+      // setId(approvalId);
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsManageModal(true);
+    };
+    const showAdjustDeadline = async (record: Item) => {
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsAdjustModal(true);
+    };
+    const showReplyModal = async (record: Item) => {
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsReplyModal(true);
+    };
+    const showPassConfirm = async (record: Item) => {
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsPassModal(true);
+    };
+    const showRejetConfirm = async (record: Item) => {
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsRejetModal(true);
+    };
+    const showApplyUpper = async (record: Item) => {
+      setSelectRecord(record);
+      setSelectIndex(7);
+      setIsApplyUpper(true);
     };
 
     if (flag) {
@@ -373,103 +357,105 @@ const AccordionForSpecialist: React.FC<
 
     if (code === 0) {
       // 负责人待指定
-      return (
-        <AtButton
-          className={styles['btn']}
-          type='primary'
-          onClick={handleSelectResponsible.bind(null, record)}>
-          指定负责人
-        </AtButton>
+      return ModalName === 'projectAudit' ? (
+        <View
+          className={styles['pass-btn']}
+          onClick={() => showManageSelector(record)}>
+          <View>指定</View>
+          <View>负责人</View>
+        </View>
+      ) : (
+        <View>无</View>
       );
     } else if (code === 1) {
       // 待回复
-      return '无';
+      return ModalName === 'projectOverview' ? (
+        <>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showReplyModal(record)}>
+            回复
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showAdjustDeadline(record)}>
+            调整时间
+          </View>
+        </>
+      ) : (
+        <>
+          <View>无</View>
+        </>
+      );
     } else if (code === 2) {
       // 问题已回复待审批
-      return (
+      return ModalName === 'projectAudit' ? (
         <View>
-          <AtButton
-            type='primary'
+          <View
             className={styles['look-btn']}
-            onClick={lookReply.bind(null, question_id)}>
+            onClick={() => showCheckModal(record)}>
             查看
-          </AtButton>
-          {/* <Popconfirm
-            title='确认通过吗?'
-            onConfirm={confirmPass.bind(null, record)}
-            okText='确认'
-            cancelText='取消'> */}
-          <AtButton
-            type='primary'
-            onClick={confirmPass.bind(null, record)}
-            className={styles['pass-btn']}>
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showPassConfirm(record)}>
             通过
-          </AtButton>
-          {/* </Popconfirm> */}
-          {/* <Popconfirm
-            title='确认驳回吗?'
-            onConfirm={confirmBack.bind(null, record)}
-            okText='确认'
-            cancelText='取消'> */}
-          <AtButton
-            onClick={confirmBack.bind(null, record)}
+          </View>
+          <View
             className={styles['back-btn']}
-            type='primary'>
+            onClick={() => showRejetConfirm(record)}>
             驳回
-          </AtButton>
-          {/* </Popconfirm> */}
+          </View>
         </View>
+      ) : canCheckOtherReply(uid) ? (
+        <View
+          className={styles['cofirm-btn']}
+          onClick={() => showCheckModal(record)}>
+          查看回复
+        </View>
+      ) : (
+        <>
+          <View>无</View>
+        </>
       );
     } else if (code === 3) {
       // 问题已解决后也可以查看回复
       return (
-        <AtButton
-          type='primary'
-          className={styles['look-btn']}
-          onClick={lookReply.bind(null, question_id)}>
-          查看
-        </AtButton>
+        <View
+          className={styles['cofirm-btn']}
+          onClick={() => showCheckModal(record)}>
+          查看回复
+        </View>
       );
     } else if (code === 4) {
       // 申请项目经理调整时间中
-      return (
-        <View>
-          <AtButton
-            type='primary'
+      return ModalName === 'projectAudit' ? (
+        <>
+          <View
             className={styles['look-btn']}
-            onClick={managerLookTimeApply.bind(null, record)}>
+            onClick={() => showCheckModal(record)}>
             查看
-          </AtButton>
-          {/* <Popconfirm
-            title='确认通过吗?'
-            onConfirm={cofirmManagerApproveTimeApply.bind(null, record)}
-            okText='确认'
-            cancelText='取消'> */}
-          <AtButton
-            onClick={cofirmManagerApproveTimeApply.bind(null, record)}
-            type='primary'
-            className={styles['pass-btn']}>
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showPassConfirm(record)}>
             通过
-          </AtButton>
-          {/* </Popconfirm> */}
-          {/* <Popconfirm
-            title='确认驳回吗?'
-            onConfirm={cofirmManagerRejectTimeApply.bind(null, record)}
-            okText='确认'
-            cancelText='取消'> */}
-          <AtButton
-            onClick={cofirmManagerRejectTimeApply.bind(null, record)}
+          </View>
+          <View
             className={styles['back-btn']}
-            type='primary'>
+            onClick={() => showRejetConfirm(record)}>
             驳回
-          </AtButton>
-          <AtButton
-            type='primary'
-            onClick={managerSubmit.bind(null, record)}
-            className={styles['warn-btn']}>
+          </View>
+          <View
+            className={styles['cofirm-btn']}
+            onClick={() => showApplyUpper(record)}>
             上报
-          </AtButton>
-        </View>
+          </View>
+        </>
+      ) : (
+        <>
+          <View>无</View>
+        </>
       );
     } else if (code === 5) {
       // 项目经理申请上报调整中
@@ -500,129 +486,53 @@ const AccordionForSpecialist: React.FC<
     }
   };
 
-  const ApplyModal = () => {
-    // const [form] = Form.useForm();
-    const handleCancel = () => {
-      setIsModalVisible(false);
-    };
+  // const ApplyModal = () => {
+  //   // const [form] = Form.useForm();
+  //   const handleCancel = () => {
+  //     setIsModalVisible(false);
+  //   };
 
-    const [url, setUrl] = useState<string>('');
-    const [confirm, setConfirm] = useState<boolean>(true);
+  const [url, setUrl] = useState<string>('');
+  const [confirm, setConfirm] = useState<boolean>(true);
 
-    const getUrl = (urls: string) => {
-      setUrl(urls);
-    };
-
-    const getConfirm = () => {
-      setConfirm(false);
-    };
-
-    const getTrue = () => {
-      setConfirm(true);
-    };
-    const onFinish = async (values: any) => {
-      if (!confirm) {
-        return message('请等待上传成功', 'warning');
-      }
-      const { text } = values;
-      const hideLoading = message('请求中', 'warning');
-      console.log(inDex, text, url);
-      try {
-        const res = await httpUtil.specialReply({
-          questionId: Number(inDex),
-          text,
-          attachment: url,
-          progressId,
-        });
-        if (res.code === 200) {
-          hideLoading();
-          getSpecial();
-          message('回复成功', 'success');
-          setIsModalVisible(false);
-        } else {
-          message('回复失败', 'error');
-        }
-      } finally {
-      }
-    };
-    return (
-      <AtModal
-        title='回复清单'
-        isOpened={isModalVisible}
-        onCancel={handleCancel}>
-        <AtForm onSubmit={onFinish}>
-          <AtInput
-            focus
-            name='text'
-            title='回复'
-            type='text'
-            placeholder='请输入回复内容'
-            value={replyText}
-            onChange={e => setReplyText(e as string)}
-          />
-          <View>
-            <UploadBtn
-              getConfirm={getConfirm}
-              getUrl={getUrl}
-              getTrue={getTrue}
-            />
-          </View>
-          <AtButton
-            type='primary'
-            className={styles['btn-background']}
-            formType='submit'>
-            确定
-          </AtButton>
-        </AtForm>
-      </AtModal>
-    );
+  const getUrl = (urls: string) => {
+    setUrl(urls);
   };
-  // const statusList = ['被驳回', '待审批', '通过'];
-  // const statusColor = ['reply', 'approval', 'solve'];
+
+  const getConfirm = () => {
+    setConfirm(false);
+  };
+
+  const getTrue = () => {
+    setConfirm(true);
+  };
+  const onFinish = async (values: any) => {
+    if (!confirm) {
+      return message('请等待上传成功', 'warning');
+    }
+    const { text } = values;
+    const hideLoading = message('请求中', 'warning');
+    console.log(inDex, text, url);
+    try {
+      const res = await httpUtil.specialReply({
+        questionId: Number(inDex),
+        text,
+        attachment: url,
+        progressId,
+      });
+      if (res.code === 200) {
+        hideLoading();
+        getSpecial();
+        message('回复成功', 'success');
+        setIsReplyModal(false);
+      } else {
+        message('回复失败', 'error');
+      }
+    } finally {
+    }
+  };
   return (
     <>
-      <AtModal
-        isOpened={isCheckModal}
-        onConfirm={okCheckModal}
-        onClose={okCheckModal}>
-        <AtModalContent>
-          <View className={styles['reply-wrapper']}>
-            <View className={styles['reply-title']}>文字内容：</View>
-            <AtTextarea
-              className={styles['reply-text-area']}
-              disabled
-              height={5}
-              value={replyText}
-              onChange={e => setReplyText(e)}
-            />
-            <View className={styles['reply-title']}>附件：</View>
-            <View className={styles['reply-files']}>
-              {/* {attachmentUrl !== '' ? (
-                canDownload ? (
-                  <a href={downloadURL} download={downloadName}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载成功，点击查看
-                  </a>
-                ) : (
-                  <a onClick={downloadFile}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载附件
-                  </a>
-                )
-              ) : (
-                <a style={{ color: 'silver' }}>
-                  <AtIcon value='file-generic' size='30' color='#F00' />
-                  无附件
-                </a>
-              )} */}
-            </View>
-          </View>
-        </AtModalContent>
-        <AtModalAction>
-          {' '}
-          <AtButton>取消</AtButton> <AtButton>确定</AtButton>{' '}
-        </AtModalAction>
-      </AtModal>
       {active && active ? (
         <View className={styles['boardw']}>
           <View className={styles['board-list']}>
@@ -651,7 +561,6 @@ const AccordionForSpecialist: React.FC<
               </View>
             </View>
           </View>
-          <CheckModal />
           {/* 子列表 */}
           <View className={styles['board-list']}>
             <View className={styles['boardw-subList']} style={{ width: '20%' }}>

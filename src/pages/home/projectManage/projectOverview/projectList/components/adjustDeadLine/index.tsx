@@ -27,28 +27,40 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
     let timer: NodeJS.Timer;
     const reply = ['reason', 'opinion', 'condition', 'question'];
     console.log(selectRecord);
-    timer = setTimeout(async () => {
-      message('请求中', 'warning');
-      try {
-        console.log({
-          adjustType: reply[selectIndex - 1],
-          adjustReason: adjustReason,
-          adjustTime: adjustDateStamp,
-          reasonId: selectRecord.key,
-        });
-        const res = await httpUtil.applyAdjust({
-          adjustType: reply[selectIndex - 1],
-          adjustReason: adjustReason,
-          adjustTime: adjustDateStamp,
-          reasonId: selectRecord.key,
-        });
-        console.log(res);
-        if (res.code === 200) {
-          message('申请成功', 'success');
+    if (selectIndex !== 7) {
+      timer = setTimeout(async () => {
+        message('请求中', 'warning');
+        try {
+          const res = await httpUtil.applyAdjust({
+            adjustType: reply[selectIndex - 1],
+            adjustReason: adjustReason,
+            adjustTime: adjustDateStamp,
+            reasonId: selectRecord.key,
+          });
+          if (res.code === 200) {
+            message('申请成功', 'success');
+          }
+        } finally {
         }
-      } finally {
-      }
-    }, 500);
+      }, 500);
+    } else {
+      timer = setTimeout(async () => {
+        message('请求中', 'warning');
+        try {
+          const res = await httpUtil.specialAdjustTime({
+            progressId: getStorageSync('progressId'),
+            adjustReason: adjustReason,
+            adjustTime: adjustDateStamp,
+            questionId: selectRecord.id,
+          });
+          console.log(res);
+          if (res.code === 200) {
+            message('申请成功', 'success');
+          }
+        } finally {
+        }
+      }, 500);
+    }
   };
   const onConfirmAdjust = () => {
     onCreate();
@@ -58,9 +70,13 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
     <AtModal isOpened={isAdjustModal} onClose={okAdjustModal}>
       <AtModalHeader>申请调整时间</AtModalHeader>
       <AtModalContent>
-        <View className={styles['reply-title']}>
-          {selectRecord?.reason + ':'}
-        </View>
+        {selectIndex === 7 ? (
+          <></>
+        ) : (
+          <View className={styles['reply-title']}>
+            {selectRecord?.reason + ':'}
+          </View>
+        )}
         <View>
           <View className={styles['reply-title']}>申请原因:</View>
           <View className={styles['reply-input']}>

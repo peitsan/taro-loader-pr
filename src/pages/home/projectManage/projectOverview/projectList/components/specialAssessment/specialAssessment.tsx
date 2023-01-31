@@ -6,45 +6,23 @@ import { IProps, dataItem, tableProps } from './specialAssessmentType';
 import styles from './specialAssessment.module.css';
 import AccordionForSpecialist from '../../../../../../../common/components/AccordionForSpecialist/index';
 
-export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
+export const SpecialAssessment: React.FC<IProps> = selfProps => {
+  const {
+    Type,
+    setIsCheckModal,
+    setIsManageModal,
+    setSelectRecord,
+    setIsAdjustModal,
+    setIsReplyModal,
+    setIsPassModal,
+    setIsRejetModal,
+    setSelectIndex,
+    setIsApplyUpper,
+    setZxpgData,
+  } = selfProps;
   const progressId = Taro.getStorageSync('progressId')!;
   const [specialList, setSpecialList] = useState<dataItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-
-  const columns = [
-    {
-      title: `标题`,
-      dataIndex: 'single',
-      key: 'single',
-    },
-    {
-      title: '需解决问题数',
-      key: 'number',
-      render: (_: any, record: any) => {
-        console.log(record);
-        const { responsibles, status } = record;
-        let manageId = [];
-        if (responsibles) {
-          manageId = responsibles.map((item: any) => {
-            return item.id;
-          });
-        }
-        const { id } = JSON.parse(Taro.getStorageSync('user')!);
-        let len = 0;
-        if (manageId.includes(id) && status === 1) {
-          len = 1;
-        }
-        const className = len > 0 ? 'num1-color' : 'num-color';
-        return <span className={styles[className]}>{len}</span>;
-      },
-      sorter: (a: any, b: any) => b.len - a.len,
-    },
-  ];
-
-  // const expandedRowRender = (record: dataItem) => {
-  //   const { content } = record;
-  //   return <ChildrenTable type={Type} item={content} getSpecial={getSpecial} />;
-  // };
 
   const getSpecial = async () => {
     setLoading(true);
@@ -53,6 +31,7 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
         progressId,
       });
       if (res.code === 200) {
+        setZxpgData(res.data);
         const itemList = [];
         let i = 0;
         for (const item of res.data) {
@@ -170,6 +149,15 @@ export const SpecialAssessment: React.FC<IProps> = ({ Type }: IProps) => {
                   <AccordionForSpecialist
                     data={item}
                     type={Type as number}
+                    setIsApplyUpper={setIsApplyUpper}
+                    setIsRejetModal={setIsRejetModal}
+                    setIsPassModal={setIsPassModal}
+                    setIsCheckModal={setIsCheckModal}
+                    setIsManageModal={setIsManageModal}
+                    setSelectRecord={setSelectRecord}
+                    setIsAdjustModal={setIsAdjustModal}
+                    setSelectIndex={setSelectIndex}
+                    setIsReplyModal={setIsReplyModal}
                     getSpecial={getSpecial}
                   />
                 </View>

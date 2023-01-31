@@ -16,40 +16,84 @@ import { SelectResponsibleProps } from './indexProps';
 import styles from './index.module.less';
 
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
-  const { isManageModal, okManageModal, selectRecord, units } = selfProps;
+  const {
+    isManageModal,
+    okManageModal,
+    selectRecord,
+    units,
+    selectIndex,
+    zxpgData,
+  } = selfProps;
+  const [fullData, setFullData] = useState<any>();
   const ResponserVal = useRef<any>();
   const AlerterVal = useRef<any>();
   const [AlertDeadline, setAlertDeadline] = useState<number>(0);
+
   const onCreate = () => {
-    // const responsibleId = ;
-    // const responsibleId = ;
     message('请求中', 'warning');
-    httpUtil
-      .comfirmResponsible({
-        project_id: getStorageSync('projectId'),
-        question_id: selectRecord.key,
-        relevantors: [
-          units[ResponserVal?.current?.state.value[0]]?.depts[
-            ResponserVal?.current?.state.value[1]
-          ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
-        ],
-        responsibles: [
-          units[AlerterVal?.current?.state.value[0]]?.depts[
-            AlerterVal?.current?.state.value[1]
-          ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
-        ],
-        advanceDay: AlertDeadline,
-      })
-      .then(res => {
-        if (res.code === 500) {
-          message('请求错误', 'error');
-        } else {
-          // getSpecial();
-          message('请求中', 'warning');
-          message('指定成功', 'success');
-          okManageModal();
+    if (selectIndex !== 7) {
+      httpUtil
+        .comfirmResponsible({
+          project_id: getStorageSync('projectId'),
+          question_id: selectRecord.key,
+          relevantors: [
+            units[ResponserVal?.current?.state.value[0]]?.depts[
+              ResponserVal?.current?.state.value[1]
+            ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
+          ],
+          responsibles: [
+            units[AlerterVal?.current?.state.value[0]]?.depts[
+              AlerterVal?.current?.state.value[1]
+            ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
+          ],
+          advanceDay: AlertDeadline,
+        })
+        .then(res => {
+          if (res.code === 500) {
+            message('请求错误', 'error');
+          } else {
+            // getSpecial();
+            message('请求中', 'warning');
+            message('指定成功', 'success');
+            okManageModal();
+          }
+        });
+    } else {
+      let kid = 0;
+      zxpgData.map(item => {
+        if (item.id == selectRecord.id) {
+          const { aid, bid, cid, eid, did } = item;
+          const idList = ['', aid, bid, cid, did, '', '', '', eid];
+          kid = idList[getStorageSync('type')];
         }
       });
+      httpUtil
+        .specialChooseResponsible({
+          projectId: getStorageSync('projectId'),
+          zxpgId: kid,
+          relevantors: [
+            units[ResponserVal?.current?.state.value[0]]?.depts[
+              ResponserVal?.current?.state.value[1]
+            ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
+          ],
+          responsibles: [
+            units[AlerterVal?.current?.state.value[0]]?.depts[
+              AlerterVal?.current?.state.value[1]
+            ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
+          ],
+          advanceDay: AlertDeadline,
+        })
+        .then(res => {
+          if (res.code === 500) {
+            message('请求错误', 'error');
+          } else {
+            // getSpecial();
+            message('请求中', 'warning');
+            message('指定成功', 'success');
+            okManageModal();
+          }
+        });
+    }
   };
   const onConfirmManage = () => {
     // console.log(selectRecord);
@@ -61,9 +105,13 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     <AtModal isOpened={isManageModal} onClose={okManageModal}>
       <AtModalHeader> 确认责任人-报警人</AtModalHeader>
       <AtModalContent>
-        <View className={styles['reply-title']}>
-          {selectRecord?.reason + ':'}
-        </View>
+        {selectIndex === 7 ? (
+          <></>
+        ) : (
+          <View className={styles['reply-title']}>
+            {selectRecord?.reason + ':'}
+          </View>
+        )}
         <View>
           <PersonSelector
             title='负责人'

@@ -43,22 +43,13 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     }
   }
 
-  const showModal = (record: Item) => {
-    setIsModalVisible(true);
-    setReasonId(Number(record.key));
-  };
-  const showApplyModal = (record: Item) => {
-    setIsAdjustTime(true);
-    setPlanTime(record.planTime);
-    setReasonId(Number(record.key));
-  };
   const lookReply = (question_id: string) => {
     message('请稍等', 'warning');
     httpUtil
       .lookAllListReply({
         project_id: Taro.getStorageSync('projectId')!,
         question_id: question_id,
-        itemName: itemName[index - 1],
+        itemName: 'special',
       })
       .then(res => {
         const {
@@ -92,7 +83,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setSelectRecord(record);
     setSelectIndex(index);
     setIsPassModal(true);
-    console.log('1');
   };
   const showRejetConfirm = async (record: Item, index: number) => {
     setSelectRecord(record);
@@ -216,63 +206,94 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
   };
   const GetOperationForList: React.FC<any> = props => {
     const { records } = props;
-    // console.log('List', records);
     const { manageId, code } = records;
     const { id } = JSON.parse(Taro.getStorageSync('user')!);
-    return code === 1 && //流程在待回复(负责人已指定)
-      manageId.includes(id) ? ( //判断是否有权限
-      ModalName === 'projectAudit' ? (
-        // 工程审核有权限回复清单的经理
-        <>
-          <View
-            className={styles['look-btn']}
-            onClick={() => showModal(records)}>
-            查看
-          </View>
-          <View
-            className={styles['pass-btn']}
-            onClick={() => showApplyModal(records)}>
-            通过
-          </View>
-          <View
-            className={styles['back-btn']}
-            onClick={() => showApplyModal(records)}>
-            驳回
-          </View>
-          <View
-            className={styles['cofirm-btn']}
-            onClick={() => showApplyModal(records)}>
-            上报
-          </View>{' '}
-        </>
-      ) : (
-        //判断流程是否在工程总览阶段
-        // 工程总览有权限回复清单的经理
+    return code === 1 ? (
+      ModalName == 'projectOverview' ? (
         <>
           <View
             className={styles['pass-btn']}
-            onClick={() => showModal(records)}>
+            onClick={() => showReplyModal(records, index)}>
             回复
           </View>
 
           <View
             className={styles['pass-btn']}
-            onClick={() => showApplyModal(records)}>
+            onClick={() => showAdjustDeadline(records, index)}>
             调整时间
           </View>
         </>
+      ) : (
+        <>
+          <View>无</View>
+        </>
       )
-    ) : ((code === 2 || code === 3) && manageId.includes(id)) ||
-      (code === 3 &&
+    ) : code === 2 ? (
+      ModalName === 'projectAudit' ? (
+        // 这里还有详细问一下 不是项目的管理员能不能审核他的问题清单
+        // 管理员看到的2和3阶段的工程审核
+        <>
+          <View
+            className={styles['look-btn']}
+            onClick={() => showCheckModal(records)}>
+            查看
+          </View>
+          <View
+            className={styles['pass-btn']}
+            onClick={() => showPassConfirm(records, index)}>
+            通过
+          </View>
+          <View
+            className={styles['back-btn']}
+            onClick={() => showRejetConfirm(records, index)}>
+            驳回
+          </View>
+        </>
+      ) : (
+        // 管理员看到的2和3阶段的工程总览
+        <View
+          className={styles['cofirm-btn']}
+          onClick={() => showCheckModal(records)}>
+          查看回复
+        </View>
+      )
+    ) : (code === 2 || code === 3) &&
+      (manageId.includes(id) ||
+        //普通员工(Boss)有权限问题已解决后也可以查看回复
         canCheckOtherReply(Number(Taro.getStorageSync('fatherId')))) ? (
-      <AtButton
-        size='small'
-        type='primary'
+      <View
+        className={styles['cofirm-btn']}
         onClick={() => showCheckModal(records)}>
         查看回复
-      </AtButton>
+      </View>
+    ) : code === 4 && ModalName === 'projectAudit' ? (
+      // 申请项目经理调整时间中且为管理员有权限
+      <>
+        <View
+          className={styles['look-btn']}
+          onClick={() => showCheckModal(records)}>
+          查看
+        </View>
+        <View
+          className={styles['pass-btn']}
+          onClick={() => showPassConfirm(records, index)}>
+          通过
+        </View>
+        <View
+          className={styles['back-btn']}
+          onClick={() => showRejetConfirm(records, index)}>
+          驳回
+        </View>
+        <View
+          className={styles['cofirm-btn']}
+          onClick={() => showApplyUpper(records, index)}>
+          上报
+        </View>
+      </>
     ) : (
-      <View>无</View>
+      <>
+        <View>无</View>
+      </>
     );
   };
   const statusList = ['被驳回', '待审批', '通过'];

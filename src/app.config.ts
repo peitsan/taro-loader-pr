@@ -93,8 +93,8 @@ export default defineAppConfig({
       pages: ['index'],
     },
   ],
-  // entryPagePath: 'pages/home/projectManage/projectOverview/projectList/index',
-  entryPagePath: 'pages/login/index',
+  entryPagePath: 'pages/home/projectManage/projectOverview/projectList/index',
+  // entryPagePath: 'pages/login/index',
   window: {
     backgroundTextStyle: 'dark',
     navigationBarBackgroundColor: '#0EB295',
