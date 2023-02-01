@@ -79,7 +79,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     const {index}= props
     return(
       <View>
-        <View>{threeListName[selectIndex]+(index +1)+':'}</View>
+        {/* <View>{threeListName[selectIndex]+(index +1)+':'}</View> */}
       <View>
         <PersonSelector
           title='负责人'
