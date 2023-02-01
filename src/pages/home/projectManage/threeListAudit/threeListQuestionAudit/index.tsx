@@ -1,15 +1,17 @@
 import { message, transPersons } from '@/common/functions';
 import { View } from '@tarojs/components';
+import PopConfirm from '@/common/components/PopConfirm';
 import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { AtMessage, AtTabs, AtTabsPane, AtTag } from 'taro-ui';
 import httpUtil from '../../../../../utils/httpUtil';
 import ThreeListQuestionAuditTable from './component/ThreeListQuestionAuditTable';
+import AdjustDeadLine from './component/adjustDeadLine';
 import { getUnitsAC } from '../../../../../redux/actionCreators';
 import { useDispatch, useSelector } from '../../../../../redux/hooks';
 import styles from './index.module.less';
 import { tabListItem } from './indexProps';
-import PopConfirm from '@/common/components/PopConfirm';
+import SelectResponsible from './component/selectResponsible';
 
 export const pageIndexTitles = ['原因', '意见', '条件'];
 export const threeListName = ['problem', 'protocol', 'procedure'];
@@ -53,6 +55,9 @@ const Index: React.FC = () => {
   const okRejectModal = () => {
     setIsRejectModal(false);
   };
+  const okAssignResponsibilities = () => {
+    setIsAssignResponsibilities(false);
+  };
   // 切换标签页
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
@@ -63,7 +68,7 @@ const Index: React.FC = () => {
     const sendData: SendDataType = {};
     let num = 0;
 
-    for (let item of expandedRow) {
+    for (const item of expandedRow) {
       const id = item.id;
       sendData[id] = {};
       sendData[id]['planTime'] = new Date(valueArr[num]).valueOf();
@@ -106,6 +111,17 @@ const Index: React.FC = () => {
   // 拒绝三个问题的清单
   const onConfirmReject = () => {
     console.log(selectRecord);
+    message('请求中', 'warning');
+    httpUtil
+      .backThreeListItem({
+        itemName: threeListName[selectTab],
+        problem_id: selectRecord.id,
+        project_id: projectId,
+      })
+      .then(res => {
+        message('驳回成功', 'success');
+        getThreeList();
+      });
   };
   const getThreeList = () => {
     httpUtil
@@ -130,6 +146,14 @@ const Index: React.FC = () => {
         operation='驳回'
         msg='驳回通过前请查看新建清单信息!确认后将无法撤回！'
         todo={onConfirmReject}
+      />
+      {/* 指定负责人 */}
+      <SelectResponsible
+        isManageModal={isAssignResponsibilities}
+        okManageModal={okAssignResponsibilities}
+        selectRecord={selectRecord}
+        selectIndex={selectTab}
+        units={units}
       />
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
