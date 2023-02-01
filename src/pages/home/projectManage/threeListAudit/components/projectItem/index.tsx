@@ -9,7 +9,15 @@ const ProjectItem = (data: IData) => {
   const { fatherProject, sonProject } = data;
   const [isOpen, setIsOpen] = useState(false);
   const [moreData, setMoreData] = useState<IChProMoreData>();
-
+  const clickNav = (e, projectName: string, projectId: number) => {
+    // 阻止冒泡
+    e.stopPropagation();
+    Taro.setStorageSync('projectName', projectName);
+    Taro.setStorageSync('projectId', projectId);
+    Taro.navigateTo({
+      url: `/pages/home/projectManage/threeListAudit/threeListQuestionAudit/index`,
+    });
+  };
   // 点击展示更多信息
   const clickShowMore = (e, data: IChProMoreData) => {
     // 阻止冒泡
@@ -23,11 +31,30 @@ const ProjectItem = (data: IData) => {
     setIsOpen(e => !e);
   };
 
+  const naviToSonPro = (
+    e,
+    projectId: number,
+    projectName: string,
+    fatherId: number,
+    fatherProName: string,
+  ) => {
+    e.stopPropagation();
+    Taro.setStorageSync('projectName', projectName);
+    Taro.setStorageSync('fatherName', fatherProName);
+    Taro.setStorageSync('projectId', projectId);
+    Taro.setStorageSync('fatherId', fatherId);
+    Taro.navigateTo({
+      url: '/pages/home/projectManage/threeListAudit/threeListQuestionAudit/index',
+    });
+  };
+
   return (
     <>
       <ProjectAccordion
         fatherProject={fatherProject}
         sonProject={sonProject}
+        naviToFatherPro={clickNav}
+        naviToSonPro={naviToSonPro}
         fatherScope={fatherProject.scope}
         clickShowSonMore={clickShowMore}
         showQuestion={true!}

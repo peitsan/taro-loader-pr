@@ -1,142 +1,129 @@
+import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { AtTabs, AtTabsPane, AtTag } from 'taro-ui';
 import { getUnitsAC } from '@/redux/actionCreators';
 import httpUtil from '@/utils/httpUtil';
 import { message, transPersons } from '@/common/functions';
 import { useDispatch, useSelector } from '@/redux/hooks';
 import { View } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { useParams } from 'react-router-dom';
+import AccordionForListAudit from '@/common/components/AccordionForListAudit';
 
+import { ThreeListQuestionAuditTableProps, tableProps } from './indexProps';
 import styles from './index.module.less';
 
-import { threeListName } from '../..';
-
-const Index: React.FC = () => {
-  const projectName = Taro.getStorageSync('projectName');
-  const fatherName = Taro.getStorageSync('fatherName');
-  const params = useParams();
-  const dispatch = useDispatch();
-  const project_id = params.project_id!;
-  const fatherId = params.fatherId!;
-  const fatherProjectName = params.fatherProjectName!;
-
-  // 当前页（问题清单 手续清单 协议清单）
-  const [curPage, setCurPage] = useState(0);
-  const [dataArr, setDataArr] = useState<any[] | null>(null);
-  // 控制modal显示
-  const [visible, setVisible] = useState(false);
-  const [expandedRow, setExpandedRow] = useState<any[]>([]);
-  // 人员列表
-  const units = useSelector(state => state.units.data.units);
-  const searchUnits = useSelector(state => state.units.data.searchUnits);
-
-  // 通过三个清单的问题
-  const onCreate = (values: any) => {
-    const valueArr: any[] = Object.values(values);
-    const sendData: SendDataType = {};
-    let num = 0;
-
-    for (let item of expandedRow) {
-      const id = item.id;
-      sendData[id] = {};
-      sendData[id]['planTime'] = new Date(valueArr[num]).valueOf();
-      // 根据新接口待修改
-      const responsibles: number | unknown[] = transPersons(
-        valueArr[num + 1],
-        searchUnits,
-      );
-      const relevantors: number | unknown[] = transPersons(
-        valueArr[num + 2],
-        searchUnits,
-      );
-      sendData[id]['responsibles'] = responsibles;
-      sendData[id]['relevantors'] = relevantors;
-      sendData[id]['advanceDay'] = valueArr[num + 3];
-      num += 4;
-    }
-    const curListName = threeListName[curPage];
-
-    const threeMap = ['problemId', 'protocolId', 'procedureId'];
-    const problem_id = expandedRow[0][threeMap[curPage]];
-    message('请求中', 'warning');
-    httpUtil
-      .passThreeListItem({
-        itemName: curListName,
-        problem_id,
-        project_id,
-        sendData,
-      })
-      .then(res => {
-        if (res.code === 200) {
-          message('成功', 'success');
-          getThreeList();
-          setVisible(false);
-        } else {
-          message(res.message, 'error');
-        }
-      });
-  };
-
-  const getThreeList = () => {
-    httpUtil.getUncheckedProjectQuestion({ project_id }).then(res => {
-      const {
-        data: { problems, protocols, procedures },
-      } = res;
-      setDataArr([problems, protocols, procedures]);
-    });
-  };
-
+const TableTitle = ['问题概述', '协议名称', '手续名称'];
+const ThreeListQuestionAuditTable: React.FC<
+  ThreeListQuestionAuditTableProps
+> = props => {
+  const {
+    problemsItem,
+    proceduresItem,
+    protocolsItem,
+    setIsAssignResponsibilities,
+    setIsRejectModal,
+    setSelectRecord,
+    index,
+    fresh,
+  } = props;
+  const [data, setData] = useState<any[]>();
   useEffect(() => {
-    dispatch(getUnitsAC({ fatherId }));
-    getThreeList();
-  }, []);
+    if (problemsItem) setData(problemsItem);
+    if (proceduresItem) setData(proceduresItem);
+    if (protocolsItem) setData(protocolsItem);
+  });
+  const Table: React.FC<tableProps> = tableProp => {
+    const { dataSource } = tableProp;
+    console.log(dataSource);
+    return (
+      <>
+        {dataSource ? (
+          <View className={styles['issueListTable']}>
+            {/* 表头 */}
+            <View className={styles['issueListTable-title']}>
+              <View
+                style={{
+                  fontWeight: '700',
+                  fontSize: '32rpx',
+                  width: '20%',
+                  textAlign: 'center',
+                }}>
+                {TableTitle[index - 1]}
+              </View>
+              <View
+                style={{
+                  fontWeight: '700',
+                  fontSize: '32rpx',
+                  width: '50%',
+                  textAlign: 'center',
+                }}>
+                所属流程
+              </View>
+              <View
+                style={{
+                  fontWeight: '700',
+                  fontSize: '32rpx',
+                  width: '20%',
+                  textAlign: 'center',
+                }}>
+                操作
+              </View>
+            </View>
+            {dataSource.length == 0 ? (
+              <View className={styles['boardw-list']}>
+                <View
+                  style={{
+                    textAlign: 'center',
+                    lineHeight: '30rpx',
+                    fontSize: '30rpx',
+                    color: '#9A9A9A',
+                  }}>
+                  暂无数据
+                </View>
+              </View>
+            ) : (
+              <View className={styles['issueListTable-tabs']}>
+                {dataSource.map((item, ind) => {
+                  return (
+                    <View key={'Accordion-' + item + `-` + ind}>
+                      <AccordionForListAudit
+                        data={item}
+                        setIsAssignResponsibilities={
+                          setIsAssignResponsibilities
+                        }
+                        setSelectRecord={setSelectRecord}
+                        setIsRejectModal={setIsRejectModal}
+                        index={index}
+                        getMediateList={fresh}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+          </View>
+        ) : (
+          <View className={styles['boardw-list']}>
+            <View
+              style={{
+                textAlign: 'center',
+                lineHeight: '30rpx',
+                fontSize: '30rpx',
+                color: '#9A9A9A',
+              }}>
+              暂无数据
+            </View>
+          </View>
+        )}
+      </>
+    );
+  };
+
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
-          项目清单
-        </AtTag>
-        <View className='project-title'>
-          {fatherName}/{projectName}
-        </View>
-      </View>
       <View>
-        {/* <AtTabs
-          scroll
-          current={selectTab}
-          tabList={tabList}
-          onClick={e => tabSwitchHandle(e)}>
-          <AtTabsPane
-            current={selectTab}
-            index={tabList.findIndex(val => val.title === '问题清单')}>
-            <ThreeListQuestionAuditTable
-              problemsItem={problem}
-              index={1}
-              fresh={getTimeDetail}
-            />
-          </AtTabsPane>
-          <AtTabsPane
-            current={selectTab}
-            index={tabList.findIndex(val => val.title === '协议清单')}>
-            <ThreeListQuestionAuditTable
-              protocolsItem={protocol}
-              index={2}
-              fresh={getTimeDetail}
-            />
-          </AtTabsPane>
-          <AtTabsPane
-            current={selectTab}
-            index={tabList.findIndex(val => val.title === '手续清单')}>
-            <ThreeListQuestionAuditTable
-              proceduresItem={procedure}
-              index={3}
-              fresh={getTimeDetail}
-            />
-          </AtTabsPane>
-        </AtTabs> */}
+        <Table dataSource={data} />
       </View>
     </>
   );
 };
-export default Index;
+
+export default ThreeListQuestionAuditTable;

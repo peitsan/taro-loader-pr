@@ -518,6 +518,7 @@ function ProjectList() {
             okApplyUpper={okApplyUpper}
             selectIndex={selectIndex as number}
             selectRecord={selectRecord}
+            zxpgData={zxpgData}
             units={units}
           />
           <AtTabs

@@ -2,12 +2,14 @@ import { message, transPersons } from '@/common/functions';
 import { View } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { AtTabs, AtTabsPane, AtTag } from 'taro-ui';
+import { AtMessage, AtTabs, AtTabsPane, AtTag } from 'taro-ui';
 import httpUtil from '../../../../../utils/httpUtil';
 import ThreeListQuestionAuditTable from './component/ThreeListQuestionAuditTable';
 import { getUnitsAC } from '../../../../../redux/actionCreators';
 import { useDispatch, useSelector } from '../../../../../redux/hooks';
 import styles from './index.module.less';
+import { tabListItem } from './indexProps';
+import PopConfirm from '@/common/components/PopConfirm';
 
 export const pageIndexTitles = ['原因', '意见', '条件'];
 export const threeListName = ['problem', 'protocol', 'procedure'];
@@ -29,21 +31,32 @@ interface SendDataType {
 const Index: React.FC = () => {
   const projectName = Taro.getStorageSync('projectName');
   const fatherName = Taro.getStorageSync('fatherName');
-  const { router } = Taro.getCurrentInstance(); //获取路由传入的index参数
+  const fatherId = Taro.getStorageSync('fatherId');
+  const projectId = Taro.getStorageSync('projectId');
+  const [selectTab, setSelectTab] = useState<number>(0);
+  const [dataArr, setDataArr] = useState<any>([]);
+  const [selectRecord, setSelectRecord] = useState<any>([]);
+  const [isAssignResponsibilities, setIsAssignResponsibilities] =
+    useState<boolean>(false);
+  const [isRejectModal, setIsRejectModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const project_id = router?.params.project_id!;
-  const fatherId = router?.params.fatherId! as string;
-  const fatherProjectName = router?.params.fatherProjectName! as string;
-  // 当前页（问题清单 手续清单 协议清单）
-  const [curPage, setCurPage] = useState(0);
-  const [dataArr, setDataArr] = useState<any[] | null>(null);
-  // 控制modal显示
-  const [visible, setVisible] = useState(false);
-  const [expandedRow, setExpandedRow] = useState<any[]>([]);
   // 人员列表
   const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(state => state.units.data.searchUnits);
 
+  // Tab标签
+  const tabList: tabListItem[] = [
+    { title: '问题清单' },
+    { title: '协议清单' },
+    { title: '手续清单' },
+  ];
+  const okRejectModal = () => {
+    setIsRejectModal(false);
+  };
+  // 切换标签页
+  const tabSwitchHandle = (val: number) => {
+    setSelectTab(val);
+  };
   // 通过三个清单的问题
   const onCreate = (values: any) => {
     const valueArr: any[] = Object.values(values);
@@ -90,28 +103,40 @@ const Index: React.FC = () => {
         }
       });
   };
-
+  // 拒绝三个问题的清单
+  const onConfirmReject = () => {
+    console.log(selectRecord);
+  };
   const getThreeList = () => {
-    httpUtil.getUncheckedProjectQuestion({ project_id }).then(res => {
-      const {
-        data: { problems, protocols, procedures },
-      } = res;
-      setDataArr([problems, protocols, procedures]);
-    });
+    httpUtil
+      .getUncheckedProjectQuestion({ project_id: projectId })
+      .then(res => {
+        console.log(res);
+        setDataArr(res.data);
+      });
   };
 
   useEffect(() => {
     dispatch(getUnitsAC({ fatherId }));
     getThreeList();
+    console.log(dataArr);
   }, []);
   return (
     <>
+      {/* 驳回审核 */}
+      <PopConfirm
+        isPop={isRejectModal}
+        okIsPop={okRejectModal}
+        operation='驳回'
+        msg='驳回通过前请查看新建清单信息!确认后将无法撤回！'
+        todo={onConfirmReject}
+      />
       <View className={styles.top}>
         <AtTag className={styles.tag} circle>
           项目清单
         </AtTag>
         <View className='project-title'>
-          {fatherProjectName}/{projectName}
+          {fatherName}/{projectName}
         </View>
       </View>
       <View>
@@ -124,9 +149,12 @@ const Index: React.FC = () => {
             current={selectTab}
             index={tabList.findIndex(val => val.title === '问题清单')}>
             <ThreeListQuestionAuditTable
-              problemsItem={problem}
+              problemsItem={dataArr ? dataArr.problems : []}
+              setIsAssignResponsibilities={setIsAssignResponsibilities}
+              setIsRejectModal={setIsRejectModal}
+              setSelectRecord={setSelectRecord}
               index={1}
-              fresh={getTimeDetail}
+              fresh={getThreeList}
             />
             {/* 问题清单 */}
           </AtTabsPane>
@@ -134,23 +162,30 @@ const Index: React.FC = () => {
             current={selectTab}
             index={tabList.findIndex(val => val.title === '协议清单')}>
             <ThreeListQuestionAuditTable
-              protocolsItem={protocol}
+              protocolsItem={dataArr ? dataArr.problems : []}
+              setIsAssignResponsibilities={setIsAssignResponsibilities}
+              setIsRejectModal={setIsRejectModal}
+              setSelectRecord={setSelectRecord}
               index={2}
-              fresh={getTimeDetail}
+              fresh={getThreeList}
             />
-            {/* 协议清单 */}
+            {/* 协议清单*/}
           </AtTabsPane>
           <AtTabsPane
             current={selectTab}
             index={tabList.findIndex(val => val.title === '手续清单')}>
             <ThreeListQuestionAuditTable
-              proceduresItem={procedure}
+              proceduresItem={dataArr ? dataArr.procedures : []}
+              setIsAssignResponsibilities={setIsAssignResponsibilities}
+              setIsRejectModal={setIsRejectModal}
+              setSelectRecord={setSelectRecord}
               index={3}
-              fresh={getTimeDetail}
+              fresh={getThreeList}
             />
-            {/* 手续清单 */}
+            {/* 手续清单*/}
           </AtTabsPane>
         </AtTabs>
+        <AtMessage />
       </View>
     </>
   );

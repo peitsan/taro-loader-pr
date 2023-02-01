@@ -5,5 +5,6 @@ export interface applyUpperProps {
   okApplyUpper: any;
   selectRecord: any;
   selectIndex: number;
+  zxpgData: any;
   units: UnitsType;
 }

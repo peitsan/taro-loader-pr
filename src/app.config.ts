@@ -93,7 +93,7 @@ export default defineAppConfig({
       pages: ['index'],
     },
   ],
-  entryPagePath: 'pages/home/projectManage/projectOverview/projectList/index',
+  entryPagePath: 'pages/home/projectManage/threeListAudit/index',
   // entryPagePath: 'pages/login/index',
   window: {
     backgroundTextStyle: 'dark',

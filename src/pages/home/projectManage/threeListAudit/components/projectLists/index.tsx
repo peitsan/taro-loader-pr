@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Taro from '@tarojs/taro';
+import { View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { IData } from '../../../projectOverview/types/projectType';
 import ProjectItem from '../projectItem';

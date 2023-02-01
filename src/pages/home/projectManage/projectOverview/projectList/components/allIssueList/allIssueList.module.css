@@ -1,24 +1,3 @@
-.num-color{
-    color: var(--success-color);
-    font-size: var(--emphasize-font-size);
-}
-
-.num1-color{
-    color: var(--warning-color);
-    font-size: var(--emphasize-font-size);
-}
-
-.reply{
-    color: var(--error-color);
-}
-
-.approval{
-    color: var(--warning-color);
-}
-
-.solve{
-    color: var(--success-color);
-}
 .issueListTable{
     height:1200rpx; 
     width:750rpx;

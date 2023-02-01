@@ -52,13 +52,13 @@ const Login: React.FC = () => {
         Taro.setStorageSync('id', String(id));
         Taro.setStorageSync('teams', JSON.stringify(teams));
         Taro.setStorageSync('token', token);
-        // **********测试用例，上线删除**********
-        Taro.setStorageSync('projectName', 'lpc_test');
-        Taro.setStorageSync('fatherName', 'lpc_test');
-        Taro.setStorageSync('type', 3);
-        Taro.setStorageSync('projectId', 303);
-        Taro.setStorageSync('progressId', 2010);
-        // **********测试用例，上线删除**********
+        // // **********测试用例，上线删除**********
+        // Taro.setStorageSync('projectName', 'lpc_test');
+        // Taro.setStorageSync('fatherName', 'lpc_test');
+        // Taro.setStorageSync('type', 3);
+        // Taro.setStorageSync('projectId', 303);
+        // Taro.setStorageSync('progressId', 2010);
+        // // **********测试用例，上线删除**********
         dispatch(updateUserInfoAC(user));
         message(`欢迎您，${user.nickname || '用户'}`, `success`);
         permission === 'admin'
