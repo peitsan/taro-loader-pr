@@ -24,7 +24,6 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     selectIndex,
     zxpgData,
   } = selfProps;
-  const [fullData, setFullData] = useState<any>();
   const ResponserVal = useRef<any>();
   const AlerterVal = useRef<any>();
   const [AlertDeadline, setAlertDeadline] = useState<number>(0);

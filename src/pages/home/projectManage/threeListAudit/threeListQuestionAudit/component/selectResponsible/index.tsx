@@ -19,6 +19,7 @@ import { SelectResponsibleProps, SendDataType } from './indexProps';
 import styles from './index.module.less';
 
 const threeListName = ['problem', 'protocol', 'procedure'];
+const threeArr = ['reasons', 'opinions', 'conditions']
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   const { isManageModal, okManageModal, selectRecord, recordFlash, units, selectIndex } =
     selfProps;
@@ -26,7 +27,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   const AlerterVal = useRef<any[]>([]);
   const [AlertDeadline, setAlertDeadline] = useState<any>({});
   const [Deadline, setDeadline] = useState<any[]>([]);
-
+  const tabs = threeArr[selectIndex]
   useEffect(()=>{
     console.log('selectRecord', selectRecord)
     
@@ -36,7 +37,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     // console.log('11', ResponserVal);
     // console.log('111', ResponserVal[0]);
     const dataSend: SendDataType = {};
-    selectRecord.reasons.map((rec, recid)=>{
+    selectRecord[tabs].map((rec, recid)=>{
       const id = rec.id;
       dataSend[id] = {};
       dataSend[id]["planTime"] = new Date(Deadline[recid]).valueOf();
@@ -95,7 +96,6 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   }
   const MulitiResponsible: React.FC<{index:number}>= props =>{
     const idx = props.index;
-    const tmpAlertDeadline = AlertDeadline;
     return(
       <View>
         {/* <View>{threeListName[selectIndex]+(index +1)+':'}</View> */}
@@ -156,7 +156,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
           {!selectRecord? <>
             <View>数据为空</View>
           </>:selectRecord.len > 0?(
-            (selectRecord.reasons as any[]).map((resItem, resIndex)=>{
+            (selectRecord[tabs] as any[]).map((resItem, resIndex)=>{
               return(
                 <>
                   <MulitiResponsible  index={resIndex}/>
