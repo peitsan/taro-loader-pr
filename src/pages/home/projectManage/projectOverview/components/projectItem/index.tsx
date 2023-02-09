@@ -196,6 +196,11 @@ const ProjectItem = (data: IData) => {
             setRemark('');
             setProName('');
             setPickDate('');
+            // @ts-ignore
+            Taro.atMessage({
+              message: '新建成功',
+              type: 'success',
+            });
           }
         } catch {
           // @ts-ignore
@@ -219,7 +224,7 @@ const ProjectItem = (data: IData) => {
   ) => {
     e.stopPropagation();
     Taro.navigateTo({
-      url: `/pages/home/projectManage/projectOverview/sonProjectProgress/index?projectId=${projectId}&proName=${projectName}&fatherId=${fatherId}&fatherProName=${fatherProName}&permission=${'manager'}`,
+      url: `/pages/home/projectManage/projectOverview/sonProjectProgress/index?projectId=${projectId}&proName=${projectName}&fatherId=${fatherId}&fatherProName=${fatherProName}&permission=${'worker'}`,
     });
   };
 

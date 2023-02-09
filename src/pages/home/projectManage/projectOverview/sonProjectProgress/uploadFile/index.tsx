@@ -10,6 +10,7 @@ import {
   AtModalHeader,
   AtModalContent,
   AtForm,
+  AtImagePicker,
 } from 'taro-ui';
 import styles from './index.module.less';
 import Upload from '../upload';
@@ -38,7 +39,6 @@ const UploadFile: FC<IType> = (props: IType) => {
       count: 1,
       type: 'all',
       success: function (res) {
-        res.errMsg;
         const { name, path, size, type } = res.tempFiles[0];
         // tempFilePath可以作为img标签的src属性显示图片
         setShowName(name);
@@ -60,9 +60,9 @@ const UploadFile: FC<IType> = (props: IType) => {
       <AtModalHeader>上传附件</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={submit}>
-          {/* <Upload >
-                        <Button>上传附件</Button>
-                    </Upload> */}
+          <Upload>
+            <Button>上传附件</Button>
+          </Upload>
           <Button className={styles.opeBtn} formType='submit'>
             确定
           </Button>

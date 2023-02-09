@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Taro from '@tarojs/taro';
 import { Picker, Button, View } from '@tarojs/components';
+import { useDispatch, useSelector } from '@/redux/hooks';
+import { getUnitsAC } from '@/redux/actionCreators';
 import {
   AtModal,
   AtModalHeader,
@@ -12,6 +14,7 @@ import {
   AtTextarea,
 } from 'taro-ui';
 import httpUtil from '@/utils/httpUtil';
+import PersonSelector from '@/common/components/personSelector/personSelector';
 import styles from './index.module.less';
 import { INowProgressInfo } from '../../../projectOverview/fatherProjectProgress';
 
@@ -20,17 +23,28 @@ interface IProps {
   setIsPlanTimeModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   curProgressInfo: INowProgressInfo;
   projectId: number;
+  fatherId: string;
   getData: () => Promise<void>;
 }
 
 export const PlanTimeModal = (props: IProps) => {
+  const dispatch = useDispatch();
+  const units = useSelector(state => state.units.data.units);
+
   const {
     isPlanTimeModalVisible,
     setIsPlanTimeModalVisible,
     curProgressInfo,
     projectId,
     getData,
+    fatherId,
   } = props;
+
+  useEffect(() => {
+    dispatch(getUnitsAC({ fatherId: fatherId, getTeamPerson: true }));
+  }, []);
+
+  const PersonValue = useRef();
 
   const [time, setTime] = useState<string>();
   const [adjustTime, setAdjustTime] = useState<string>();
@@ -74,6 +88,63 @@ export const PlanTimeModal = (props: IProps) => {
   const AdjustModalContent = () => {
     initSelectTime();
     setStart(curProgressInfo?.planTime!);
+
+    const isSelect = () => {
+      // 由于PersonValue用的anyScript，所以下面只好ignore了
+      // @ts-ignore
+      for (const i of PersonValue.current.state.value) {
+        if (i < 0) return false;
+      }
+      return true;
+    };
+
+    const submitDelay = () => {
+      if (adjustTime === '' || reason === '' || !isSelect()) {
+        Taro.showToast({
+          title: '请先填写完整',
+          icon: 'error',
+          duration: 1000,
+        });
+        return;
+      }
+      // startTime的时间戳
+      const startTimeTramp = new Date(adjustTime!).getTime();
+      const {
+        // 由于PersonValue用的anyScript，所以下面只好ignore了
+        // @ts-ignore
+        state: {
+          value: [first, second, third],
+          newList,
+        },
+      } = PersonValue.current;
+      const selectId = newList[first].depts[second].workers[third].id;
+      httpUtil
+        .managerSubmitProjectProgressPlanTimeApply({
+          projectId: projectId,
+          progressId: curProgressInfo.progressId,
+          responsibleId: selectId,
+          adjustTime: startTimeTramp,
+          adjustReason: reason,
+        })
+        .then(res => {
+          if (res?.code === 200) {
+            getData().then(() => {
+              Taro.showToast({
+                title: '申请发出',
+                icon: 'success',
+                duration: 1000,
+              });
+              setIsPlanTimeModalVisible(false);
+            });
+          } else {
+            Taro.showToast({
+              title: '网络错误，请重新再试',
+              icon: 'error',
+              duration: 1000,
+            });
+          }
+        });
+    };
     return (
       <>
         <AtForm className={styles.adjustForm}>
@@ -100,16 +171,31 @@ export const PlanTimeModal = (props: IProps) => {
             <View>
               <AtTextarea
                 value={reason}
+                height={50}
                 onChange={e => {
-                  console.log(e);
+                  setReason(e);
                 }}
                 placeholder='调整原因'
                 focus
               />
             </View>
           </View>
-          <View></View>
-          <Button formType='submit'>确认上报</Button>
+          <View>
+            <PersonSelector
+              title='上报领导'
+              data={units}
+              width={350}
+              multiple
+              placeholder='选择上报的领导'
+              ref={PersonValue}
+            />
+          </View>
+          <Button
+            formType='submit'
+            className={styles.btn}
+            onClick={submitDelay}>
+            确认上报
+          </Button>
         </AtForm>
       </>
     );
@@ -153,7 +239,7 @@ export const PlanTimeModal = (props: IProps) => {
           )}
         </AtModalContent>
       </AtModal>
-      <AtToast isOpened={isOpen} text={'请将表单填写完整'}></AtToast>
+      <AtToast isOpened={isOpen} text='请将表单填写完整'></AtToast>
     </>
   );
 };
