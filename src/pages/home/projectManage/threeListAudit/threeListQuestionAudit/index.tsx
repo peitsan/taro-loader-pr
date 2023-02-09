@@ -62,52 +62,7 @@ const Index: React.FC = () => {
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
   };
-  // 通过三个清单的问题
-  const onCreate = (values: any) => {
-    const valueArr: any[] = Object.values(values);
-    const sendData: SendDataType = {};
-    let num = 0;
 
-    for (const item of expandedRow) {
-      const id = item.id;
-      sendData[id] = {};
-      sendData[id]['planTime'] = new Date(valueArr[num]).valueOf();
-      // 根据新接口待修改
-      const responsibles: number | unknown[] = transPersons(
-        valueArr[num + 1],
-        searchUnits,
-      );
-      const relevantors: number | unknown[] = transPersons(
-        valueArr[num + 2],
-        searchUnits,
-      );
-      sendData[id]['responsibles'] = responsibles;
-      sendData[id]['relevantors'] = relevantors;
-      sendData[id]['advanceDay'] = valueArr[num + 3];
-      num += 4;
-    }
-    const curListName = threeListName[curPage];
-
-    const threeMap = ['problemId', 'protocolId', 'procedureId'];
-    const problem_id = expandedRow[0][threeMap[curPage]];
-    message('请求中', 'warning');
-    httpUtil
-      .passThreeListItem({
-        itemName: curListName,
-        problem_id,
-        project_id,
-        sendData,
-      })
-      .then(res => {
-        if (res.code === 200) {
-          message('成功', 'success');
-          getThreeList();
-          setVisible(false);
-        } else {
-          message(res.message, 'error');
-        }
-      });
-  };
   // 拒绝三个问题的清单
   const onConfirmReject = () => {
     console.log(selectRecord);
@@ -152,6 +107,7 @@ const Index: React.FC = () => {
         isManageModal={isAssignResponsibilities}
         okManageModal={okAssignResponsibilities}
         selectRecord={selectRecord}
+        recordFlash={getThreeList}
         selectIndex={selectTab}
         units={units}
       />

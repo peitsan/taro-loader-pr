@@ -3,58 +3,64 @@ import { getStorageSync } from '@tarojs/taro';
 import { useEffect, useRef, useState } from 'react';
 import {
   AtInputNumber,
+  AtList,
+  AtListItem,
   AtModal,
   AtModalAction,
   AtModalContent,
   AtModalHeader,
 } from 'taro-ui';
-import { Button, View } from '@tarojs/components';
+import { Button, Picker, View } from '@tarojs/components';
 import { UnitsType } from '@/redux/units/slice';
 import PersonSelector from '@/common/components/personSelector/personSelector';
 import { message } from '@/common/functions';
 import httpUtil from '@/utils/httpUtil';
-import { SelectResponsibleProps } from './indexProps';
-import threeListName from '../../index'
+import { SelectResponsibleProps, SendDataType } from './indexProps';
 import styles from './index.module.less';
 
+const threeListName = ['problem', 'protocol', 'procedure'];
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
-  const { isManageModal, okManageModal, selectRecord, units, selectIndex } =
+  const { isManageModal, okManageModal, selectRecord, recordFlash, units, selectIndex } =
     selfProps;
-    console.log('selectRecord', selectRecord)
-  const [fullData, setFullData] = useState<any>();
-  const [length, setLength] = useState<number>(0);
-  const ResponserVal = useRef<any>();
-  const AlerterVal = useRef<any>();
-  const [AlertDeadline, setAlertDeadline] = useState<number>(0);
-  useEffect(()=>{
-    if(!selectRecord) {
-      console.log(2)
-      setLength(0);
-    }
-    else if(!selectRecord.reasons){
-      console.log(2)
-      setLength(0)
-       }else  setLength(selectRecord.reasons.length);
+  const ResponserVal = useRef<any[]>([]);
+  const AlerterVal = useRef<any[]>([]);
+  const [AlertDeadline, setAlertDeadline] = useState<any>({});
+  const [Deadline, setDeadline] = useState<any[]>([]);
 
-  }, [])
-  console.log('len'+length);
+  useEffect(()=>{
+    console.log('selectRecord', selectRecord)
+    
+  }, [selectRecord])
+ 
   const onCreate = () => {
+    // console.log('11', ResponserVal);
+    // console.log('111', ResponserVal[0]);
+    const dataSend: SendDataType = {};
+    selectRecord.reasons.map((rec, recid)=>{
+      const id = rec.id;
+      dataSend[id] = {};
+      dataSend[id]["planTime"] = new Date(Deadline[recid]).valueOf();
+      dataSend[id]["responsibles"] = [
+        units[ResponserVal?.current[recid]?.state.value[0]]?.depts[
+          ResponserVal?.current[recid]?.state.value[1]
+        ]?.workers[ResponserVal?.current[recid]?.state.value[2]]?.id,
+      ];
+      dataSend[id]["relevantors"] =  [
+        units[AlerterVal?.current[recid]?.state.value[0]]?.depts[
+          AlerterVal?.current[recid]?.state.value[1]
+        ]?.workers[AlerterVal?.current[recid]?.state.value[2]]?.id,
+      ];
+      dataSend[id]["advanceDay"] = AlertDeadline[recid];
+    })
+    
+    console.log('dataSend', dataSend)
     message('请求中', 'warning');
       httpUtil
-        .comfirmResponsible({
+        .passThreeListItem({
+          itemName:threeListName[selectIndex],
           project_id: getStorageSync('projectId'),
-          question_id: selectRecord.key,
-          relevantors: [
-            units[ResponserVal?.current?.state.value[0]]?.depts[
-              ResponserVal?.current?.state.value[1]
-            ]?.workers[ResponserVal?.current?.state.value[2]]?.id,
-          ],
-          responsibles: [
-            units[AlerterVal?.current?.state.value[0]]?.depts[
-              AlerterVal?.current?.state.value[1]
-            ]?.workers[AlerterVal?.current?.state.value[2]]?.id,
-          ],
-          advanceDay: AlertDeadline,
+          problem_id: selectRecord.id,
+          sendData: dataSend
         })
         .then(res => {
           if (res.code === 500) {
@@ -64,26 +70,53 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
             message('请求中', 'warning');
             message('指定成功', 'success');
             okManageModal();
+            recordFlash();
           }
         });
   };
   const onConfirmManage = () => {
-    // console.log(selectRecord);
     onCreate();
-    okManageModal();
   };
   const setAlertDeadlines =(val, index)=>{
-
+    setAlertDeadline(preADDL => {
+      const updatedADDL = preADDL;
+      updatedADDL[index] = val;
+      return {...updatedADDL};
+    });
+    console.log('AlertDeadline', AlertDeadline);
+  }
+  const setDeadLines = (val, index) => {
+    setDeadline(preDDL => {
+      const updatedDDL = preDDL;
+      updatedDDL[index] = val;
+      return {...updatedDDL};
+    });
+    // setDeadline(DDL);
   }
   const MulitiResponsible: React.FC<{index:number}>= props =>{
-    const {index}= props
+    const idx = props.index;
+    const tmpAlertDeadline = AlertDeadline;
     return(
       <View>
         {/* <View>{threeListName[selectIndex]+(index +1)+':'}</View> */}
       <View>
+      <Picker
+              mode='date'
+              value='YYYY-MM-DD'
+              onChange={e => {
+                setDeadLines(e.detail.value, props.index);
+              }}
+              >
+              <AtList>
+                <AtListItem
+                  title='计划完成时间'
+                  extraText={Deadline[props.index] ? Deadline[props.index] : '请选择时间'}
+                />
+              </AtList>
+            </Picker>
         <PersonSelector
           title='负责人'
-          ref={ResponserVal}
+          ref={ResponserVal.current[props.index]}
           data={units as UnitsType}
           placeholder='请选择负责人'
           width={354}
@@ -93,7 +126,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
       <View>
         <PersonSelector
           title='报警人'
-          ref={AlerterVal}
+          ref={AlerterVal.current[props.index]}
           data={units as UnitsType}
           placeholder='请选择报警人'
           width={354}
@@ -106,7 +139,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
           min={0}
           max={10}
           step={1}
-          value={AlertDeadline[props.index]}
+          value={AlertDeadline[idx]}
           onChange={e => setAlertDeadlines(e, props.index)}
         />
       </View>
@@ -115,6 +148,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
     )
   }
   // 人员好像数据不太对
+  const deadlineArr: SendDataType = [];
   return (
     <AtModal isOpened={isManageModal} onClose={okManageModal}>
       <AtModalHeader> 确认责任人-报警人</AtModalHeader>
@@ -122,7 +156,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
           {!selectRecord? <>
             <View>数据为空</View>
           </>:selectRecord.len > 0?(
-            (selectRecord.reasons as any[]).map((resItem,resIndex)=>{
+            (selectRecord.reasons as any[]).map((resItem, resIndex)=>{
               return(
                 <>
                   <MulitiResponsible  index={resIndex}/>

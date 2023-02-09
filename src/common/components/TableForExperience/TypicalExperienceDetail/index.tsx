@@ -61,7 +61,9 @@ const TypicalExperienceDetail: React.FC<
     const fileName = file.replace(/^\/\w*\/\w*\/\d*-/, '');
     return fileName;
   };
-
+  const drawClose = () => {
+    setOpen(close)
+  };
   if (!data) return <></>;
 
   return (
@@ -111,7 +113,7 @@ const TypicalExperienceDetail: React.FC<
         </AtModalContent>{' '}
         <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
       </AtModal> */}
-      <AtDrawer show={open} mask>
+      <AtDrawer show={open} mask onClose={onClose}>
         <View>
           <View>问题概述:</View>
           <View>{data.describe}</View>
