@@ -37,21 +37,22 @@ export const ProjectModel: React.FC<IProps> = ({ refresh }: IProps) => {
   return (
     <View>
       {permission === 'manager' ? (
-        <Button
-          type='primary'
-          onClick={showModal}
-          size='default'
-          className={styles['new-btn']}>
-          新建
-        </Button>
+        <>
+          <Button
+            type='primary'
+            onClick={showModal}
+            size='default'
+            className={styles['new-btn']}>
+            新建
+          </Button>
+          <AtModal isOpened={isModalVisible} onClose={handleOk}>
+            <AtModalHeader>新建工程</AtModalHeader>
+            <AtModalContent>
+              <ProjectForm handleReq={handleReq} refresh={refresh} />
+            </AtModalContent>
+          </AtModal>
+        </>
       ) : null}
-
-      <AtModal isOpened={isModalVisible} onClose={handleOk}>
-        <AtModalHeader>新建工程</AtModalHeader>
-        <AtModalContent>
-          <ProjectForm handleReq={handleReq} refresh={refresh} />
-        </AtModalContent>
-      </AtModal>
     </View>
   );
 };

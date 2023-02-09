@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Picker } from '@tarojs/components';
+import { Input, Picker } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import {
   AtForm,
@@ -73,7 +73,7 @@ export const ProjectForm: FC<IProps> = ({ handleReq, refresh }: IProps) => {
         }}
         name='name'
         title='项目名称'
-        focus
+        // focus
       />
       <AtButton
         loading={loading}

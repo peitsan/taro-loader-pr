@@ -85,10 +85,15 @@ const SonProjectProgress = () => {
       permission === 'manager'
         ? setIsOpenLoadFile(true)
         : console.log('还未上传附件');
-    } else if (type === 0 && !startTime) {
+    } else if (type === 0 && !startTime && permission === 'manager') {
       setIsOpenStartDateSele(true);
+    } else if (type === 0 && !startTime && permission !== 'manager') {
+      Taro.showToast({
+        title: '流程还未设置时间',
+        icon: 'error',
+        duration: 1000,
+      });
     } else if (type < progressNow) {
-      // console.log('跳转');
       Taro.setStorageSync('projectName', proName);
       Taro.setStorageSync('fatherName', fatherProName);
       Taro.setStorageSync('projectId', projectId);
@@ -152,14 +157,33 @@ const SonProjectProgress = () => {
     const startTime = curProgressInfo?.startTime;
     const planTime = curProgressInfo?.planTime;
     const endTime = curProgressInfo?.endTime;
-    if (!startTime) return console.log('请先填写当前流程开始时间');
-    if (!planTime) return console.log('请先填写当前流程计划完成时间');
-    if (!endTime) return console.log('请先填写当前流程实际完成时间');
-
+    if (!startTime)
+      Taro.showToast({
+        title: '请先填写开始时间',
+        icon: 'error',
+        duration: 1000,
+      });
+    if (!planTime)
+      return Taro.showToast({
+        title: '请先填写计划完成时间',
+        icon: 'error',
+        duration: 1000,
+      });
+    if (!endTime)
+      return Taro.showToast({
+        title: '请先填写实际完成时间',
+        icon: 'error',
+        duration: 1000,
+      });
     httpUtil
       .pushProjectToNextProgress({ project_id: String(projectId) })
       .then(() => {
         getData().then(() => {
+          Taro.showToast({
+            title: '推进成功',
+            icon: 'success',
+            duration: 1000,
+          });
           setIsOpenEndDateSele(false);
           setIsOpenOperateModal(false);
         });
@@ -171,14 +195,6 @@ const SonProjectProgress = () => {
   return (
     <>
       <View>
-        <View
-          className={styles.top}
-          onClick={() => {
-            console.log('后退');
-          }}>
-          <AtIcon value='chevron-left' />
-          <View>返回</View>
-        </View>
         <View className={styles['name-div']}>
           <AtTag className={styles.tag} circle>
             项目详情
@@ -186,13 +202,15 @@ const SonProjectProgress = () => {
           <View className={styles.name}>
             {fatherProName}/{proName}
           </View>
-          <View
-            className={styles.operate}
-            onClick={() => {
-              setIsOpenOperateModal(true);
-            }}>
-            相关操作
-          </View>
+          {permission === 'manager' && (
+            <View
+              className={styles.operate}
+              onClick={() => {
+                setIsOpenOperateModal(true);
+              }}>
+              相关操作
+            </View>
+          )}
         </View>
         <View className={styles['progress-div']}>
           {timestamp && (
@@ -221,7 +239,7 @@ const SonProjectProgress = () => {
       </View>
       <AtToast
         isOpened={isOpenToast}
-        text={'流程未开始'}
+        text='流程未开始'
         icon='close-circle'></AtToast>
       <AtModal
         isOpened={isOpenOperateModal}
@@ -256,34 +274,39 @@ const SonProjectProgress = () => {
         </AtModalContent>
       </AtModal>
       {/* 确定相应时间 */}
-      <StartTimeModal
-        selectIndex={selectInfo?.selectIndex!}
-        selectId={selectInfo?.selectId!}
-        isStartTimeModalVisible={isOpenStartDateSele}
-        setIsStartTimeModalVisible={setIsOpenStartDateSele}
-        getData={getData}
-        timestamp={timestamp}
-        projectId={Number(projectId)}
-        isFather={false}
-      />
-      <PlanTimeModal
-        isPlanTimeModalVisible={isOpenPlanDateSele}
-        setIsPlanTimeModalVisible={setIsOpenPlanDateSele}
-        projectId={Number(projectId)}
-        curProgressInfo={curProgressInfo!}
-        getData={getData}
-      />
-      <EndTimeModal
-        isEndTimeModalVisible={isOpenEndDateSele}
-        setIsEndTimeModalVisible={setIsOpenEndDateSele}
-        projectId={Number(projectId)}
-        curProgressInfo={curProgressInfo!}
-        getData={getData}
-      />
-      <UploadFile
-        isUploadVisible={isOpenLoadFile}
-        setIsUploadVisible={setIsOpenLoadFile}
-      />
+      {permission === 'manager' && (
+        <>
+          <StartTimeModal
+            selectIndex={selectInfo?.selectIndex!}
+            selectId={selectInfo?.selectId!}
+            isStartTimeModalVisible={isOpenStartDateSele}
+            setIsStartTimeModalVisible={setIsOpenStartDateSele}
+            getData={getData}
+            timestamp={timestamp}
+            projectId={Number(projectId)}
+            isFather={false}
+          />
+          <PlanTimeModal
+            isPlanTimeModalVisible={isOpenPlanDateSele}
+            setIsPlanTimeModalVisible={setIsOpenPlanDateSele}
+            projectId={Number(projectId)}
+            curProgressInfo={curProgressInfo!}
+            getData={getData}
+            fatherId={fatherId!}
+          />
+          <EndTimeModal
+            isEndTimeModalVisible={isOpenEndDateSele}
+            setIsEndTimeModalVisible={setIsOpenEndDateSele}
+            projectId={Number(projectId)}
+            curProgressInfo={curProgressInfo!}
+            getData={getData}
+          />
+          <UploadFile
+            isUploadVisible={isOpenLoadFile}
+            setIsUploadVisible={setIsOpenLoadFile}
+          />
+        </>
+      )}
     </>
   );
 };

@@ -19,8 +19,15 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
     const ele = itemRef.current;
     // @ts-ignore
     const childLen = ele.childNodes.length;
-    // @ts-ignore
-    ele.style.transition = `max-height ${0.4 * childLen}s ease`;
+    let time = childLen * 0.4;
+    if (time > 2) time = 2;
+    if (arrType === 'left') {
+      // @ts-ignore
+      ele.style.transition = `max-height ${time}s ease`;
+    } else {
+      // @ts-ignore
+      ele.style.transition = `max-height 0.5s ease`;
+    }
     arrType === 'left' ? setArrType('down') : setArrType('left');
     if (isShow === false) {
       // @ts-ignore
@@ -29,7 +36,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
       // @ts-ignore
       ele.style['maxHeight'] = '0';
     }
-    setIsShow(e => !e);
+    setIsShow(i => !i);
   };
 
   const {
