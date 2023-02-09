@@ -99,10 +99,14 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
         <View>
           <View className={styles['reply-title']}>回复:</View>
           <View className={styles['reply-input']}>
-            <Input
-              placeholder='请输入回复内容'
-              onInput={e => setReplyText(e.detail.value)}
-              value={replyText}></Input>
+            {isReplyModal ? (
+              <Input
+                style={{ zIndex: 101 }}
+                focus
+                placeholder='请输入回复内容'
+                onInput={e => setReplyText(e.detail.value)}
+                value={replyText}></Input>
+            ) : null}
           </View>
           <View className={styles['reply-title']}>选择附件:</View>
           <View>

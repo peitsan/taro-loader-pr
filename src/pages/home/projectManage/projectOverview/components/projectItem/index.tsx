@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Taro from '@tarojs/taro';
-import { Picker, Button } from '@tarojs/components';
+import { Picker, Button, View } from '@tarojs/components';
 import {
   AtModal,
   AtModalHeader,
@@ -307,15 +307,18 @@ const ProjectItem = (data: IData) => {
               </AtList>
             </Picker>
             {/* 输入项目名称 */}
-            <AtInput
-              title='项目名称'
-              name='name'
-              placeholder='请输入项目名称'
-              onChange={e => {
-                setProName(String(e));
-              }}
-              value={proName}
-            />
+            {isOpenModal ? (
+              <AtInput
+                title='项目名称'
+                name='name'
+                style={{ zIndex: 101 }}
+                placeholder='请输入项目名称'
+                onChange={e => {
+                  setProName(String(e));
+                }}
+                value={proName}
+              />
+            ) : null}
             {/* 选择初步启动日期 */}
             <Picker
               mode='date'
@@ -331,15 +334,19 @@ const ProjectItem = (data: IData) => {
               </AtList>
             </Picker>
             {/* 备注信息 */}
-            <AtInput
-              name='remark'
-              title='备注'
-              placeholder='请输入备注'
-              onChange={e => {
-                setRemark(String(e));
-              }}
-              value={remark}
-            />
+            <View>
+              {isOpenModal ? (
+                <AtInput
+                  name='remark'
+                  title='备注'
+                  placeholder='请输入备注'
+                  onChange={e => {
+                    setRemark(String(e));
+                  }}
+                  value={remark}
+                />
+              ) : null}
+            </View>
             <Button className={styles.btn} formType='submit'>
               确定
             </Button>

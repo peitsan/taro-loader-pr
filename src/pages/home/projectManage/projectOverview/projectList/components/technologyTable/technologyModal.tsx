@@ -65,15 +65,17 @@ const TechnologyModal: React.FC<technologyModalProps> = selfProps => {
       <AtModalHeader>{'填写' + titleList[currentTab!]}</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={onFinish}>
-          <AtInput
-            focus
-            title={titleList[currentTab!]}
-            name={parameterList[currentTab!]}
-            placeholder={`请输入${titleList[currentTab!]}`}
-            value={tmp as string}
-            onChange={e =>
-              setValue(parameterList[currentTab!], e as string)
-            }></AtInput>
+          {isTechModal ? (
+            <AtInput
+              style={{ zIndex: 101 }}
+              title={titleList[currentTab!]}
+              name={parameterList[currentTab!]}
+              placeholder={`请输入${titleList[currentTab!]}`}
+              value={tmp as string}
+              onChange={e =>
+                setValue(parameterList[currentTab!], e as string)
+              }></AtInput>
+          ) : null}
           <Button className='btn-background' formType='submit' type='primary'>
             确定
           </Button>

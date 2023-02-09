@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Input, Picker } from '@tarojs/components';
+import { Input, Picker, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import {
   AtForm,
@@ -15,11 +15,16 @@ import styles from './index.module.less';
 
 // 定义 interface 用于请求成功关闭上一层的 modal
 interface IProps {
+  showOpen: any;
   handleReq: Function;
   refresh: () => Promise<void>;
 }
 
-export const ProjectForm: FC<IProps> = ({ handleReq, refresh }: IProps) => {
+export const ProjectForm: FC<IProps> = ({
+  handleReq,
+  refresh,
+  showOpen,
+}: IProps) => {
   const pickerRange = ['规模以下', '规模以上'];
   const [picker, setPicker] = useState('规模以上');
   const [name, setName] = useState<string>('');
@@ -65,16 +70,20 @@ export const ProjectForm: FC<IProps> = ({ handleReq, refresh }: IProps) => {
           <AtListItem title='规模选择' extraText={picker} />
         </AtList>
       </Picker>
-      <AtInput
-        placeholder='请输入项目名称'
-        value={String(name)}
-        onChange={e => {
-          setName(String(e));
-        }}
-        name='name'
-        title='项目名称'
-        // focus
-      />
+      <View>
+        {showOpen ? (
+          <AtInput
+            placeholder='请输入项目名称'
+            value={String(name)}
+            onChange={e => {
+              setName(String(e));
+            }}
+            name='name'
+            title='项目名称'
+            // focus
+          />
+        ) : null}
+      </View>
       <AtButton
         loading={loading}
         type='primary'

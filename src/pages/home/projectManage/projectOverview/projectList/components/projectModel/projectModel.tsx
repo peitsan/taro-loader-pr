@@ -47,7 +47,11 @@ export const ProjectModel: React.FC<IProps> = ({
         onClose={handleCancel}>
         <AtModalHeader>{`新建${selectList}`}</AtModalHeader>
         <AtModalContent>
-          <ProjectForm selectList={selectList} handleOk={handleOk} />
+          <ProjectForm
+            selectList={selectList}
+            handleOk={handleOk}
+            showOpen={isModalVisible}
+          />
         </AtModalContent>
       </AtModal>
     </>

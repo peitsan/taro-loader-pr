@@ -169,15 +169,16 @@ export const PlanTimeModal = (props: IProps) => {
           <View className={styles.reason_div}>
             <View>调整原因</View>
             <View>
-              <AtTextarea
-                value={reason}
-                height={50}
-                onChange={e => {
-                  setReason(e);
-                }}
-                placeholder='调整原因'
-                focus
-              />
+              {isPlanTimeModalVisible ? (
+                <AtTextarea
+                  value={reason}
+                  height={50}
+                  onChange={e => {
+                    setReason(e);
+                  }}
+                  placeholder='调整原因'
+                />
+              ) : null}
             </View>
           </View>
           <View>
