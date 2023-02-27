@@ -11,7 +11,6 @@ const QuestionTable = () => {
   const column = ['父项目名称', '项目名字', '所属流程', '更多'];
   const list = useSelector(state => state.applyAudit.questionApprovals);
 
-  console.log('list', list);
   useEffect(() => {
     dispatch(getApplyListAC());
   }, []);

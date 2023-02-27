@@ -84,7 +84,6 @@ const ProjectHandOver: React.FC = () => {
   useEffect(() => {
     dispatch(getManagersAC());
     getOwnProjects();
-    console.log(searchManagers);
   }, []);
   const PersonModal: React.FC = () => {
     return (

@@ -16,18 +16,32 @@ export const Intermediate: React.FC = () => {
   const [mediateList, setMediateList] = useState<any[]>([]);
   const projectId = Taro.getStorageSync('projectId');
   const progressId = Taro.getStorageSync('progressId');
+  const type = Taro.getStorageSync('type');
   // 列表loading
   const [loading, setLoading] = useState(true);
 
   const getMediateList = async () => {
     try {
-      const resl = await httpUtil.mediateInspection({
-        projectId: projectId!,
-        progressId: progressId!,
-      });
-      if (resl.code === 200) {
-        setMediateList(resl.data);
-        setLoading(false);
+      if (type == '20' || type == '21' || type == '22') {
+        const resl = await httpUtil.getCheckForNK({
+          projectId: projectId!,
+          progressType: Number(type)!,
+        });
+        console.log(resl);
+        if (resl.code === 200) {
+          setMediateList(resl.data);
+          setLoading(false);
+        }
+      } else {
+        const resl = await httpUtil.mediateInspection({
+          projectId: projectId!,
+          progressId: progressId!,
+        });
+        // console.log(resl);
+        if (resl.code === 200) {
+          setMediateList(resl.data);
+          setLoading(false);
+        }
       }
     } finally {
     }
@@ -39,7 +53,7 @@ export const Intermediate: React.FC = () => {
 
   const expandedRowRender = (record: DataType) => {
     const { checkList } = record;
-    console.log(checkList);
+    // console.log(checkList);
     const columns: ColumnsType<ExpandedDataType> = [
       { title: '序号', dataIndex: 'index', key: 'index', width: '6%' },
       {

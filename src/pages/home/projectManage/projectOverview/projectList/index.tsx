@@ -22,6 +22,7 @@ import {
   SpecialAssessment,
   ProjectModel,
   Intermediate,
+  PreProcedure,
 } from './components';
 import httpUtil from '../../../../../utils/httpUtil';
 import {
@@ -685,7 +686,7 @@ function ProjectList() {
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '前期手续')}>
                 <View style='background-color: #FAFBFC;'>
-                  <Intermediate />
+                  <PreProcedure data={issue} />
                 </View>
               </AtTabsPane>
             ) : null}
@@ -717,7 +718,7 @@ function ProjectList() {
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '专项评估')}>
                 {/* <View style='50px;background-color: #FAFBFC;'></View> */}
-                {/* <SpecialAssessment
+                <SpecialAssessment
                   Type={type}
                   setZxpgData={setZxpgData}
                   setIsApplyUpper={setIsApplyUpper}
@@ -730,7 +731,7 @@ function ProjectList() {
                   setSelectRecord={setSelectRecord}
                   setSelectIndex={setSelectIndex}
                   fresh={getTimeDetail}
-                /> */}
+                />
               </AtTabsPane>
             ) : null}
           </AtTabs>

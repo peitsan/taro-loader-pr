@@ -60,7 +60,6 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
             questionId: selectRecord.id,
             progressId: getStorageSync('progressId'),
           };
-          console.log('test', data);
           const res = await httpUtil.specialReply(data);
           if (res.code === 200) {
             message('回复成功', 'success');
