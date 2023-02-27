@@ -107,9 +107,10 @@ function ProjectList() {
   const noUnifiedList = [0, 5, 6, 8];
   //无科研技术收口和专项评估
   const noTwoType = [0, 8];
-
   //专项评估
-  const specialList = [1, 2, 3, 4, 8];
+  const specialList = [1, 2, 3, 4, 8, 20, 21, 22];
+  // 前期手续
+  const hasPreliminaryProcedure = [20, 21, 22];
 
   // 这里注释了取项目id的请求体
   const getTimeDetail = async () => {
@@ -136,6 +137,8 @@ function ProjectList() {
   //监听Tab页切换事件
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
+    console.log(tabList);
+    console.log(type);
   };
   //动态鉴权生成Tab标签
   const effectTabList = () => {
@@ -147,8 +150,32 @@ function ProjectList() {
       { title: '初设第一阶段中间检查要点' },
       { title: '初设第二阶段中间检查要点' },
       { title: '建设专业可研反馈记录表' },
+      { title: '前期手续' },
+      { title: '中间成果评审会检查要点' },
+      { title: '市公司内审前检查检查要点' },
       { title: '专项评估' },
     ];
+    //无前期手续的splice
+    if (type != 21) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '中间成果评审会检查要点'),
+        1,
+      );
+    }
+    //无前期手续的splice
+    if (type != 22) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '市公司内审前检查检查要点'),
+        1,
+      );
+    }
+    //无前期手续的splice
+    if (!hasPreliminaryProcedure.includes(type)) {
+      TabList.splice(
+        TabList.findIndex(val => val.title === '前期手续'),
+        1,
+      );
+    }
     // 无统一任务
     if (noUnifiedList.includes(type)) {
       TabList.splice(
@@ -434,17 +461,18 @@ function ProjectList() {
       <View className='projectView-title-wrp'>
         {(selectTab == tabList.findIndex(val => val.title === '问题清单') ||
           selectTab == tabList.findIndex(val => val.title === '手续清单') ||
-          selectTab == tabList.findIndex(val => val.title === '协议清单')) &&
+          selectTab == tabList.findIndex(val => val.title === '协议清单') ||
+          selectTab == tabList.findIndex(val => val.title === '前期手续')) &&
         Taro.getStorageSync('ModalName') === 'projectOverview' &&
         !JSON.parse(Taro.getStorageSync('progress')) ? (
           <View
             className='projectModel-container'
             style={{ position: 'absolute', right: '30px', top: '10px' }}>
-            {/* 这个还有很多bug */}
             <ProjectModel
               flushFunction={flush}
               selectList={tabList[selectTab].title}
             />
+            {/* 前期手续新增页面要修改只有2个字段 */}
           </View>
         ) : null}
       </View>
@@ -651,13 +679,45 @@ function ProjectList() {
                 </View>
               </AtTabsPane>
             ) : null}
+            {hasPreliminaryProcedure.includes(type) ? (
+              //前期手续
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(val => val.title === '前期手续')}>
+                <View style='background-color: #FAFBFC;'>
+                  <Intermediate />
+                </View>
+              </AtTabsPane>
+            ) : null}
+            {type === 21 ? (
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(
+                  val => val.title === '中间成果评审会检查要点',
+                )}>
+                <View style='background-color: #FAFBFC;'>
+                  <Intermediate />
+                </View>
+              </AtTabsPane>
+            ) : null}
+            {type === 22 ? (
+              <AtTabsPane
+                current={selectTab}
+                index={tabList.findIndex(
+                  val => val.title === '市公司内审前检查检查要点',
+                )}>
+                <View style='background-color: #FAFBFC;'>
+                  <Intermediate />
+                </View>
+              </AtTabsPane>
+            ) : null}
             {specialList.includes(type) ? (
               //专项评估
               <AtTabsPane
                 current={selectTab}
                 index={tabList.findIndex(val => val.title === '专项评估')}>
-                <View style='50px;background-color: #FAFBFC;'></View>
-                <SpecialAssessment
+                {/* <View style='50px;background-color: #FAFBFC;'></View> */}
+                {/* <SpecialAssessment
                   Type={type}
                   setZxpgData={setZxpgData}
                   setIsApplyUpper={setIsApplyUpper}
@@ -670,7 +730,7 @@ function ProjectList() {
                   setSelectRecord={setSelectRecord}
                   setSelectIndex={setSelectIndex}
                   fresh={getTimeDetail}
-                />
+                /> */}
               </AtTabsPane>
             ) : null}
           </AtTabs>
