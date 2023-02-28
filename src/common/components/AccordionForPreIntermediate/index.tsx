@@ -15,16 +15,17 @@ const AccordionForIntermediate: React.FC<
   const [active, setActive] = useState<Boolean>(false);
   const ModalName = Taro.getStorageSync('ModalName');
   const projectId = Taro.getStorageSync('projectId');
-  const handleCheckOrUncheck = async (isCheck: number) => {
+  const handleCheckOrUncheck = async (isCheck: number, code: string) => {
     message('请求中', 'warning');
     const data = {
       projectId: Number(projectId),
       progressType: Number(Taro.getStorageSync('type')),
-      code: JSON.stringify(isCheck === 0 ? 1 : 0),
+      code: code,
     };
-    console.log(data);
     const res = await httpUtil.managerCheckForNK(data);
-    console.log(res);
+    if (res.code == 500) {
+      message('网络异常,检查失败', 'warning');
+    }
     getMediateList();
   };
   return (
@@ -131,6 +132,7 @@ const AccordionForIntermediate: React.FC<
                             onClick={handleCheckOrUncheck.bind(
                               null,
                               list.isCheck,
+                              list.code,
                             )}>
                             取消
                             <AtIcon
@@ -144,6 +146,7 @@ const AccordionForIntermediate: React.FC<
                             onClick={handleCheckOrUncheck.bind(
                               null,
                               list.isCheck,
+                              list.code,
                             )}>
                             {' '}
                             检查
