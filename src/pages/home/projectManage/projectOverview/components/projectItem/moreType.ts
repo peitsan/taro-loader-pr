@@ -6,4 +6,5 @@ export interface IChProMoreData {
   startTime: string;
   scope: string;
   progressNow: string;
+  mark: string;
 }

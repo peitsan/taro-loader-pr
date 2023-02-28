@@ -32,9 +32,16 @@ export const ShowMoreInfo: FC<IShowMore> = (props: IShowMore) => {
           </View>
           {/* @ts-ignore */}
           <View className={styles.moreInfoStyle}>
-            项目进度：{moreData.progressNow}
+            项目进度：
+            <View
+              className={`${
+                moreData.progressNow === '已完成' ? styles.done : styles.doing
+              }`}></View>
+            {moreData.progressNow}
           </View>
-          <View></View>
+          <View className={styles.moreInfoStyle}>
+            备注：{moreData.mark || '无'}
+          </View>
         </>
       )}
     </AtFloatLayout>
