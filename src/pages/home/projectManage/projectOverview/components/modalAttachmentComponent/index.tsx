@@ -22,7 +22,6 @@ export const ModalAttachmentComponent: FC<IModalCheck> = (
     Taro.downloadFile({
       url: 'https://sgcc.torcher.team' + url,
       success: res => {
-        console.log('res', res);
         Taro.showToast({
           title: '下载完成',
           icon: 'success',
@@ -40,6 +39,12 @@ export const ModalAttachmentComponent: FC<IModalCheck> = (
     Taro.openDocument({
       filePath: filePath,
       success: () => {},
+      fail: () => {
+        Taro.showToast({
+          title: '暂不支持该文件的打开',
+          icon: 'error',
+        });
+      },
     });
   };
 
