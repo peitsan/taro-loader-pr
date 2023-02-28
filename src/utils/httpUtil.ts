@@ -87,6 +87,8 @@ import {
   deleteOneCase,
   downLoadCaseFile,
   createClassicCase,
+  preInspection,
+  managerCheckForNK,
 } from './params';
 
 class HttpUtil {
