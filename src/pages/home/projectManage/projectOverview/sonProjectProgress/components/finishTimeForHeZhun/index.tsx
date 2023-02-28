@@ -12,38 +12,35 @@ import {
 } from 'taro-ui';
 import httpUtil from '@/utils/httpUtil';
 import styles from './index.module.less';
-import { INowProgressInfo } from '../../../projectOverview/fatherProjectProgress';
 
-interface IProps {
-  isEndTimeModalVisible: boolean;
-  setIsEndTimeModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  curProgressInfo: INowProgressInfo;
+export interface ICheckData {
   projectId: number;
-  getData: () => Promise<void>;
+  progressId: number;
 }
 
-export const EndTimeModal = (props: IProps) => {
+interface IProps {
+  isFinishTimeModalVisibleForHeZhun: boolean;
+  setIsFinishTimeModalVisibleForHeZhun: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+  getData: () => Promise<void>;
+  checkData: ICheckData[];
+  curIndex: number;
+  setCurIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const FinishTimeForHeZhun = (props: IProps) => {
   const {
-    isEndTimeModalVisible,
-    setIsEndTimeModalVisible,
-    curProgressInfo,
-    projectId,
+    isFinishTimeModalVisibleForHeZhun,
+    setIsFinishTimeModalVisibleForHeZhun,
+    checkData,
+    curIndex,
+    setCurIndex,
     getData,
   } = props;
   const [time, setTime] = useState<string>();
-  const [start, setStart] = useState<string>();
-  const [end, setEnd] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const initSelectTime = () => {
-    setStart('1970-01-01');
-    setEnd('2999-01-01');
-    setTime('');
-  };
-  const setTimeHandler = () => {
-    initSelectTime();
-    const time = curProgressInfo?.startTime;
-    if (time) setStart(time);
-  };
+
   const submit = () => {
     if (!time) {
       setIsOpen(true);
@@ -54,30 +51,35 @@ export const EndTimeModal = (props: IProps) => {
       const finishTime = new Date(time).valueOf();
       httpUtil
         .selectProjectProgressFinishTime({
-          project_id: projectId,
-          progress_id: curProgressInfo?.progressId,
+          project_id: Number(checkData[curIndex].projectId),
+          progress_id: Number(checkData[curIndex].progressId),
           finishTime,
         })
         .then(() => {
           getData().then(() => {
-            setIsEndTimeModalVisible(false);
-            console.log('成功');
+            setIsFinishTimeModalVisibleForHeZhun(false);
+            Taro.showToast({
+              title: '时间设置成功',
+              icon: 'success',
+              duration: 1000,
+            });
           });
         });
     }
   };
 
-  useEffect(() => {
-    setTimeHandler();
-  }, [curProgressInfo]);
   return (
     <>
       <AtModal
-        isOpened={isEndTimeModalVisible}
+        isOpened={isFinishTimeModalVisibleForHeZhun}
         onClose={() => {
-          setIsEndTimeModalVisible(false);
+          setIsFinishTimeModalVisibleForHeZhun(false);
         }}>
-        <AtModalHeader>选择实际完成时间</AtModalHeader>
+        <AtModalHeader>
+          {curIndex === 0
+            ? '填写核准要件的实际完成时间'
+            : '填写核准批复的实际完成时间'}
+        </AtModalHeader>
         <AtModalContent>
           <AtForm onSubmit={submit}>
             <Picker
@@ -85,9 +87,7 @@ export const EndTimeModal = (props: IProps) => {
               value='YYYY-MM-DD'
               onChange={e => {
                 setTime(e.detail.value);
-              }}
-              start={start}
-              end={end}>
+              }}>
               <AtList>
                 <AtListItem
                   title='时间'

@@ -12,38 +12,26 @@ import {
 } from 'taro-ui';
 import httpUtil from '@/utils/httpUtil';
 import styles from './index.module.less';
-import { INowProgressInfo } from '../../../projectOverview/fatherProjectProgress';
 
 interface IProps {
-  isEndTimeModalVisible: boolean;
-  setIsEndTimeModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  curProgressInfo: INowProgressInfo;
-  projectId: number;
+  isAdjustTimeForChuShe: boolean;
+  setIsAdjustTimeForChuShe: React.Dispatch<React.SetStateAction<boolean>>;
   getData: () => Promise<void>;
+  projectId: number;
+  progressId: number;
 }
 
-export const EndTimeModal = (props: IProps) => {
+export const AdjustTimeForChuShe = (props: IProps) => {
   const {
-    isEndTimeModalVisible,
-    setIsEndTimeModalVisible,
-    curProgressInfo,
-    projectId,
+    isAdjustTimeForChuShe,
+    setIsAdjustTimeForChuShe,
     getData,
+    projectId,
+    progressId,
   } = props;
   const [time, setTime] = useState<string>();
-  const [start, setStart] = useState<string>();
-  const [end, setEnd] = useState<string>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const initSelectTime = () => {
-    setStart('1970-01-01');
-    setEnd('2999-01-01');
-    setTime('');
-  };
-  const setTimeHandler = () => {
-    initSelectTime();
-    const time = curProgressInfo?.startTime;
-    if (time) setStart(time);
-  };
+
   const submit = () => {
     if (!time) {
       setIsOpen(true);
@@ -51,33 +39,34 @@ export const EndTimeModal = (props: IProps) => {
         setIsOpen(false);
       }, 2000);
     } else {
-      const finishTime = new Date(time).valueOf();
+      const startTime = new Date(time).valueOf();
       httpUtil
-        .selectProjectProgressFinishTime({
+        .adjustTimeAfterChuShe({
+          progress_id: progressId,
           project_id: projectId,
-          progress_id: curProgressInfo?.progressId,
-          finishTime,
+          adjustTime: startTime,
         })
         .then(() => {
           getData().then(() => {
-            setIsEndTimeModalVisible(false);
-            console.log('成功');
+            setIsAdjustTimeForChuShe(false);
+            Taro.showToast({
+              title: '时间设置成功',
+              icon: 'success',
+              duration: 1000,
+            });
           });
         });
     }
   };
 
-  useEffect(() => {
-    setTimeHandler();
-  }, [curProgressInfo]);
   return (
     <>
       <AtModal
-        isOpened={isEndTimeModalVisible}
+        isOpened={isAdjustTimeForChuShe}
         onClose={() => {
-          setIsEndTimeModalVisible(false);
+          setIsAdjustTimeForChuShe(false);
         }}>
-        <AtModalHeader>选择实际完成时间</AtModalHeader>
+        <AtModalHeader>调整初步设计启动会时间</AtModalHeader>
         <AtModalContent>
           <AtForm onSubmit={submit}>
             <Picker
@@ -85,9 +74,7 @@ export const EndTimeModal = (props: IProps) => {
               value='YYYY-MM-DD'
               onChange={e => {
                 setTime(e.detail.value);
-              }}
-              start={start}
-              end={end}>
+              }}>
               <AtList>
                 <AtListItem
                   title='时间'

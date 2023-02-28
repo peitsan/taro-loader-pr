@@ -144,6 +144,11 @@ export interface selectProjectProgressFinishTime {
   progress_id: number;
   finishTime: number;
 }
+export interface IAdjustTimeAfterChuShe {
+  project_id: number;
+  progress_id: number;
+  adjustTime: number;
+}
 export interface comfirmResponsible {
   project_id: string;
   question_id: string;

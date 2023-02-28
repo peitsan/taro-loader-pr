@@ -1,15 +1,15 @@
 import react, { FC } from 'react';
 import Taro from '@tarojs/taro';
-import httpUtil from '@/utils/httpUtil';
 import { IData } from '../../types/projectType';
 import ProjectItem from '../projectItem';
 
 interface IType {
   projectData: IData[];
+  getOwnProjects?: () => Promise<void>;
 }
 
 export const ProjectLists: FC<IType> = (props: IType) => {
-  const { projectData } = props;
+  const { projectData, getOwnProjects } = props;
   return (
     <>
       {projectData
@@ -18,6 +18,7 @@ export const ProjectLists: FC<IType> = (props: IType) => {
               key={`projectItem-${index}`}
               fatherProject={item.fatherProject}
               sonProject={item.sonProject}
+              getOwnProjects={getOwnProjects!}
             />
           ))
         : null}

@@ -1,37 +1,48 @@
 import React, { useEffect, useState, FC } from 'react';
-import Taro, { useRouter } from '@tarojs/taro';
-import { Button, View } from '@tarojs/components';
+import Taro from '@tarojs/taro';
+import { Button } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
-import {
-  AtTag,
-  AtIcon,
-  AtToast,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtForm,
-  AtImagePicker,
-} from 'taro-ui';
+import { AtModal, AtModalHeader, AtModalContent, AtForm } from 'taro-ui';
 import styles from './index.module.less';
 import Upload from '../upload';
 
 interface IType {
   isUploadVisible: boolean;
   setIsUploadVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  getData: () => Promise<void>;
+  progressId: number;
+  projectId: number;
 }
 
-const upload = () => {};
-
 const UploadFile: FC<IType> = (props: IType) => {
-  const { isUploadVisible, setIsUploadVisible } = props;
+  const {
+    isUploadVisible,
+    setIsUploadVisible,
+    getData,
+    progressId,
+    projectId,
+  } = props;
   const [isUpload, setIsUpload] = useState(false);
-  const [showName, setShowName] = useState<string>('');
-  const [url, setUrl] = useState('');
-  const submit = () => {
+  const [path, setPath] = useState('');
+
+  const submit = async () => {
     if (!isUpload) {
       console.log('还未上传文件');
     } else {
-      console.log('上传文件');
+      // console.log('path', path);
+      const res = await httpUtil.uploadAttachment({
+        attachment: path,
+        progressId,
+        projectId,
+      });
+      if (res.code === 200) {
+        Taro.showToast({
+          title: '上传成功',
+          icon: 'success',
+        });
+        setIsUploadVisible(false);
+        getData();
+      }
     }
   };
   const chooseFile = () => {
@@ -39,15 +50,37 @@ const UploadFile: FC<IType> = (props: IType) => {
       count: 1,
       type: 'all',
       success: function (res) {
-        const { name, path, size, type } = res.tempFiles[0];
+        const { name, path } = res.tempFiles[0];
         // tempFilePath可以作为img标签的src属性显示图片
-        setShowName(name);
-        console.log(res);
         setIsUpload(true);
-        console.log('上传成功');
+        Taro.uploadFile({
+          url: 'https://sgcc.torcher.team/worker/upload',
+          name: 'file',
+          header: {
+            Authorization: 'Bearer ' + Taro.getStorageSync('token'),
+          },
+          filePath: path,
+          fileName: name,
+          success: res => {
+            const data = JSON.parse(res.data);
+            // console.log('data', data);
+            setPath(data.data.file.url);
+          },
+          fail: () => {
+            Taro.showToast({
+              title: '上传文件失败',
+              icon: 'error',
+              duration: 1000,
+            });
+          },
+        });
       },
       fail: function () {
-        console.log('上传失败');
+        Taro.showToast({
+          title: '打开文件失败',
+          icon: 'error',
+          duration: 1000,
+        });
       },
     });
   };
@@ -60,9 +93,9 @@ const UploadFile: FC<IType> = (props: IType) => {
       <AtModalHeader>上传附件</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={submit}>
-          <Upload>
-            <Button>上传附件</Button>
-          </Upload>
+          {/* <Upload> */}
+          <Button onClick={chooseFile}>上传附件</Button>
+          {/* </Upload> */}
           <Button className={styles.opeBtn} formType='submit'>
             确定
           </Button>
