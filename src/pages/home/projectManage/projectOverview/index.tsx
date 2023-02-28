@@ -37,7 +37,12 @@ const ProjectOverview = () => {
         </AtTag>
         <ProjectModel refresh={getOwnProjects} />
       </View>
-      {projectData && <ProjectLists projectData={projectData} />}
+      {projectData && (
+        <ProjectLists
+          getOwnProjects={getOwnProjects}
+          projectData={projectData}
+        />
+      )}
     </>
   );
 };

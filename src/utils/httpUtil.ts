@@ -36,6 +36,7 @@ import {
   selectProjectProgressStartTime,
   selectProjectProgressPlanTime,
   selectProjectProgressFinishTime,
+  IAdjustTimeAfterChuShe,
   comfirmResponsible,
   lookAllListReply,
   updateTechnologyList,
@@ -315,6 +316,18 @@ class HttpUtil {
       'put',
       `/manager/project/${params.project_id}/progress/${params.progress_id}/setFinishTime`,
       params,
+    );
+
+  /**
+   * @description 调整初步设计启动会以后的时间
+   */
+  adjustTimeAfterChuShe = (params: IAdjustTimeAfterChuShe) =>
+    httpReq(
+      'put',
+      `/manager/project/${params.project_id}/progress/${params.progress_id}/adjustTime`,
+      {
+        adjustTime: params.adjustTime,
+      },
     );
 
   // 指定内置清单负责人

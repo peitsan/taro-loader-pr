@@ -5,17 +5,18 @@ import httpUtil from '@/utils/httpUtil';
 import { navigateTo } from '@/common/functions';
 import {
   AtTag,
-  AtIcon,
   AtToast,
   AtModal,
   AtModalHeader,
   AtModalContent,
 } from 'taro-ui';
 import styles from './index.module.less';
+import ProgressItemList from './progressItemList';
 import ProgressItem, {
   IProgressItem,
   IonClickName,
 } from '../../components/progressItem';
+import { ModalAttachmentComponent } from '../components';
 
 import {
   StartTimeModal,
@@ -23,6 +24,13 @@ import {
   EndTimeModal,
 } from '../../components/timeSelect';
 import UploadFile from './uploadFile';
+import {
+  FinishTimeForHeZhun,
+  PlanTimeForHeZhun,
+  AdjustTimeForChuShe,
+  ICheckData,
+  NavTop,
+} from './components';
 
 export interface INowProgressInfo {
   startTime: string | null;
@@ -33,10 +41,10 @@ export interface INowProgressInfo {
 
 const SonProjectProgress = () => {
   const {
-    projectId = 304,
-    proName,
-    fatherProName,
-    fatherId,
+    projectId = 394,
+    proName = '220KV变电站测试1',
+    fatherProName = '项目1',
+    fatherId = String(394),
     permission = 'manager',
   } = useRouter().params;
 
@@ -55,8 +63,6 @@ const SonProjectProgress = () => {
   const [isOpenPlanDateSele, setIsOpenPlanDateSele] = useState(false);
   // 控制完成时间窗口的打开与关闭
   const [isOpenEndDateSele, setIsOpenEndDateSele] = useState(false);
-  // 上传附件与否
-  const [isUpload, setIsUpload] = useState(false);
   // 控制打开上传文件与关闭
   const [isOpenLoadFile, setIsOpenLoadFile] = useState(false);
   // 点击选择的index,id
@@ -69,22 +75,83 @@ const SonProjectProgress = () => {
 
   const [curProgressInfo, setCurProgressInfo] = useState<INowProgressInfo>();
 
+  // 控制调整初步设计启动会时间的modal的显示与否
+  const [isShowForAdjustChuShe, setIsShowForAdjustChuShe] = useState(false);
+
+  //
+  const [
+    isFinishTimeModalVisibleForHeZhun,
+    setIsFinishTimeModalVisibleForHeZhun,
+  ] = useState(false);
+
+  const [isPlanTimeModalVisibleForHeZhun, setIsPlanTimeModalVisibleForHeZhun] =
+    useState(false);
+
+  const [isAdjustTimeForChuShe, setIsAdjustTimeForChuShe] = useState(false);
+
+  //
+  const [curIndexForHeZhunFini, setCurIndexForHeZhunFini] = useState(0);
+
+  const [curIndexForHeZhunPlan, setCurIndexForHeZhunPlan] = useState(0);
+
+  // 将核准要件和核准批复单独拿出来
+  const [checkData, setCheckData] = useState<ICheckData[]>([]);
+
+  // 记录初步设计启动会的id
+  const [idForChuShe, setIdForChuShe] = useState('');
+
+  // 设置每次下载的文件
+  const [fileUrl, setFileUrl] = useState('');
+
+  // 下载文件modal展示与否
+  const [isDolShow, setIsDolShow] = useState(false);
+
+  // 下载文件节点的 progressId
+  const [downProgressId, setDownProgressId] = useState('');
+
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
-    const { type, startTime, endTime, id, name } = params;
+    const { type, startTime, endTime, id, name, attachment } = params;
+    // setSelectInfo({ selectId: id, selectIndex: type });
 
-    setSelectInfo({ selectId: id, selectIndex: type });
+    // 核准要件上传文件
+    if ((name === '核准要件' || name === '核准批复') && attachment) {
+      setFileUrl(attachment);
+      setIsDolShow(true);
+      return;
+    } else if (
+      (name === '核准要件' || name === '核准批复') &&
+      !attachment &&
+      permission !== 'manager'
+    ) {
+      return Taro.showToast({
+        title: '还未上传文件',
+        icon: 'error',
+      });
+    } else if (
+      (name === '核准要件' || name === '核准批复') &&
+      permission === 'manager'
+    ) {
+      setDownProgressId(String(id));
+      return setIsOpenLoadFile(true);
+    }
 
-    if (type > progressNow) {
+    if (
+      (progressNow >= 20 && (type > progressNow || type <= 8)) ||
+      (progressNow <= 8 && type > progressNow)
+    ) {
       setOpenToast(true);
       setTimeout(() => {
         setOpenToast(false);
       }, 2000);
       return;
-    } else if (type === 7 && startTime && !isUpload) {
+    } else if (type === 7 && startTime && !attachment) {
       permission === 'manager'
         ? setIsOpenLoadFile(true)
         : console.log('还未上传附件');
+    } else if (type === 7 && startTime && attachment) {
+      setFileUrl(attachment);
+      setIsDolShow(true);
     } else if (type === 0 && !startTime && permission === 'manager') {
       setIsOpenStartDateSele(true);
     } else if (type === 0 && !startTime && permission !== 'manager') {
@@ -106,8 +173,6 @@ const SonProjectProgress = () => {
       navigateTo('/home/projectManage/projectOverview/projectList');
       return;
     } else if (type === progressNow && !startTime) {
-      console.log('*****');
-
       setIsOpenStartDateSele(true);
       return;
     } else if (type === progressNow && startTime) {
@@ -129,6 +194,7 @@ const SonProjectProgress = () => {
 
   // 获取该项目的过程数据
   const getData = () => {
+    const specialData: ICheckData[] = [];
     // 获取时间戳数据
     return httpUtil
       .getProjectProgress({ project_id: String(projectId) })
@@ -145,10 +211,23 @@ const SonProjectProgress = () => {
               planTime: item.planTime,
               progressId: item.progressId,
             });
+            if (item.type >= 1 && item.type < 20)
+              setIsShowForAdjustChuShe(true);
+          }
+          if (item.name === '核准要件' || item.name === '核准批复') {
+            item.endTime && setCurIndexForHeZhunFini(e => e + 1);
+            item.planTime && setCurIndexForHeZhunPlan(e => e + 1);
+            specialData.push({
+              projectId: Number(item.projectId),
+              progressId: Number(item.progressId),
+            });
+          }
+          if (item.name === '初步设计启动会') {
+            setIdForChuShe(String(item.progressId));
           }
         });
         if (hasFinish) setProgressNow(progresses.length);
-
+        setCheckData(specialData);
         setTimestamp(progresses);
       });
   };
@@ -195,46 +274,22 @@ const SonProjectProgress = () => {
   return (
     <>
       <View>
-        <View className={styles['name-div']}>
-          <AtTag className={styles.tag} circle>
-            项目详情
-          </AtTag>
-          <View className={styles.name}>
-            {fatherProName}/{proName}
-          </View>
-          {permission === 'manager' && (
-            <View
-              className={styles.operate}
-              onClick={() => {
-                setIsOpenOperateModal(true);
-              }}>
-              相关操作
-            </View>
-          )}
-        </View>
+        <NavTop
+          fatherProName={fatherProName}
+          proName={proName}
+          permission={permission}
+          setIsOpenOperateModal={setIsOpenOperateModal}
+        />
         <View className={styles['progress-div']}>
-          {timestamp && (
-            <>
-              {timestamp.map((item, index) => {
-                return (
-                  <ProgressItem
-                    key={`ProjectProgress-${index}`}
-                    name={item.name}
-                    startTime={item.startTime}
-                    endTime={item.endTime}
-                    planTime={item.planTime}
-                    progressId={item.progressId}
-                    projectId={item.projectId}
-                    status={item.status}
-                    finish={item.finish}
-                    type={item.type}
-                    onClickName={params => onClickProName(params)}
-                    hasNext={index !== timestamp.length - 1 && true}
-                  />
-                );
-              })}
-            </>
-          )}
+          <ProgressItemList
+            timeStamp={timestamp}
+            onClickProName={onClickProName}
+            // 根据流程条是否小于9来判断是否需要隐藏部分节点
+            isHiddenItem={timestamp.length <= 9 ? false : true}
+            // isHiddenItem 优先级要高于 hiddenIndex 和 hiddenNum
+            hiddenIndex={5} // 从哪一位index后面开始隐藏
+            hiddenNum={2} // 隐藏节点数量
+          />
         </View>
       </View>
       <AtToast
@@ -248,6 +303,33 @@ const SonProjectProgress = () => {
         }}>
         <AtModalHeader>相关操作</AtModalHeader>
         <AtModalContent>
+          {isShowForAdjustChuShe && (
+            <Button
+              className={styles.opeBtn}
+              style={{ fontSize: 32 + 'rpx' }}
+              onClick={() => {
+                setIsAdjustTimeForChuShe(true);
+                setIsOpenOperateModal(false);
+              }}>
+              调整初步设计启动会的开始时间
+            </Button>
+          )}
+          <Button
+            className={styles.opeBtn}
+            onClick={() => {
+              setIsPlanTimeModalVisibleForHeZhun(true);
+              setIsOpenOperateModal(false);
+            }}>
+            填写核准计划完成时间
+          </Button>
+          <Button
+            className={styles.opeBtn}
+            onClick={() => {
+              setIsFinishTimeModalVisibleForHeZhun(true);
+              setIsOpenOperateModal(false);
+            }}>
+            填写核准实际完成时间
+          </Button>
           <Button
             className={styles.opeBtn}
             onClick={() => {
@@ -276,6 +358,28 @@ const SonProjectProgress = () => {
       {/* 确定相应时间 */}
       {permission === 'manager' && (
         <>
+          <PlanTimeForHeZhun
+            isPlanTimeModalVisibleForHeZhun={isPlanTimeModalVisibleForHeZhun}
+            setIsPlanTimeModalVisibleForHeZhun={
+              setIsPlanTimeModalVisibleForHeZhun
+            }
+            checkData={checkData}
+            curIndex={curIndexForHeZhunPlan}
+            setCurIndex={setCurIndexForHeZhunPlan}
+            getData={getData}
+          />
+          <FinishTimeForHeZhun
+            isFinishTimeModalVisibleForHeZhun={
+              isFinishTimeModalVisibleForHeZhun
+            }
+            setIsFinishTimeModalVisibleForHeZhun={
+              setIsFinishTimeModalVisibleForHeZhun
+            }
+            getData={getData}
+            curIndex={curIndexForHeZhunFini}
+            setCurIndex={setCurIndexForHeZhunFini}
+            checkData={checkData}
+          />
           <StartTimeModal
             selectIndex={selectInfo?.selectIndex!}
             selectId={selectInfo?.selectId!}
@@ -301,12 +405,27 @@ const SonProjectProgress = () => {
             curProgressInfo={curProgressInfo!}
             getData={getData}
           />
+          <AdjustTimeForChuShe
+            isAdjustTimeForChuShe={isAdjustTimeForChuShe}
+            setIsAdjustTimeForChuShe={setIsAdjustTimeForChuShe}
+            getData={getData}
+            projectId={Number(projectId)}
+            progressId={Number(idForChuShe)}
+          />
           <UploadFile
             isUploadVisible={isOpenLoadFile}
             setIsUploadVisible={setIsOpenLoadFile}
+            getData={getData}
+            progressId={Number(downProgressId)}
+            projectId={Number(projectId)}
           />
         </>
       )}
+      <ModalAttachmentComponent
+        isShow={isDolShow}
+        setIsShow={setIsDolShow}
+        url={fileUrl}
+      />
     </>
   );
 };

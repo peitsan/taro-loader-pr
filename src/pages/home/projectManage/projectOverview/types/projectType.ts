@@ -26,4 +26,5 @@ export interface IChildrenProject {
 export interface IData {
   fatherProject: IFatherProject;
   sonProject: IChildrenProject[];
+  getOwnProjects?: () => Promise<void>;
 }

@@ -20,7 +20,7 @@ import { ProjectAccordion } from '../../../components/projectAccordion';
 import { ShowMoreInfo } from '../../../components/showMoreInfo';
 
 const ProjectItem = (data: IData) => {
-  const { fatherProject, sonProject } = data;
+  const { fatherProject, sonProject, getOwnProjects } = data;
   const [isOpen, setIsOpen] = useState(false);
   const [chooseOneType, setChooseOneType] = useState<number | string>();
   // 存储二级类型的一个数组
@@ -95,49 +95,66 @@ const ProjectItem = (data: IData) => {
   // 一级类型的选择 option
   const oneType = ['隧道', '线路', '变电站'];
 
-  // 两种类型选择
-  const twoType = [
+  const twoTypeCanChooseOptions = [
+    // 规模以下
     {
       '0': [
         {
-          name: '电缆隧道',
-          value: 1010,
+          name: '220kV电缆隧道',
+          value: 1011,
+        },
+        {
+          name: '500kv电缆隧道',
+          value: 1012,
         },
       ],
       '1': [
         {
-          name: '架空线路',
-          value: 2010,
+          name: '220kV架空线路',
+          value: 2011,
         },
       ],
       '2': [
         {
-          name: '主变扩建',
-          value: 3010,
+          name: '220kV主变扩建',
+          value: 3013,
         },
       ],
     },
+    // 规模以上
     {
       '0': [
         {
-          name: '电缆隧道',
-          value: 1010,
+          name: '500kV电缆隧道',
+          value: 1012,
+        },
+        {
+          name: '220kV电缆隧道',
+          value: 1011, // 暂定
         },
       ],
       '1': [
         {
-          name: '架空线路',
-          value: 2010,
+          name: '500kV架空线路',
+          value: 2012,
+        },
+        {
+          name: '220kV架空线路',
+          value: 2011, // 暂定
         },
       ],
       '2': [
         {
-          name: '220kv变电站',
+          name: '500kV变电站',
+          value: 3012,
+        },
+        {
+          name: '220kV变电站',
           value: 3011,
         },
         {
-          name: '500kv变电站',
-          value: 3012,
+          name: '500kV主变扩建',
+          value: 3014,
         },
       ],
     },
@@ -145,9 +162,10 @@ const ProjectItem = (data: IData) => {
 
   // 通过一级类型获得二级类型
   const getTwoType = (scope: number, index: number | string) => {
-    const objArr: { name: string; value: number }[] = twoType[scope][index];
+    const objArr: { name: string; value: number }[] =
+      twoTypeCanChooseOptions[scope][index];
     const new_Arr: string[] = [];
-    for (let item of objArr) {
+    for (const item of objArr) {
       new_Arr.push(item.name);
     }
     setTwoTypeCanChoose(new_Arr);
@@ -159,7 +177,7 @@ const ProjectItem = (data: IData) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(async () => {
       const data = {
-        type: Number(chooseOneType) * 1000, // 这里*1000 是因为pc端接口调用 1000 2000 3000
+        type: (Number(chooseOneType) + 1) * 1000, // 这里*1000 是因为pc端接口调用 1000 2000 3000
         subType: subTypeValue,
         name: proName,
         startTime: pickDate,
@@ -180,10 +198,11 @@ const ProjectItem = (data: IData) => {
       } else {
         // 请求数据
         const { id } = JSON.parse(Taro.getStorageSync('user'));
+        const startTimeStamp = new Date(data.startTime).getTime();
         try {
           const res = await httpUtil.projectNewAdd({
             managers: [id],
-            startTime: data.startTime,
+            startTime: String(startTimeStamp),
             scope: data.scope!,
             type: data.type,
             subType: data.subType,
@@ -196,10 +215,12 @@ const ProjectItem = (data: IData) => {
             setRemark('');
             setProName('');
             setPickDate('');
-            // @ts-ignore
-            Taro.atMessage({
-              message: '新建成功',
-              type: 'success',
+            getOwnProjects!().then(() => {
+              // @ts-ignore
+              Taro.atMessage({
+                message: '新建成功',
+                type: 'success',
+              });
             });
           }
         } catch {
@@ -293,8 +314,9 @@ const ProjectItem = (data: IData) => {
                 setChooseTwoType(twoTypeCanChoose![e.detail.value]);
                 // 下面的 chooseOneType 不可能为 undefined
                 const subTypeValue =
-                  twoType[fatherProject.scope][chooseOneType!][e.detail.value]
-                    .value;
+                  twoTypeCanChooseOptions[fatherProject.scope][chooseOneType!][
+                    e.detail.value
+                  ].value;
                 setSubTypeValue(subTypeValue);
               }}>
               <AtList>
@@ -319,7 +341,7 @@ const ProjectItem = (data: IData) => {
                 value={proName}
               />
             ) : null}
-            {/* 选择初步启动日期 */}
+            {/* 选择可研启动会日期 */}
             <Picker
               mode='date'
               onChange={e => {
@@ -328,7 +350,7 @@ const ProjectItem = (data: IData) => {
               value='YYYY-MM-DD'>
               <AtList>
                 <AtListItem
-                  title='初步设计启动时间'
+                  title='可研启动会日期'
                   extraText={pickDate ? pickDate : '请选择日期'}
                 />
               </AtList>

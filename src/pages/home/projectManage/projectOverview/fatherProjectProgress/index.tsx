@@ -4,7 +4,6 @@ import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import {
   AtTag,
-  AtIcon,
   AtToast,
   AtModal,
   AtModalHeader,
@@ -162,7 +161,7 @@ const FatherProjectProgress = () => {
       </View>
       <AtToast
         isOpened={isOpenToast}
-        text={'流程未开始'}
+        text='流程未开始'
         icon='close-circle'></AtToast>
       <AtModal
         isOpened={isOpenOperateModal}
@@ -207,7 +206,7 @@ const FatherProjectProgress = () => {
             getData={getData}
             timestamp={timestamp}
             projectId={Number(projectId)}
-            isFather={true}
+            isFather
           />
           <PlanTimeModal
             isPlanTimeModalVisible={isOpenPlanDateSele}
