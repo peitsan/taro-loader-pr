@@ -3,13 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro';
 import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { navigateTo } from '@/common/functions';
-import {
-  AtTag,
-  AtToast,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-} from 'taro-ui';
+import { AtToast, AtModal, AtModalHeader, AtModalContent } from 'taro-ui';
 import styles from './index.module.less';
 import ProgressItemList from './progressItemList';
 import ProgressItem, {
