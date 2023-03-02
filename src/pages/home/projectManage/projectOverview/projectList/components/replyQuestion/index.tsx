@@ -2,26 +2,36 @@ import { getStorageSync } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
 import { AtModal, AtModalAction, AtModalContent, AtModalHeader } from 'taro-ui';
 import { Button, Input, View } from '@tarojs/components';
+import Upload from '@/common/components/upload';
+import UploadFile from '@/common/components/uploadFile';
 import { message } from '@/common/functions';
 import httpUtil from '@/utils/httpUtil';
-import UploadBtn from '@/common/components/UploadBtn/UploadBtn';
+// import UploadBtn from '@/common/components/UploadBtn/UploadBtn';
 import { ReplyQuestionProps, FileProps } from './indexProps';
 import styles from './index.module.less';
+import { ModalAttachmentComponent } from '../../../components/modalAttachmentComponent';
 
 const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
   const { isReplyModal, okReplyModal, selectRecord, selectIndex } = selfProps;
   const [replyText, setReplyText] = useState<string>('');
+  const projectId = getStorageSync('projectId');
   const reply = ['reason', 'opinion', 'condition', 'question'];
-  const [files, setFiles] = useState<FileProps[]>([]);
+  // 设置每次下载的文件
+  const [fileUrl, setFileUrl] = useState('');
+  // 控制打开上传文件与关闭
+  const [isOpenLoadFile, setIsOpenLoadFile] = useState(false);
+  // 下载文件modal展示与否
+  const [isDolShow, setIsDolShow] = useState(false);
+  // 下载文件节点的 progressId
+  const [downProgressId, setDownProgressId] = useState('');
   const [value, setValue] = useState<any>('');
-  const [url, setUrl] = useState<string>('');
   const [confirm, setConfirm] = useState<boolean>(true);
-  const chooseFile = useState({
-    fileNum: 1,
-    files: [],
-    showUploadBtn: true,
-    upLoadImg: [],
-  });
+  // const chooseFile = useState({
+  //   fileNum: 1,
+  //   files: [],
+  //   showUploadBtn: true,
+  //   upLoadImg: [],
+  // });
   let timer: NodeJS.Timer;
   const onFinish = () => {
     if (!confirm) {
@@ -36,7 +46,7 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
         try {
           const data = {
             text: replyText,
-            attachment: url,
+            attachment: fileUrl,
             reason_id: String(selectRecord.key),
             type: reply[selectIndex - 1],
           };
@@ -56,7 +66,7 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
         try {
           const data = {
             text: replyText,
-            attachment: url,
+            attachment: fileUrl,
             questionId: selectRecord.id,
             progressId: getStorageSync('progressId'),
           };
@@ -70,16 +80,6 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
         }
       }, 500);
     }
-  };
-  // 拿到子组件上传图片的路径数组
-  const getOnFilesValue = (value: FileProps[]) => {
-    console.log(3, value);
-    setFiles(value);
-    if (value.length > 0) setUrl(value[0].url as string);
-    console.log(files);
-    const handleChange = val => {
-      setValue(val);
-    };
   };
   useEffect(() => {
     setConfirm(true);
@@ -110,7 +110,19 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
           <View className={styles['reply-title']}>选择附件:</View>
           <View>
             {' '}
-            <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} />
+            <UploadFile
+              isUploadVisible={isOpenLoadFile}
+              setIsUploadVisible={setIsOpenLoadFile}
+              getData={okReplyModal}
+              progressId={Number(downProgressId)}
+              projectId={Number(projectId)}
+            />
+            <ModalAttachmentComponent
+              isShow={isDolShow}
+              setIsShow={setIsDolShow}
+              url={fileUrl}
+            />
+            {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
           </View>
         </View>
         <View className={styles['reply-title']}></View>

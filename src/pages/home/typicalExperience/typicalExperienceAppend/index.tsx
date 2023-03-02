@@ -14,12 +14,16 @@ import {
 import { BASE_URL } from '@/utils/baseUrl';
 import styles from './index.module.less';
 import httpUtil from '../../../../utils/httpUtil';
+import UploadFile from '../../projectManage/projectOverview/sonProjectProgress/uploadFile';
+import { ModalAttachmentComponent } from '../../projectManage/projectOverview/components/modalAttachmentComponent';
+
 import {
   debounce,
   message,
   navigateTo,
 } from '../../../../common/functions/index';
-import UploadBtn from '../../../../common/components/UploadBtn/UploadBtn';
+
+// import UploadBtn from '../../../../common/components/UploadBtn/UploadBtn';
 
 interface FileProps {
   file: {
@@ -37,6 +41,14 @@ const TypicalExperienceAppend: React.FC = () => {
   const [files, setFiles] = useState<FileProps[]>([]);
   const [value, setValue] = useState<any>('');
   const [loading, setLoginLoading] = useState<any>('');
+  // 控制打开上传文件与关闭
+  const [isOpenLoadFile, setIsOpenLoadFile] = useState(true);
+
+  // 设置每次下载的文件
+  const [fileUrl, setFileUrl] = useState('');
+
+  // 下载文件modal展示与否
+  const [isDolShow, setIsDolShow] = useState(true);
   const SelectorRange = ['安全', '质量', '技经', '设计', '其他'];
   const SelectorRangeEng = ['SAFE', 'QUALITY', 'EXPERIENCE', 'DESIGN', 'OTHER'];
   const chooseFile = useState({
@@ -229,7 +241,17 @@ const TypicalExperienceAppend: React.FC = () => {
               placeholder='请描述问题的注意要点'
             />
             <View className={styles.title}>相关资料:</View>
-            <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} />
+            <UploadFile
+              isUploadVisible={isOpenLoadFile}
+              setIsUploadVisible={setIsOpenLoadFile}
+              getData={onReset}
+            />
+            <ModalAttachmentComponent
+              isShow={isDolShow}
+              setIsShow={setIsDolShow}
+              url={fileUrl}
+            />
+            {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
             <AtButton formType='submit'>提交</AtButton>
             <AtButton formType='reset'>重置</AtButton>
           </AtForm>

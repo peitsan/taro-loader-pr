@@ -39,7 +39,7 @@ const AccordionForIntermediate: React.FC<
                 textAlign: 'center',
                 fontSize: '32rpx',
               }}>
-              {data ? data.major : null}
+              {data.checkList ? data.checkList[0].type : null}
             </View>
             <View style={{ width: '70%' }} onClick={() => setActive(false)}>
               <View style={{ float: 'right' }}>
@@ -207,7 +207,7 @@ const AccordionForIntermediate: React.FC<
                 width: '30%',
                 textAlign: 'center',
               }}>
-              {data.major}
+              {data.checkList ? data.checkList[0].type : null}
             </View>
             <View
               style={{

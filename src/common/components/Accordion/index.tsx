@@ -312,14 +312,14 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
                 style={{
                   width: '30%',
                   textAlign: 'center',
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '50rpx',
                 }}>
                 {data.issueOverView}
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '50rpx',
                   width: '35%',
                   textAlign: 'center',
@@ -337,7 +337,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
             <View className={styles['board-list']}>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '25%',
                   textAlign: 'center',
@@ -346,7 +346,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   width: '25%',
                   textAlign: 'center',
                   color: '#ff4500',
@@ -355,7 +355,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '25%',
                   textAlign: 'center',
@@ -365,7 +365,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '20%',
                   textAlign: 'center',
@@ -383,19 +383,29 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
           {/* <CheckModal /> */}
           {/* 子列表 */}
           <View className={styles['board-list']}>
-            <View className={styles['board-subList']} style={{ width: '20%' }}>
+            <View
+              className={styles['board-subList']}
+              style={{ width: '20%', fontSize: '28rpx' }}>
               {index == 4 ? '单项' : '原因'}
             </View>
-            <View className={styles['board-subList']} style={{ width: '25%' }}>
+            <View
+              className={styles['board-subList']}
+              style={{ width: '25%', fontSize: '28rpx' }}>
               {index == 4 ? '截止时间' : '计划完成时间'}
             </View>
-            <View className={styles['board-subList']} style={{ width: '25%' }}>
+            <View
+              className={styles['board-subList']}
+              style={{ width: '25%', fontSize: '28rpx' }}>
               {index == 4 ? '负责人及单位' : '责任人及责任单位'}
             </View>
-            <View className={styles['board-subList']} style={{ width: '15%' }}>
+            <View
+              className={styles['board-subList']}
+              style={{ width: '15%', fontSize: '28rpx' }}>
               {index == 4 ? '状态' : '当前整改情况'}
             </View>
-            <View className={styles['board-subList']} style={{ width: '10%' }}>
+            <View
+              className={styles['board-subList']}
+              style={{ width: '10%', fontSize: '28rpx' }}>
               操作
             </View>
           </View>
@@ -466,7 +476,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
             <View className={styles['board-list']}>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '50rpx',
                   width: '30%',
                   textAlign: 'center',
@@ -475,7 +485,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '50rpx',
                   width: '35%',
                   textAlign: 'center',
@@ -485,7 +495,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '35%',
                 }}>
@@ -503,7 +513,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
             <View className={styles['board-list']}>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '25%',
                   textAlign: 'center',
@@ -512,7 +522,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   width: '25%',
                   textAlign: 'center',
                   color: '#ff4500',
@@ -521,7 +531,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '25%',
                   textAlign: 'center',
@@ -531,7 +541,7 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
               <View
                 style={{
-                  fontSize: '32rpx',
+                  fontSize: '30rpx',
                   lineHeight: '70rpx',
                   width: '20%',
                   textAlign: 'center',
