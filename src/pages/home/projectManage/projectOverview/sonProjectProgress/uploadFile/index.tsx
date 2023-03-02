@@ -77,7 +77,7 @@ const UploadFile: FC<IType> = (props: IType) => {
       },
       fail: function () {
         Taro.showToast({
-          title: '打开文件失败',
+          title: '取消上传',
           icon: 'error',
           duration: 1000,
         });
