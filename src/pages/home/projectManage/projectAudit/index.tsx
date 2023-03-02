@@ -75,6 +75,7 @@ const ProjectAudit = () => {
             </AtTag>
           </View>
           <ProjectLists />
+          <View style={{ height: 50 + 'px' }}></View>
         </>
       ) : (
         <View style={{ margin: '50px auto', textAlign: 'center' }}>

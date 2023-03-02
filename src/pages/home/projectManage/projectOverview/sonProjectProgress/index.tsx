@@ -103,6 +103,11 @@ const SonProjectProgress = () => {
   // 下载文件节点的 progressId
   const [downProgressId, setDownProgressId] = useState('');
 
+  // 下载文件modal的标题
+  const [downloadModalFileTitle, setDownloadModalFileTitle] = useState<
+    '核准要件' | '核准批复' | '初设批复'
+  >('核准要件');
+
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
     const { type, startTime, endTime, id, name, attachment } = params;
@@ -110,6 +115,7 @@ const SonProjectProgress = () => {
 
     // 核准要件上传文件
     if ((name === '核准要件' || name === '核准批复') && attachment) {
+      setDownloadModalFileTitle(name);
       setFileUrl(attachment);
       setIsDolShow(true);
       return;
@@ -144,6 +150,7 @@ const SonProjectProgress = () => {
         ? setIsOpenLoadFile(true)
         : console.log('还未上传附件');
     } else if (type === 7 && startTime && attachment) {
+      setDownloadModalFileTitle('初设批复');
       setFileUrl(attachment);
       setIsDolShow(true);
     } else if (type === 0 && !startTime && permission === 'manager') {
@@ -420,6 +427,7 @@ const SonProjectProgress = () => {
         isShow={isDolShow}
         setIsShow={setIsDolShow}
         url={fileUrl}
+        titleName={downloadModalFileTitle}
       />
     </>
   );
