@@ -140,6 +140,7 @@ const ProgressItem = (props: IProgressItem) => {
                   setExtraLen={setExtraLen}
                   onClickName={props.onClickName}
                   attachment={item.attachment}
+                  hasNext={index === 7 ? false : true}
                 />
               </>
             );
