@@ -138,8 +138,6 @@ function ProjectList() {
   //监听Tab页切换事件
   const tabSwitchHandle = (val: number) => {
     setSelectTab(val);
-    console.log(tabList);
-    console.log(type);
   };
   //动态鉴权生成Tab标签
   const effectTabList = () => {
