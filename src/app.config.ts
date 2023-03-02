@@ -93,9 +93,10 @@ export default defineAppConfig({
       pages: ['index'],
     },
   ],
-  // entryPagePath: 'pages/home/projectManage/projectOverview/sonProjectProgress/index',
+  // entryPagePath: 'pages/home/projectManage/projectOverview/index',
   // entryPagePath: 'pages/home/projectManage/projectAudit/index',
   entryPagePath: 'pages/login/index',
+  // entryPagePath: entryPath,
   window: {
     backgroundTextStyle: 'dark',
     navigationBarBackgroundColor: '#0EB295',
