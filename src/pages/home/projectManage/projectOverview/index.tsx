@@ -43,6 +43,7 @@ const ProjectOverview = () => {
           projectData={projectData}
         />
       )}
+      <View style={{ height: 50 + 'px' }}></View>
     </>
   );
 };

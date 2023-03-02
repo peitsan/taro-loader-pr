@@ -129,6 +129,7 @@ export const ProjectAccordion: FC<IProjectAccordion> = (
                           startTime: item.startTime,
                           scope: item.scope,
                           progressNow: item.progressNow?.name,
+                          mark: item.remark,
                         });
                       }}>
                       更多信息

@@ -1,3 +1,4 @@
+import React from 'react';
 import { navigateTo } from '@/common/functions/index';
 import banner_1 from '@assets/banner/1.jpg';
 import banner_2 from '@assets/banner/2.jpg';
@@ -66,6 +67,7 @@ const Index: React.FC = () => {
       ],
     },
   ];
+  React.useEffect(() => {}, []);
   return (
     <>
       <View className={styles.top}>

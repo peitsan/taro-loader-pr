@@ -4,6 +4,10 @@ import { store } from './redux/store';
 import './styles/global.less';
 
 const App = props => {
-  return <Provider store={store}>{props.children}</Provider>;
+  return (
+    <>
+      <Provider store={store}>{props.children}</Provider>
+    </>
+  );
 };
 export default App;

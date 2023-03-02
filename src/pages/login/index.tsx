@@ -1,7 +1,8 @@
 import Taro from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
+import { Message } from '@/common/components';
 import { AtMessage, AtForm, AtInput, AtButton } from 'taro-ui';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import httpUtil from '../../utils/httpUtil';
 import { switchTab, message } from '../../common/functions/index';
 import { useDispatch } from '../../redux/hooks';
@@ -18,13 +19,26 @@ type IdentityType = {
 };
 
 const Login: React.FC = () => {
+  useEffect(() => {
+    // 由于 app.config.ts 文件中不支持引入，所以不能动态设置 entryPagePath，只能在这里跳转了
+    const token = Taro.getStorageSync('token');
+    const permission = Taro.getStorageSync('permission');
+    if (token) {
+      Taro.redirectTo({
+        url:
+          permission === 'admin'
+            ? '/pages/home/managerManage/index'
+            : '/pages/home/projectManage/index',
+      });
+    }
+  }, []);
   const dispatch = useDispatch();
   const Wrapper = (props: any) => {
     return (
       <View className='wrapper'>
         <View className='login-wrapper'>
           {props.children}
-          <Image className='logo' src={logo} alt='logo'></Image>
+          <Image className='logo' src={logo}></Image>
         </View>
       </View>
     );
@@ -71,7 +85,7 @@ const Login: React.FC = () => {
     };
     return (
       <>
-        <AtForm name='basic' onSubmit={onFinish} onReset={onReset}>
+        <AtForm onSubmit={onFinish} onReset={onReset}>
           <AtInput
             focus
             required
