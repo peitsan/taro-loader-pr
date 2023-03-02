@@ -26,6 +26,7 @@ const ProjectItem = (data: IData) => {
       startTime: data.startTime,
       scope: data.scope,
       progressNow: data.progressNow || '已完成',
+      mark: data.mark,
     });
 
     setIsOpen(e => !e);
