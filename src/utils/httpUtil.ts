@@ -87,6 +87,8 @@ import {
   deleteOneCase,
   downLoadCaseFile,
   createClassicCase,
+  preInspection,
+  managerCheckForNK,
 } from './params';
 
 class HttpUtil {
@@ -180,6 +182,20 @@ class HttpUtil {
   // 获取父项目节点详情
   getFatherProjectNodeDetail = (params: getFatherProjectNodeDetail) =>
     httpReq('get', `/worker/fatherProject/${params.projectId}`);
+  /**
+   * @description 市公司内审前检查和市公司可研内审 的检查
+   */
+  getCheckForNK = (params: preInspection) =>
+    httpReq(
+      'get',
+      `/manager/check/get/${params.projectId}/${params.progressType}`,
+    );
+
+  /**
+   * @description 获取可研阶段的专项评估
+   */
+  getSpecialForKeYan = (params: getSpecial) =>
+    httpReq('get', `/worker/getKeyanZxpg/${params.progressId}`);
 
   //获取专项评估
   getSpecial = (params: getSpecial) =>
@@ -258,6 +274,15 @@ class HttpUtil {
   // 获取自己所管理的所有项目
   getManagerProjects = () => httpReq('get', `/manager/project`);
 
+  /**
+   * @description 勾选中间成果评审会和市公司内审前检查
+   */
+  managerCheckForNK = (params: managerCheckForNK) =>
+    httpReq('post', `/manager/check/post`, params);
+
+  /**
+   * @description 调整初步设计启动会以后的时间
+   * */
   // 获取待审批问题
   getUncheckedProjectQuestion = (params: getUncheckedProjectQuestion) =>
     httpReq('get', `/manager/project/${params.project_id}/list/unchecked`);

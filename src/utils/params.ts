@@ -343,6 +343,10 @@ export interface mediateInspection {
   projectId: string;
   progressId: string;
 }
+export interface preInspection {
+  projectId: number;
+  progressType: number;
+}
 
 export interface getFatherProjectNodeDetail {
   projectId: number;
@@ -353,6 +357,11 @@ export interface fatherProjectNewAdd {
   scope: number;
 }
 
+export interface managerCheckForNK {
+  projectId: number;
+  progressType: number;
+  code: string;
+}
 export type addManager = number[];
 
 export interface deleteManager {

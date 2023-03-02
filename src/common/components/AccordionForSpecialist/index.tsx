@@ -291,7 +291,7 @@ const AccordionForSpecialist: React.FC<
       setQuestion_id(approvalId);
     };
     const lookReply = (question_id: string) => {
-      console.log(question_id);
+      // console.log(question_id);
       message('请稍等', 'warning');
       httpUtil
         .specialCheckReply({
@@ -526,7 +526,7 @@ const AccordionForSpecialist: React.FC<
     }
     const { text } = values;
     const hideLoading = message('请求中', 'warning');
-    console.log(inDex, text, url);
+    // console.log(inDex, text, url);
     try {
       const res = await httpUtil.specialReply({
         questionId: Number(inDex),

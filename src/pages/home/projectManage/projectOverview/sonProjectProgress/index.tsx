@@ -178,6 +178,7 @@ const SonProjectProgress = () => {
       Taro.setStorageSync('status', '进行中');
       Taro.setStorageSync('name', name);
       Taro.setStorageSync('type', String(type));
+      console.log(type);
       Taro.setStorageSync('progress', JSON.stringify(false));
       // progressyi
       navigateTo('/home/projectManage/projectOverview/projectList');
