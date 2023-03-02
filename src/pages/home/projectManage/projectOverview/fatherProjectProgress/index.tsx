@@ -56,10 +56,14 @@ const FatherProjectProgress = () => {
 
   const [curProgressInfo, setCurProgressInfo] = useState<INowProgressInfo>();
 
+  // 初设批复附件attachment
+  const [attachment, setAttachMent] = useState('');
+
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
-    const { type, startTime, endTime, id } = params;
+    const { type, startTime, endTime, id, attachment } = params;
     setSelectInfo({ selectId: id, selectIndex: type });
+
     if (type > progressNow) {
       setOpenToast(true);
       setTimeout(() => {
@@ -152,6 +156,7 @@ const FatherProjectProgress = () => {
                     type={item.type}
                     onClickName={params => onClickProName(params)}
                     hasNext={index !== timestamp.length - 1 && true}
+                    attachment={attachment}
                   />
                 );
               })}
@@ -214,6 +219,7 @@ const FatherProjectProgress = () => {
             projectId={Number(projectId)}
             curProgressInfo={curProgressInfo!}
             getData={getData}
+            fatherId={projectId!}
           />
           <EndTimeModal
             isEndTimeModalVisible={isOpenEndDateSele}

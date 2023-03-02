@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC } from 'react';
 import Taro from '@tarojs/taro';
-import { Button } from '@tarojs/components';
+import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { AtModal, AtModalHeader, AtModalContent, AtForm } from 'taro-ui';
 import styles from './index.module.less';
@@ -24,6 +24,7 @@ const UploadFile: FC<IType> = (props: IType) => {
   } = props;
   const [isUpload, setIsUpload] = useState(false);
   const [path, setPath] = useState('');
+  const [isShowUploadFile, setIsShowUploadFile] = useState(false);
 
   const submit = async () => {
     if (!isUpload) {
@@ -36,12 +37,14 @@ const UploadFile: FC<IType> = (props: IType) => {
         projectId,
       });
       if (res.code === 200) {
-        Taro.showToast({
-          title: '上传成功',
-          icon: 'success',
+        getData().then(() => {
+          Taro.showToast({
+            title: '上传文件成功',
+            icon: 'success',
+            duration: 1000,
+          });
+          setIsUploadVisible(false);
         });
-        setIsUploadVisible(false);
-        getData();
       }
     }
   };
@@ -65,6 +68,7 @@ const UploadFile: FC<IType> = (props: IType) => {
             const data = JSON.parse(res.data);
             // console.log('data', data);
             setPath(data.data.file.url);
+            setIsShowUploadFile(true);
           },
           fail: () => {
             Taro.showToast({
@@ -77,7 +81,7 @@ const UploadFile: FC<IType> = (props: IType) => {
       },
       fail: function () {
         Taro.showToast({
-          title: '打开文件失败',
+          title: '取消上传',
           icon: 'error',
           duration: 1000,
         });
@@ -93,11 +97,20 @@ const UploadFile: FC<IType> = (props: IType) => {
       <AtModalHeader>上传附件</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={submit}>
+          <View
+            style={{
+              display: isShowUploadFile ? 'block' : 'none',
+              wordBreak: 'break-all',
+            }}>
+            当前上传文件为: {path}
+          </View>
           {/* <Upload> */}
-          <Button onClick={chooseFile}>上传附件</Button>
+          <Button onClick={chooseFile} className={styles.uploadBtn}>
+            选择附件
+          </Button>
           {/* </Upload> */}
           <Button className={styles.opeBtn} formType='submit'>
-            确定
+            上传
           </Button>
         </AtForm>
       </AtModalContent>

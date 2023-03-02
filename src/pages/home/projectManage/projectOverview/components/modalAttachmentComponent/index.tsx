@@ -1,19 +1,20 @@
 import React, { FC, useState } from 'react';
 import Taro from '@tarojs/taro';
 import { AtModal, AtModalHeader, AtModalContent } from 'taro-ui';
-import { Button } from '@tarojs/components';
+import { Button, View } from '@tarojs/components';
 import styles from './index.module.less';
 
 interface IModalCheck {
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
   url: string;
+  titleName: string;
 }
 
 export const ModalAttachmentComponent: FC<IModalCheck> = (
   props: IModalCheck,
 ) => {
-  const { isShow, setIsShow, url } = props;
+  const { isShow, setIsShow, url, titleName } = props;
   const [font, setFont] = useState<'下载文件' | '打开文件'>('下载文件');
   const [file, setFile] = useState('');
 
@@ -56,8 +57,9 @@ export const ModalAttachmentComponent: FC<IModalCheck> = (
           setFont('下载文件');
           setIsShow(false);
         }}>
-        <AtModalHeader>初设批复附件</AtModalHeader>
+        <AtModalHeader>{titleName + '附件'}</AtModalHeader>
         <AtModalContent>
+          <View className={styles.title}>{`附件标题: ${url}`}</View>
           <Button
             onClick={() => {
               font === '下载文件' ? downloadFile() : openFile(file);
