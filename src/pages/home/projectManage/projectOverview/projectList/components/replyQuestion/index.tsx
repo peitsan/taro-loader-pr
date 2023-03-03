@@ -1,6 +1,12 @@
 import { getStorageSync } from '@tarojs/taro';
 import { useEffect, useState } from 'react';
-import { AtModal, AtModalAction, AtModalContent, AtModalHeader } from 'taro-ui';
+import {
+  AtIcon,
+  AtModal,
+  AtModalAction,
+  AtModalContent,
+  AtModalHeader,
+} from 'taro-ui';
 import { Button, Input, View } from '@tarojs/components';
 import Upload from '@/common/components/upload';
 import UploadFile from '@/common/components/uploadFile';
@@ -20,18 +26,13 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
   const [fileUrl, setFileUrl] = useState('');
   // 控制打开上传文件与关闭
   const [isOpenLoadFile, setIsOpenLoadFile] = useState(false);
+  const [hasUpload, setHasUpload] = useState(false);
   // 下载文件modal展示与否
   const [isDolShow, setIsDolShow] = useState(false);
   // 下载文件节点的 progressId
   const [downProgressId, setDownProgressId] = useState('');
   const [value, setValue] = useState<any>('');
-  const [confirm, setConfirm] = useState<boolean>(true);
-  // const chooseFile = useState({
-  //   fileNum: 1,
-  //   files: [],
-  //   showUploadBtn: true,
-  //   upLoadImg: [],
-  // });
+
   let timer: NodeJS.Timer;
   const onFinish = () => {
     if (!confirm) {
@@ -107,21 +108,34 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
                 value={replyText}></Input>
             ) : null}
           </View>
-          <View className={styles['reply-title']}>选择附件:</View>
+          <View className={styles['reply-title']}>
+            附件:
+            {!hasUpload ? (
+              <View onClick={() => setIsOpenLoadFile(true)}>
+                <AtIcon value='upload' size='20' color='orange'></AtIcon>未上传
+              </View>
+            ) : (
+              <View>
+                <AtIcon value='upload' size='20' color='#52c41a'></AtIcon>已上传
+              </View>
+            )}
+          </View>
           <View>
             {' '}
             <UploadFile
               isUploadVisible={isOpenLoadFile}
               setIsUploadVisible={setIsOpenLoadFile}
-              getData={okReplyModal}
-              progressId={Number(downProgressId)}
+              getData={() => {
+                setHasUpload(true);
+              }}
+              progressId={Number(getStorageSync('progressId'))}
               projectId={Number(projectId)}
             />
-            <ModalAttachmentComponent
+            {/* <ModalAttachmentComponent
               isShow={isDolShow}
               setIsShow={setIsDolShow}
               url={fileUrl}
-            />
+            /> */}
             {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
           </View>
         </View>

@@ -120,7 +120,6 @@ const TypicalExperienceAppend: React.FC = () => {
       message('提交失败', 'error');
     } finally {
       hide();
-      // setLoginLoading(false);
     }
   };
 
@@ -245,11 +244,8 @@ const TypicalExperienceAppend: React.FC = () => {
               isUploadVisible={isOpenLoadFile}
               setIsUploadVisible={setIsOpenLoadFile}
               getData={onReset}
-            />
-            <ModalAttachmentComponent
-              isShow={isDolShow}
-              setIsShow={setIsDolShow}
-              url={fileUrl}
+              progressId={Number(progressId)}
+              projectId={Number(projectId)}
             />
             {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
             <AtButton formType='submit'>提交</AtButton>
