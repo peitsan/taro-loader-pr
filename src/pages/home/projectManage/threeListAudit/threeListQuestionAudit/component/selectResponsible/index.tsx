@@ -23,9 +23,12 @@ const threeArr = ['reasons', 'opinions', 'conditions']
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   const { isManageModal, okManageModal, selectRecord, recordFlash, units, selectIndex } =
     selfProps;
-  const ResponserVal = useRef<any[]>([]);
-  const AlerterVal = useRef<any[]>([]);
-  const [AlertDeadline, setAlertDeadline] = useState<any>({});
+  // const ResponserVal = useRef<any[]>([]);\
+  const ResponserVal = [];
+  const AlerterVal  = [];
+  // const [AlerterVal, setAlerterVal] = useState<any>([]);
+  // const [ResponserVal, setResponserVal] = useState<any>([]);
+  const [AlertDeadline, setAlertDeadline] = useState<any>([10]);
   const [Deadline, setDeadline] = useState<any[]>([]);
   const tabs = threeArr[selectIndex]
   useEffect(()=>{
@@ -34,24 +37,32 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   }, [selectRecord])
  
   const onCreate = () => {
-    // console.log('11', ResponserVal);
+   
     // console.log('111', ResponserVal[0]);
     const dataSend: SendDataType = {};
     selectRecord[tabs].map((rec, recid)=>{
       const id = rec.id;
       dataSend[id] = {};
       dataSend[id]["planTime"] = new Date(Deadline[recid]).valueOf();
+      console.log(units);
+      console.log(units[ResponserVal[recid][0]]?.depts[
+        ResponserVal[recid][1]
+      ]?.workers[ResponserVal[recid][2]]?.id,)
       dataSend[id]["responsibles"] = [
-        units[ResponserVal?.current[recid]?.state.value[0]]?.depts[
-          ResponserVal?.current[recid]?.state.value[1]
-        ]?.workers[ResponserVal?.current[recid]?.state.value[2]]?.id,
+        units[ResponserVal[recid][0]]?.depts[
+          ResponserVal[recid][1]
+        ]?.workers[ResponserVal[recid][2]]?.id,
       ];
       dataSend[id]["relevantors"] =  [
-        units[AlerterVal?.current[recid]?.state.value[0]]?.depts[
-          AlerterVal?.current[recid]?.state.value[1]
-        ]?.workers[AlerterVal?.current[recid]?.state.value[2]]?.id,
+        units[AlerterVal[recid][0]]?.depts[
+          AlerterVal[recid][1]
+        ]?.workers[AlerterVal[recid][2]]?.id,
       ];
-      dataSend[id]["advanceDay"] = AlertDeadline[recid];
+
+      if(AlertDeadline[recid])
+        dataSend[id]["advanceDay"] = AlertDeadline[recid];
+      else if(AlertDeadline[recid] == undefined) 
+        dataSend[id]["advanceDay"] = 10;
     })
     
     console.log('dataSend', dataSend)
@@ -84,8 +95,21 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
       updatedADDL[index] = val;
       return {...updatedADDL};
     });
-    console.log('AlertDeadline', AlertDeadline);
   }
+  // const setResponsers = (val, index)=>{
+  //   setResponserVal(preADDL => {
+  //     const updatedADDL = preADDL;
+  //     updatedADDL[index] = val;
+  //     return {...updatedADDL};
+  //   });
+  // }
+  // const setAlerters = (val, index)=>{
+  //   setAlerterVal(preADDL => {
+  //     const updatedADDL = preADDL;
+  //     updatedADDL[index] = val;
+  //     return {...updatedADDL};
+  //   });
+  // }
   const setDeadLines = (val, index) => {
     setDeadline(preDDL => {
       const updatedDDL = preDDL;
@@ -114,9 +138,27 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
                 />
               </AtList>
             </Picker>
+        <View className={styles['reply-title']}>
+        提前提醒天数:{' '}
+        <AtInputNumber
+          min={0}
+          max={30}
+          step={1}
+          value={AlertDeadline[idx]}
+          onChange={e => setAlertDeadlines(e, props.index)}
+        />
+      </View>
         <PersonSelector
           title='负责人'
-          ref={ResponserVal.current[props.index]}
+          ref={ resp  =>{
+            if(resp)
+            ResponserVal[props.index] = resp?.state.value;
+            // setResponserVal(preADDL => {
+            //   const updatedADDL = preADDL;
+            //   updatedADDL[props.index] = 1;
+            //   return {...updatedADDL};
+            // });
+          }}
           data={units as UnitsType}
           placeholder='请选择负责人'
           width={354}
@@ -126,21 +168,14 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
       <View>
         <PersonSelector
           title='报警人'
-          ref={AlerterVal.current[props.index]}
+          ref={alet  =>{
+            if(alet)
+              AlerterVal[props.index] = alet?.state.value;
+          }}
           data={units as UnitsType}
           placeholder='请选择报警人'
           width={354}
           multiple
-        />
-      </View>
-      <View className={styles['reply-title']}>
-        提前提醒天数:{' '}
-        <AtInputNumber
-          min={0}
-          max={10}
-          step={1}
-          value={AlertDeadline[idx]}
-          onChange={e => setAlertDeadlines(e, props.index)}
         />
       </View>
       </View>
