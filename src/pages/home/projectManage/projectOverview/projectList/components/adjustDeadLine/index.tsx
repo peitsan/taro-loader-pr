@@ -40,6 +40,7 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
             message('申请成功', 'success');
           }
         } finally {
+          okAdjustModal();
         }
       }, 500);
     } else {
@@ -56,13 +57,13 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
             message('申请成功', 'success');
           }
         } finally {
+          okAdjustModal();
         }
       }, 500);
     }
   };
   const onConfirmAdjust = () => {
     onCreate();
-    okAdjustModal();
   };
   return (
     <AtModal isOpened={isAdjustModal} onClose={okAdjustModal}>

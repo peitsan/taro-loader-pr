@@ -300,36 +300,38 @@ function ProjectList() {
   };
   //关闭指定负责人模态框
   const okManageModal = () => {
-    setIsManageModal(false);
     getTimeDetail();
+    setIsManageModal(false);
   };
   //关闭申请调整时间模态框
   const okAdjustModal = () => {
-    setIsAdjustModal(false);
     getTimeDetail();
+    setIsAdjustModal(false);
   };
   //关闭可研技术收口填写模态框
   const okTechModal = () => {
-    setIsTechModal(false);
     getTimeDetail();
+    setIsTechModal(false);
   };
   //关闭可研技术收口填写模态框
   const okReplyModal = () => {
-    setIsReplyModal(false);
     getTimeDetail();
+    setIsReplyModal(false);
   };
   //关闭选择领导上报模态框
   const okApplyUpper = () => {
-    setIsApplyUpper(false);
     getTimeDetail();
+    setIsApplyUpper(false);
   };
 
   const [isRejetModal, setIsRejetModal] = useState<boolean>(false);
   const [isPassModal, setIsPassModal] = useState<boolean>(false);
   const okPassModal = () => {
+    getTimeDetail();
     setIsPassModal(false);
   };
   const okRejetModal = () => {
+    getTimeDetail();
     setIsRejetModal(false);
   };
   const pass = (question_id: string) => {
