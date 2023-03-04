@@ -49,7 +49,6 @@ export const ProjectForm: React.FC<IProps> = ({
   const [itemTitle, setItemTitle] = useState<string>('');
   let timer: NodeJS.Timer;
   const onFinish = () => {
-    console.log(items);
     if (timer) {
       clearTimeout(timer);
     }
@@ -81,14 +80,12 @@ export const ProjectForm: React.FC<IProps> = ({
     let tmp = items;
     tmp.push({ name: '' });
     setItems(tmp);
-    console.log(tmp);
   };
   const formDelete = (id: number) => {
     setListSum(listSum - 1);
     let tmp = items;
     tmp.splice(id, 1);
     setItems(tmp);
-    console.log(tmp);
   };
   const formRefInput = (val, id) => {
     let tmp = items;

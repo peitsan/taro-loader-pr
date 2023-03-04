@@ -17,12 +17,10 @@ const ApplyUpper: React.FC<applyUpperProps> = selfProps => {
     units,
     zxpgData,
   } = selfProps;
-  console.log(units);
   const UpperManager = useRef<any>();
   const onCreate = () => {
     let timer: NodeJS.Timer;
     const reply = ['reason', 'opinion', 'condition', 'question'];
-    console.log(selectRecord);
     if (selectIndex !== 7) {
       timer = setTimeout(async () => {
         message('请求中', 'warning');
@@ -36,7 +34,6 @@ const ApplyUpper: React.FC<applyUpperProps> = selfProps => {
               ]?.workers[UpperManager?.current?.state.value[2]]?.id,
             itemName: reply[selectIndex - 1],
           });
-          console.log(res);
           if (res.code === 200) {
             message('上报成功', 'success');
           } else if (res.code === 500) {
@@ -65,7 +62,6 @@ const ApplyUpper: React.FC<applyUpperProps> = selfProps => {
                 UpperManager?.current?.state.value[1]
               ]?.workers[UpperManager?.current?.state.value[2]]?.id,
           });
-          console.log(res);
           if (res.code === 200) {
             message('上报成功', 'success');
           } else if (res.code === 500) {

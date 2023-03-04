@@ -26,7 +26,6 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
   const onCreate = () => {
     let timer: NodeJS.Timer;
     const reply = ['reason', 'opinion', 'condition', 'question'];
-    console.log(selectRecord);
     if (selectIndex !== 7) {
       timer = setTimeout(async () => {
         message('请求中', 'warning');
@@ -53,7 +52,6 @@ const AdjustDeadLine: React.FC<adjustDeadLineProps> = selfProps => {
             adjustTime: adjustDateStamp,
             questionId: selectRecord.id,
           });
-          console.log(res);
           if (res.code === 200) {
             message('申请成功', 'success');
           }

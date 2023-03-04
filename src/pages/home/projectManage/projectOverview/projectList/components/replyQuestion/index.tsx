@@ -8,7 +8,6 @@ import {
   AtModalHeader,
 } from 'taro-ui';
 import { Button, Input, View } from '@tarojs/components';
-import Upload from '@/common/components/upload';
 import UploadFile from '@/common/components/uploadFile';
 import { message } from '@/common/functions';
 import httpUtil from '@/utils/httpUtil';
@@ -32,6 +31,7 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
   // 下载文件节点的 progressId
   const [downProgressId, setDownProgressId] = useState('');
   const [value, setValue] = useState<any>('');
+  const [confirm, setConfirm] = useState<boolean>(true);
 
   let timer: NodeJS.Timer;
   const onFinish = () => {
@@ -51,7 +51,6 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
             reason_id: String(selectRecord.key),
             type: reply[selectIndex - 1],
           };
-          console.log('test', data);
           const res = await httpUtil.replyQus(data);
           if (res.code === 200) {
             okReplyModal();
@@ -128,6 +127,7 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
               getData={() => {
                 setHasUpload(true);
               }}
+              getUrl={setFileUrl}
               progressId={Number(getStorageSync('progressId'))}
               projectId={Number(projectId)}
             />

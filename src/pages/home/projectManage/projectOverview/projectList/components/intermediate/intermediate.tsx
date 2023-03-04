@@ -28,7 +28,6 @@ export const Intermediate: React.FC = () => {
           projectId: projectId!,
           progressType: Number(type)!,
         });
-        console.log(1, resl);
         if (resl.code === 200) {
           setMediateList(resl.data);
           setLoading(false);
@@ -38,7 +37,6 @@ export const Intermediate: React.FC = () => {
           projectId: projectId!,
           progressId: progressId!,
         });
-        console.log(2, resl);
         if (resl.code === 200) {
           setMediateList(resl.data);
           setLoading(false);

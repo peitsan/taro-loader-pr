@@ -36,6 +36,7 @@ const UploadFile: FC<IType> = (props: IType) => {
         progressId,
         projectId,
       });
+      console.log('path', res);
       if (res.code === 200) {
         getData().then(() => {
           Taro.showToast({
@@ -49,6 +50,7 @@ const UploadFile: FC<IType> = (props: IType) => {
     }
   };
   const chooseFile = () => {
+    // console.log('path', path);
     Taro.chooseMessageFile({
       count: 1,
       type: 'all',
@@ -65,8 +67,8 @@ const UploadFile: FC<IType> = (props: IType) => {
           filePath: path,
           fileName: name,
           success: res => {
+            // console.log(res);
             const data = JSON.parse(res.data);
-            // console.log('data', data);
             setPath(data.data.file.url);
             setIsShowUploadFile(true);
           },

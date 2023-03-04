@@ -40,7 +40,6 @@ export const TechnologyTable: React.FC<technologyTableProps> = forwardRef(
     };
 
     const showModal = (e: number, id: number | null) => {
-      console.log(1);
       setCurrentTab(e);
       if (id) {
         setSheetId(id);
