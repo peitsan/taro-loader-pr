@@ -126,50 +126,6 @@ const AccordionForSpecialist: React.FC<
       default:
         break;
     }
-    setIsModalVisible(true);
-  };
-  const showApplyModal = (record: any) => {
-    const { adate, bdate, cdate, ddate, edate, id } = record;
-    setInDex(id);
-    switch (type) {
-      case 1:
-        setDate(adate);
-        break;
-      case 2:
-        setDate(bdate);
-        break;
-      case 3:
-        setDate(cdate);
-        break;
-      case 4:
-        setDate(ddate);
-        break;
-      case 8:
-        setDate(edate);
-        break;
-      default:
-        break;
-    }
-    setIsAdjustTime(true);
-  };
-
-  const showCheckModal = (record: any) => {
-    const { attachment, content } = record;
-    setAttachments(attachment);
-    setReplyText(content);
-    setIsCheckModal(true);
-  };
-
-  const okCheckModal = () => {
-    setIsCheckModal(false);
-  };
-
-  const handleSelectResponsible = (record: any) => {
-    const { aid, bid, cid, eid, did } = record;
-    const idList = ['', aid, bid, cid, did, '', '', '', eid];
-    const approvalId = idList[type];
-    setInDex(approvalId);
-    // setIsSelectResponsibleModalVisible(true);
   };
 
   const handleChooseTime = (question_id: number) => {
@@ -178,6 +134,7 @@ const AccordionForSpecialist: React.FC<
   };
 
   const codeMapOperator = (code: number, record: any) => {
+    console.log(record);
     const uid = getStorageSync('id');
     const { id: question_id, adate, cdate, ddate, edate } = record;
     let flag;
@@ -193,103 +150,6 @@ const AccordionForSpecialist: React.FC<
       flag = false;
     }
 
-    const confirmPass = async (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      try {
-        const res = await httpUtil.specialPass({
-          projectId: String(projectId),
-          zxpgId: approvalId,
-        });
-        if (res.code === 200) {
-          message('通过成功', 'success');
-          getSpecial();
-        }
-      } finally {
-      }
-    };
-
-    const confirmBack = async (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      try {
-        const res = await httpUtil.specialReject({
-          projectId: String(projectId),
-          zxpgId: approvalId,
-        });
-        if (res.code === 200) {
-          message('驳回成功', 'success');
-          getSpecial();
-        }
-      } finally {
-      }
-    };
-
-    const managerLookTimeApply = async (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      message('请求中', 'warning');
-      try {
-        const res = await httpUtil.specialCheckTime({
-          projectId: projectId,
-          zxpgId: approvalId,
-        });
-        if (res.code === 200) {
-          setIsAdjustModal(true);
-          const { reason, time } = res.data.adjust;
-          setTimeApplyTime(time);
-          setTimeApplyReason(reason);
-        }
-      } finally {
-      }
-    };
-
-    const cofirmManagerApproveTimeApply = async (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      message('请求中', 'warning');
-      try {
-        const res = await httpUtil.specialAdjustPass({
-          projectId: String(projectId),
-          questionId: approvalId,
-        });
-        if (res.code === 200) {
-          message('请求中', 'success');
-          getSpecial();
-        }
-      } finally {
-      }
-    };
-
-    const cofirmManagerRejectTimeApply = async (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      message('请求中', 'warning');
-      try {
-        const res = await httpUtil.specialAdjustReject({
-          projectId: String(projectId),
-          questionId: approvalId,
-        });
-        if (res.code === 200) {
-          message('驳回成功', 'success');
-          getSpecial();
-        }
-      } finally {
-      }
-    };
-
-    const managerSubmit = (records: any) => {
-      const { aid, bid, cid, eid, did } = records;
-      const idList = ['', aid, bid, cid, did, '', '', '', eid];
-      const approvalId = idList[type];
-      // setSubmitModalVisible(true);
-      setQuestion_id(approvalId);
-    };
     const lookReply = (question_id: string) => {
       // console.log(question_id);
       message('请稍等', 'warning');
@@ -536,13 +396,13 @@ const AccordionForSpecialist: React.FC<
       });
       if (res.code === 200) {
         hideLoading();
-        getSpecial();
         message('回复成功', 'success');
         setIsReplyModal(false);
       } else {
         message('回复失败', 'error');
       }
     } finally {
+      getSpecial();
     }
   };
   return (

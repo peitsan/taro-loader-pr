@@ -53,10 +53,10 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
           };
           const res = await httpUtil.replyQus(data);
           if (res.code === 200) {
-            okReplyModal();
             message('回复成功', 'success');
           }
         } finally {
+          okReplyModal();
           hideLoading();
         }
       }, 500);
@@ -73,9 +73,9 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
           const res = await httpUtil.specialReply(data);
           if (res.code === 200) {
             message('回复成功', 'success');
-            okReplyModal();
           }
         } finally {
+          okReplyModal();
           hideLoading();
         }
       }, 500);
