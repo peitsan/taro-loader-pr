@@ -243,9 +243,6 @@ const TypicalExperienceAppend: React.FC = () => {
             <UploadFile
               isUploadVisible={isOpenLoadFile}
               setIsUploadVisible={setIsOpenLoadFile}
-              getData={onReset}
-              progressId={Number(progressId)}
-              projectId={Number(projectId)}
             />
             {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
             <AtButton formType='submit'>提交</AtButton>

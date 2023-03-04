@@ -67,6 +67,7 @@ function ProjectList() {
   const [replyText, setReplyText] = useState<string>('空');
   // 缓存专项评估数据
   const [zxpgData, setZxpgData] = useState<any>();
+  const ZxpgRef = useRef();
   // 暂存获取选中数据
   const [selectRecord, setSelectRecord] = useState();
   const [selectIndex, setSelectIndex] = useState<number>();
@@ -300,13 +301,19 @@ function ProjectList() {
   };
   //关闭指定负责人模态框
   const okManageModal = () => {
+    console.log("0000")
     getTimeDetail();
     setIsManageModal(false);
+    if (ZxpgRef.current) {
+      console.log("111");
+      ZxpgRef.current.getSpecial();
+    }
   };
   //关闭申请调整时间模态框
   const okAdjustModal = () => {
     getTimeDetail();
     setIsAdjustModal(false);
+    if (ZxpgRef?.current) ZxpgRef?.current.getSpecial();
   };
   //关闭可研技术收口填写模态框
   const okTechModal = () => {
@@ -712,7 +719,7 @@ function ProjectList() {
                   setIsAdjustModal={setIsAdjustModal}
                   setSelectRecord={setSelectRecord}
                   setSelectIndex={setSelectIndex}
-                  fresh={getTimeDetail}
+                  ref={ZxpgRef}
                 />
               </AtTabsPane>
             ) : null}

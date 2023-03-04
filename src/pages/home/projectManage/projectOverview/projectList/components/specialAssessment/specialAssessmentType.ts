@@ -10,7 +10,7 @@ export interface IProps {
   setSelectRecord?: Function;
   setSelectIndex?: Function;
   setZxpgData?: any;
-  fresh: Function;
+  ref: any;
 }
 
 export interface dataItem {

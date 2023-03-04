@@ -18,7 +18,6 @@ const AccordionForSpecialist: React.FC<
   const {
     data,
     type,
-    getSpecial,
     setIsCheckModal,
     setIsManageModal,
     setSelectRecord,
@@ -37,18 +36,10 @@ const AccordionForSpecialist: React.FC<
   const projectId = Taro.getStorageSync('projectId')!;
   const progressId = Taro.getStorageSync('progressId')!;
   const searchUnits = useSelector(state => state.units.data.searchUnits);
-  const [loading, setLoading] = useState(true);
-  // 当前操作的question
-  const [question_id, setQuestion_id] = useState<string>();
 
   // 回复内容
   const [replyText, setReplyText] = useState<string>('空');
-  const [replyFile, setReplyFile] = useState<string>('');
-  // 申请调整时间
-  const [timeApplyTime, setTimeApplyTime] = useState('');
-  const [timeApplyReason, setTimeApplyReason] = useState('');
-  // const Height = String(85 * (data.item.length + 1)) + `px`;
-  // const itemName = ['reason', 'opinion', 'condition', 'question'];
+
   let len: number = 0;
   const { status } = data;
   if (
@@ -72,38 +63,6 @@ const AccordionForSpecialist: React.FC<
       <View style={{ color: 'silver' }}>无</View>
     );
   };
-
-  const statusRender = (status: number) => {
-    enum statusEnum {
-      '负责人待指定',
-      '待回复(负责人已指定)',
-      '问题待审批',
-      '问题已解决',
-      '申请项目经理调整时间中',
-      '项目经理申请上报调整中',
-    }
-    enum colorEnum {
-      'reply' = 1,
-      'approval',
-      'solve',
-    }
-    return status === undefined ? (
-      <View className={styles['solve']}>通过</View>
-    ) : (
-      <View className={styles[colorEnum[status]]}>
-        {statusEnum[Number(status)]}
-      </View>
-    );
-  };
-
-  const timeRender = (text: string) => {
-    return (
-      <View style={{ color: text ? 'black' : 'silver' }}>
-        {text ? text : '暂无'}
-      </View>
-    );
-  };
-
   const showModal = (record: any) => {
     const { adate, bdate, cdate, ddate, edate, id } = record;
     setInDex(id);
@@ -130,7 +89,6 @@ const AccordionForSpecialist: React.FC<
 
   const handleChooseTime = (question_id: number) => {
     setInDex(question_id!);
-    setIsModalVisible(true);
   };
 
   const codeMapOperator = (code: number, record: any) => {
@@ -184,10 +142,6 @@ const AccordionForSpecialist: React.FC<
       setIsCheckModal(true);
     };
     const showManageSelector = async (record: Item) => {
-      // const { aid, bid, cid, eid, did } = record;
-      // const idList = ["", aid, bid, cid, did, "", "", "", eid];
-      // const approvalId = idList[Type];
-      // setId(approvalId);
       setSelectRecord(record);
       setSelectIndex(7);
       setIsManageModal(true);
@@ -360,51 +314,6 @@ const AccordionForSpecialist: React.FC<
     }
   };
 
-  // const ApplyModal = () => {
-  //   // const [form] = Form.useForm();
-  //   const handleCancel = () => {
-  //     setIsModalVisible(false);
-  //   };
-
-  const [url, setUrl] = useState<string>('');
-  const [confirm, setConfirm] = useState<boolean>(true);
-
-  const getUrl = (urls: string) => {
-    setUrl(urls);
-  };
-
-  const getConfirm = () => {
-    setConfirm(false);
-  };
-
-  const getTrue = () => {
-    setConfirm(true);
-  };
-  const onFinish = async (values: any) => {
-    if (!confirm) {
-      return message('请等待上传成功', 'warning');
-    }
-    const { text } = values;
-    const hideLoading = message('请求中', 'warning');
-    // console.log(inDex, text, url);
-    try {
-      const res = await httpUtil.specialReply({
-        questionId: Number(inDex),
-        text,
-        attachment: url,
-        progressId,
-      });
-      if (res.code === 200) {
-        hideLoading();
-        message('回复成功', 'success');
-        setIsReplyModal(false);
-      } else {
-        message('回复失败', 'error');
-      }
-    } finally {
-      getSpecial();
-    }
-  };
   return (
     <>
       {active && active ? (

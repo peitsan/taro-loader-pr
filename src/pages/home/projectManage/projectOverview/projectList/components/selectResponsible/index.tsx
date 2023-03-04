@@ -50,8 +50,8 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
         .then(res => {
           if (res.code === 500) {
             message('请求错误', 'error');
+            okManageModal();
           } else {
-            // getSpecial();
             message('请求中', 'warning');
             message('指定成功', 'success');
             okManageModal();
@@ -59,11 +59,16 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
         });
     } else {
       let kid = 0;
+      const type = Number(getStorageSync('type'));
       zxpgData.map(item => {
         if (item.id == selectRecord.id) {
           const { aid, bid, cid, eid, did } = item;
           const idList = ['', aid, bid, cid, did, '', '', '', eid];
-          kid = idList[getStorageSync('type')];
+          if (type < 20) {
+            kid = idList[type];
+          } else {
+            kid = idList[type - 20];
+          }
         }
       });
       httpUtil
@@ -85,19 +90,17 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
         .then(res => {
           if (res.code === 500) {
             message('请求错误', 'error');
+            okManageModal();
           } else {
-            // getSpecial();
+            okManageModal();
             message('请求中', 'warning');
             message('指定成功', 'success');
-            okManageModal();
           }
         });
     }
   };
   const onConfirmManage = () => {
-    // console.log(selectRecord);
     onCreate();
-    okManageModal();
   };
   // 人员好像数据不太对
   return (

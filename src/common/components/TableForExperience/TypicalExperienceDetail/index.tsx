@@ -11,6 +11,7 @@ import { AtIcon, AtDrawer, AtButton, AtMessage } from 'taro-ui';
 // AtModalAction,
 import { message } from '../../../functions/index';
 import style from './index.module.less';
+import { ModalAttachmentComponent } from '../../ModalAttachmentComponent';
 
 const TypicalExperienceDetail: React.FC<
   TypicalExperienceDetailProps
@@ -21,30 +22,7 @@ const TypicalExperienceDetail: React.FC<
   // 文件下载的URL和name
   const [downloadURL, setDownloadURL] = useState('');
   const [downloadName, setDownloadName] = useState('');
-  const downloadFile = (replyFile: string) => {
-    setCanDownload(false);
-    const hideLoading = message('下载中', 'warning');
-    httpUtil
-      .downloadFile({ replyFile })
-      .then(res => {
-        const blob = new Blob([res.blob], {
-          type: 'application/octet-stream',
-        });
-        const downURL = window.URL.createObjectURL(blob);
-        console.log(res, downURL);
-        const downName = res.fileName;
-        setDownloadURL(downURL);
-        setDownloadName(downName);
-        setCanDownload(true);
-      })
-      .catch(() => {
-        message('下载失败', 'error');
-      })
-      .finally(() => {
-        message('下载成功', 'success');
-        hideLoading();
-      });
-  };
+  const [isDolShow, setIsDolShow] = useState(false);
 
   const clearFileStatusClose = () => {
     setCanDownload(false);
@@ -61,52 +39,49 @@ const TypicalExperienceDetail: React.FC<
     const fileName = file.replace(/^\/\w*\/\w*\/\d*-/, '');
     return fileName;
   };
-  const drawClose = () => {
-    setOpen(close)
-  };
+
   if (!data) return <></>;
 
   return (
     <>
       <AtDrawer show={open} mask onClose={onClose}>
-        <View>
-          <View>问题概述:</View>
-          <View>{data.describe}</View>
+        <View className={style['typical-list']}>
+          <View className={style['typical-title']}>问题概述:</View>
+          <View className={style['typical-content']}>{data.describe}</View>
         </View>
-        <View>
-          <View>解决方案:</View>
-          <View>{data.solution}</View>
+        <View className={style['typical-list']}>
+          <View className={style['typical-title']}>解决方案:</View>
+          <View className={style['typical-content']}>{data.solution}</View>
         </View>
-        <View>
-          <View>注意要点:</View>
-          <View>{data.point}</View>
+        <View className={style['typical-list']}>
+          <View className={style['typical-title']}>注意要点:</View>
+          <View className={style['typical-content']}>{data.point}</View>
         </View>
-        <View>
-          <View>相关资料：</View>
-          <View>{data.point}</View>
+        <View className={style['typical-list']}>
+          <View className={style['typical-title']}>相关资料：</View>
+          <View className={style['typical-content']}>{data.point}</View>
         </View>
-        <View className={style['file-list']}>
+        <View className='typical-files'>
           {data.files && data.files.length ? (
-            canDownload ? (
-              <a
-                href={downloadURL}
-                download={getFileName(data.files[0])}
-                onError={() => console.log('失败')}>
-                <AtIcon value='file-generic' size='30' color='#F00'></AtIcon>
-                {getFileName(data.files[0])}
-              </a>
-            ) : (
-              <a onClick={downloadFile.bind(null, data.files[0])}>
-                <AtIcon value='download' size='30' color='#F00'></AtIcon>
-                下载附件
-              </a>
-            )
-          ) : (
             <View style={{ color: 'silver' }}>
-              <AtIcon value='file-generic' size='30' color='#F00'></AtIcon>
+              <AtIcon value='file-generic' size='30' color='#797979' />
               无附件
             </View>
+          ) : (
+            <View
+              onClick={() => {
+                setIsDolShow(true);
+              }}>
+              <AtIcon value='file-generic' size='30' color='#51796f' />
+              下载附件
+            </View>
           )}
+          <ModalAttachmentComponent
+            isShow={isDolShow}
+            setIsShow={setIsDolShow}
+            url={downloadURL}
+            titleName={downloadName}
+          />
         </View>
         <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
       </AtDrawer>

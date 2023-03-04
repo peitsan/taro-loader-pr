@@ -10,7 +10,7 @@ export interface Item {
 export interface AccordionForSpecialProps {
   data: any;
   type: number;
-  getSpecial: Function;
+  getSpecial?: Function;
   setIsCheckModal?: any;
   setIsManageModal?: any;
   setSelectRecord?: any;
