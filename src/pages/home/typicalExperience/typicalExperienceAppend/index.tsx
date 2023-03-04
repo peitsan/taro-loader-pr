@@ -48,7 +48,7 @@ const TypicalExperienceAppend: React.FC = () => {
   const [fileUrl, setFileUrl] = useState('');
 
   // 下载文件modal展示与否
-  const [isDolShow, setIsDolShow] = useState(true);
+  
   const SelectorRange = ['安全', '质量', '技经', '设计', '其他'];
   const SelectorRangeEng = ['SAFE', 'QUALITY', 'EXPERIENCE', 'DESIGN', 'OTHER'];
   const chooseFile = useState({

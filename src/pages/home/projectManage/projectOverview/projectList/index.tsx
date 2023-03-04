@@ -39,6 +39,7 @@ import SelectResponsible from './components/selectResponsible';
 import AdjustDeadline from './components/AdjustDeadline';
 import ReplyQuestion from './components/replyQuestion';
 import FillTechnology from './components/technologyTable/technologyModal';
+import { ModalAttachmentComponent } from '../components';
 import './index.less';
 
 function ProjectList() {
@@ -85,6 +86,7 @@ function ProjectList() {
   // 员工列表
   const units = useSelector(state => state.units.data.units);
   const searchUnits = useSelector(state => state.units.data.searchUnits);
+  const [isDolShow, setIsDolShow] = useState(false);
   const typeName = [
     '可研启动会',
     '中间成果评审会',
@@ -245,30 +247,10 @@ function ProjectList() {
   const CheckModal: React.FC = () => {
     let reply = '回复为空';
     let URL = '';
-    const [canDownload, setCanDownload] = useState(false);
-    // 文件下载的URL和name
-    const [downloadURL, setDownloadURL] = useState('');
-    const [downloadName, setDownloadName] = useState('');
     if (selectRecord) {
       URL = selectRecord.attachment;
       reply = selectRecord.text;
     }
-    const downloadFile = () => {
-      setCanDownload(false);
-      const hiding = message('下载中', 'warning');
-      httpUtil.downloadFile({ replyFile: attachmentUrl }).then(res => {
-        const blob = new Blob([res.blob], {
-          type: 'application/octet-stream',
-        });
-        const URL = window.URL.createObjectURL(blob);
-        // const URL = Taro.downloadFile
-        const Name = res.fileName;
-        setDownloadURL(URL);
-        setDownloadName(Name);
-        setCanDownload(true);
-        hiding();
-      });
-    };
     return (
       <AtModal
         isOpened={isCheckModal}
@@ -286,24 +268,26 @@ function ProjectList() {
             />
             <View className='reply-title'>附件：</View>
             <View className='reply-files'>
-              {attachmentUrl !== '' ? (
-                canDownload ? (
-                  <a href={downloadURL} download={downloadName}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载成功，点击查看
-                  </a>
-                ) : (
-                  <a onClick={downloadFile}>
-                    <AtIcon value='file-generic' size='30' color='#F00' />
-                    下载附件
-                  </a>
-                )
-              ) : (
-                <a style={{ color: 'silver' }}>
-                  <AtIcon value='file-generic' size='30' color='#F00' />
+              {URL == '' ? (
+                <View style={{ color: 'silver' }}>
+                  <AtIcon value='file-generic' size='30' color='#797979' />
                   无附件
-                </a>
+                </View>
+              ) : (
+                <View
+                  onClick={() => {
+                    setIsDolShow(true);
+                  }}>
+                  <AtIcon value='file-generic' size='30' color='#51796f' />
+                  下载附件
+                </View>
               )}
+              <ModalAttachmentComponent
+                isShow={isDolShow}
+                setIsShow={setIsDolShow}
+                url={URL}
+                titleName='回复内容附件'
+              />
             </View>
           </View>
         </AtModalContent>
