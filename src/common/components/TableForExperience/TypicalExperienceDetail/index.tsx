@@ -24,15 +24,6 @@ const TypicalExperienceDetail: React.FC<
   const [downloadName, setDownloadName] = useState('');
   const [isDolShow, setIsDolShow] = useState(false);
 
-  const clearFileStatusClose = () => {
-    setCanDownload(false);
-    setDownloadURL('');
-    const hideLoading = message('下载中', 'warning');
-    onClose();
-    if (typeof hideLoading === 'function') {
-      hideLoading();
-    }
-  };
 
   // 拆分文件名字
   const getFileName = (file: string) => {
@@ -41,9 +32,15 @@ const TypicalExperienceDetail: React.FC<
   };
 
   if (!data) return <></>;
-
+  console.log(data);
   return (
     <>
+      <ModalAttachmentComponent
+        isShow={isDolShow}
+        setIsShow={setIsDolShow}
+        url={downloadURL}
+        titleName={downloadName}
+      />
       <AtDrawer show={open} mask onClose={onClose}>
         <View className={style['typical-list']}>
           <View className={style['typical-title']}>问题概述:</View>
@@ -62,26 +59,31 @@ const TypicalExperienceDetail: React.FC<
           <View className={style['typical-content']}>{data.point}</View>
         </View>
         <View className='typical-files'>
-          {data.files && data.files.length ? (
-            <View style={{ color: 'silver' }}>
+          {!data.files ? (
+            <View
+              className={style['typical-content']}
+              style={{ color: 'silver' }}>
               <AtIcon value='file-generic' size='30' color='#797979' />
               无附件
             </View>
           ) : (
-            <View
-              onClick={() => {
-                setIsDolShow(true);
-              }}>
-              <AtIcon value='file-generic' size='30' color='#51796f' />
-              下载附件
-            </View>
+            data.files.ap((item, tyid) => {
+              return (
+                <>
+                  <View
+                    key={'typical-' + tyid}
+                    className={style['typical-content']}
+                    onClick={() => {
+                      setIsDolShow(true);
+                      setDownloadURL(item);
+                    }}>
+                    <AtIcon value='file-generic' size='30' color='#51796f' />
+                    下载附件{tyid + 1}:
+                  </View>
+                </>
+              );
+            })
           )}
-          <ModalAttachmentComponent
-            isShow={isDolShow}
-            setIsShow={setIsDolShow}
-            url={downloadURL}
-            titleName={downloadName}
-          />
         </View>
         <AtButton onClick={() => onClose()}>关闭</AtButton>{' '}
       </AtDrawer>

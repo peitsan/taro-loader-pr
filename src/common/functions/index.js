@@ -8,3 +8,4 @@ export * from './getNumberTime';
 export * from './debounce';
 export * from './taroUIFun';
 export * from './router';
+export * from './createFormData';

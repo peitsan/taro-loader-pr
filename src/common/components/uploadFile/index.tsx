@@ -4,7 +4,6 @@ import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { AtModal, AtModalHeader, AtModalContent, AtForm } from 'taro-ui';
 import styles from './index.module.less';
-import Upload from '../upload';
 
 interface IType {
   isUploadVisible: boolean;

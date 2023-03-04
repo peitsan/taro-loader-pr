@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro';
-import { View, Input, Picker } from '@tarojs/components';
+import { View, Input, Picker, Button } from '@tarojs/components';
 import { useState, useEffect, useRef } from 'react';
 import {
   AtMessage,
@@ -10,17 +10,19 @@ import {
   AtList,
   AtListItem,
   AtToast,
+  AtImagePicker,
 } from 'taro-ui';
-import { BASE_URL } from '@/utils/baseUrl';
 import styles from './index.module.less';
 import httpUtil from '../../../../utils/httpUtil';
 import UploadFile from '../../projectManage/projectOverview/sonProjectProgress/uploadFile';
-import { ModalAttachmentComponent } from '../../projectManage/projectOverview/components/modalAttachmentComponent';
-
 import {
   debounce,
   message,
   navigateTo,
+  createFormData,
+  getCaption,
+  fileToUrl,
+  urlToFile,
 } from '../../../../common/functions/index';
 
 // import UploadBtn from '../../../../common/components/UploadBtn/UploadBtn';
@@ -39,78 +41,49 @@ const TypicalExperienceAppend: React.FC = () => {
   const [solution, setSolution] = useState<string>('');
   const [point, setPoint] = useState<string>('');
   const [files, setFiles] = useState<FileProps[]>([]);
+  const [Path, setPath] = useState<string>('');
   const [value, setValue] = useState<any>('');
   const [loading, setLoginLoading] = useState<any>('');
   // 控制打开上传文件与关闭
   const [isOpenLoadFile, setIsOpenLoadFile] = useState(true);
 
   // 设置每次下载的文件
-  const [fileUrl, setFileUrl] = useState('');
 
   // 下载文件modal展示与否
-  
+
   const SelectorRange = ['安全', '质量', '技经', '设计', '其他'];
   const SelectorRangeEng = ['SAFE', 'QUALITY', 'EXPERIENCE', 'DESIGN', 'OTHER'];
+  const maxLength = 4;
   const chooseFile = useState({
     fileNum: 1,
     files: [],
     showUploadBtn: true,
     upLoadImg: [],
   });
-
-  function getBlob(url, callback) {
-    const xhr = new window.XMLHttpRequest();
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.onload = () => {
-      callback(xhr.response);
-    };
-    xhr.send();
-  }
-  function createFormData(values = {}, boundary = '') {
-    let result = '';
-    for (const i in values) {
-      result += `\r\n--${boundary}`;
-      result += `\r\nContent-Disposition: form-data; name="${i}"`;
-      result += '\r\n';
-      result += `\r\n${values[i]}`;
-    }
-    // 如果obj不为空，则最后一行加上boundary
-    if (result) {
-      result += `\r\n--${boundary}`;
-    }
-    return result;
-  }
-  // 生成一个boundary字符串
-  const boundary = `----WebKitFormBoundary${new Date().getTime()}`;
   const onSubmit = async () => {
-    // formData.append('type', SelectorRangeEng[(type as number) - 1]);
-    // formData.append('describe', describe);
-    // formData.append('solution', solution);
-    // formData.append('point', point);
-    if (files.length > 0)
-      for (const file of files as FileProps[]) {
-        if (file.file.size / 2 ** 20 >= 110) {
-          return message('上传文件大小不能超过110MB', 'warning');
-        }
-      }
-    const blob = undefined;
-    if (files.length > 0) getBlob(files[0].url, blob);
-    console.log(blob);
-    console.log(SelectorRangeEng[(type as number) - 1]);
-    const val = {
+    // if (files.length > 0)
+    //   for (const file of files as FileProps[]) {
+    //     if (file.file.size / 2 ** 20 >= 110) {
+    //       return message('上传文件大小不能超过110MB', 'warning');
+    //     }
+    //   }
+    const res = '';
+    Taro.showLoading({ title: '文件上传中...' });
+    const typ = getCaption(files[0].url, '.');
+    const fileUrl = {
+      url: files[0].url,
+      type: 'image/' + (typ === 'jpg' ? 'jpeg' : typ),
+      name: '',
+    };
+    const formData = createFormData({
       type: SelectorRangeEng[(type as number) - 1],
       describe: describe,
       solution: solution,
       point: point,
-      files: blob,
-    };
-    console.log(val);
-    const formData = createFormData(val, boundary);
+      files: fileUrl,
+    });
     console.log(formData);
-    const hide = message('请稍后', 'warning');
     try {
-      // setLoginLoading(true);
       const res = await httpUtil.createClassicCase(formData);
       if (res.code === 200) {
         message('提交成功', 'success');
@@ -119,7 +92,7 @@ const TypicalExperienceAppend: React.FC = () => {
     } catch {
       message('提交失败', 'error');
     } finally {
-      hide();
+      message(`上传成功`, 'success');
     }
   };
 
@@ -130,64 +103,50 @@ const TypicalExperienceAppend: React.FC = () => {
     setPoint('');
     setFiles([]);
   };
-  // 拿到子组件上传图片的路径数组
-  const getOnFilesValue = (value: any) => {
-    console.log(3, value);
-    setFiles(value);
-    console.log(files);
-    const handleChange = val => {
-      setValue(val);
-    };
-    // 上传组件
-    // const uploadLoader = data => {
-    //   console.log(GetStorageToken());
-    //   let i = data.i ? data.i : 0; // 当前所上传的图片位置
-    //   let success = data.success ? data.success : 0; //上传成功的个数
-    //   let fail = data.fail ? data.fail : 0; //上传失败的个数
-    //   Taro.showLoading({
-    //     title: `正在上传第${i + 1}张`,
-    //   });
-    //   // 发起上传
-    //   Taro.uploadFile({
-    //     url: BASE_URL + '/api/applets/file/uploadFile',
-    //     header: {
-    //       'content-type': 'multipart/form-data',
-    //       Authorization: GetStorageToken().authorization, // 上传需要单独处理cookie
-    //     },
-    //     name: 'file',
-    //     filePath: data[i].file.path,
-    //     success: resp => {
-    //       console.log(resp);
-    //       //图片上传成功，图片上传成功的变量+1
-    //       if (resp.statusCode == 200) {
-    //         success++;
-    //       } else {
-    //         fail++;
-    //       }
-    //     },
-    //     fail: () => {
-    //       fail++; //图片上传失败，图片上传失败的变量+1
-    //     },
-    //     complete: () => {
-    //       Taro.hideLoading();
-    //       i++; //这个图片执行完上传后，开始上传下一张
-    //       if (i == data.length) {
-    //         //当图片传完时，停止调用
-    //         Taro.showToast({
-    //           title: '上传成功',
-    //           icon: 'success',
-    //           duration: 2000,
-    //         });
-    //       } else {
-    //         //若图片还没有传完，则继续调用函数
-    //         data.i = i;
-    //         data.success = success;
-    //         data.fail = fail;
-    //         uploadLoader(data);
-    //       }
-    //     },
-    //   });
-    // };
+  const upLoadImg = imgs => {
+    Taro.chooseMessageFile({
+      count: 1,
+      type: 'all',
+      success: function (res) {
+        const { name, path } = res.tempFiles[0];
+        Taro.uploadFile({
+          url: 'https://sgcc.torcher.team/worker/upload',
+          name: 'file',
+          header: {
+            Authorization: 'Bearer ' + Taro.getStorageSync('token'),
+          },
+          filePath: path,
+          fileName: name,
+          success: res => {
+            const data = JSON.parse(res.data);
+            console.log(data);
+
+            const attach = {
+              file: {
+                url: data.data.file.url,
+                size: 1111111,
+              },
+              url: data.data.file.url,
+            };
+            setPath(data.data.file.url);
+            setFiles(preADDL => {
+              const updatedADDL = preADDL;
+              updatedADDL.push(attach);
+              return { ...updatedADDL };
+            });
+            // setFiles(attach);
+            console.log(files);
+          },
+          fail: () => {
+            Taro.showToast({
+              title: '上传文件失败',
+              icon: 'error',
+              duration: 1000,
+            });
+          },
+        });
+      },
+    });
   };
   return (
     <>
@@ -240,10 +199,35 @@ const TypicalExperienceAppend: React.FC = () => {
               placeholder='请描述问题的注意要点'
             />
             <View className={styles.title}>相关资料:</View>
-            <UploadFile
-              isUploadVisible={isOpenLoadFile}
-              setIsUploadVisible={setIsOpenLoadFile}
-            />
+
+            <></>
+            <View
+              style={{
+                wordBreak: 'break-all',
+              }}>
+              当前上传文件为: {Path}
+            </View>
+            {/* <Upload> */}
+            <Button onClick={upLoadImg} className={styles.uploadBtn}>
+              选择附件
+            </Button>
+            {/* <AtImagePicker
+              length={2}
+              mode='aspectFill'
+              multiple={false}
+              count={1} //调用的后端接口不允许多选
+              showAddBtn={files?.length !== maxLength}
+              files={files}
+              onChange={e => onChange(e)}
+              onFail={e => console.log('fail', e)}
+              onImageClick={(i, file) => {
+                //点击预览
+                Taro.previewImage({
+                  current: file?.url,
+                  urls: fileToUrl(files),
+                });
+              }}
+            /> */}
             {/* <UploadBtn chooseImg={chooseFile} onFilesValue={getOnFilesValue} /> */}
             <AtButton formType='submit'>提交</AtButton>
             <AtButton formType='reset'>重置</AtButton>
