@@ -15,9 +15,9 @@ import styles from './index.module.less';
 
 // 定义 interface 用于请求成功关闭上一层的 modal
 interface IProps {
-  showOpen: any;
   handleReq: Function;
   refresh: () => Promise<void>;
+  showOpen: boolean;
 }
 
 export const ProjectForm: FC<IProps> = ({
@@ -83,16 +83,21 @@ export const ProjectForm: FC<IProps> = ({
             // focus
           />
         ) : null} */}
-        <AtInput
-          placeholder='请输入项目名称'
-          value={String(name)}
-          onChange={e => {
-            setName(String(e));
-          }}
-          name='name'
-          title='项目名称'
-          // focus
-        />
+        {showOpen ? (
+          <AtInput
+            placeholder='请输入项目名称'
+            onChange={e => {
+              setName(String(e));
+            }}
+            value={name}
+            name='name'
+            title='项目名称'
+            style={{ zIndex: 101 }}
+            focus
+          />
+        ) : (
+          <></>
+        )}
       </View>
       <AtButton
         loading={loading}

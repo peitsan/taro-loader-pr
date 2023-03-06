@@ -49,7 +49,11 @@ export const ProjectModel: React.FC<IProps> = ({ refresh }: IProps) => {
             <AtModalHeader>新建工程</AtModalHeader>
             <AtModalContent>
               {isModalVisible ? (
-                <ProjectForm handleReq={handleReq} refresh={refresh} />
+                <ProjectForm
+                  handleReq={handleReq}
+                  refresh={refresh}
+                  showOpen={isModalVisible}
+                />
               ) : null}
             </AtModalContent>
           </AtModal>
