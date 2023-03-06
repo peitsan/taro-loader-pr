@@ -4,7 +4,6 @@ import { Button, View } from '@tarojs/components';
 import httpUtil from '@/utils/httpUtil';
 import { AtModal, AtModalHeader, AtModalContent, AtForm } from 'taro-ui';
 import styles from './index.module.less';
-import Upload from '../upload';
 
 interface IType {
   isUploadVisible: boolean;
@@ -12,6 +11,9 @@ interface IType {
   getData: () => Promise<void>;
   progressId: number;
   projectId: number;
+  // 控制上传文件名称的显示与隐藏
+  isShowFileName: boolean;
+  setIsShowFileName: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const UploadFile: FC<IType> = (props: IType) => {
@@ -21,20 +23,21 @@ const UploadFile: FC<IType> = (props: IType) => {
     getData,
     progressId,
     projectId,
+    isShowFileName,
+    setIsShowFileName,
   } = props;
   const [isUpload, setIsUpload] = useState(false);
   const [path, setPath] = useState('');
   const [isShowUploadFile, setIsShowUploadFile] = useState(false);
 
-  useEffect(() => {
-    console.log(path);
-  }, []);
-
   const submit = async () => {
     if (!isUpload) {
-      console.log('还未上传文件');
+      Taro.showToast({
+        title: '还未上传文件',
+        icon: 'error',
+        duration: 1000,
+      });
     } else {
-      // console.log('path', path);
       const res = await httpUtil.uploadAttachment({
         attachment: path,
         progressId,
@@ -48,6 +51,8 @@ const UploadFile: FC<IType> = (props: IType) => {
             duration: 1000,
           });
           setIsUploadVisible(false);
+          setPath(''); // 初始化
+          setIsUpload(false); // 初始化
         });
       }
     }
@@ -73,6 +78,7 @@ const UploadFile: FC<IType> = (props: IType) => {
             // console.log('data', data);
             setPath(data.data.file.url);
             setIsShowUploadFile(true);
+            setIsShowFileName(true);
           },
           fail: () => {
             Taro.showToast({
@@ -101,7 +107,7 @@ const UploadFile: FC<IType> = (props: IType) => {
       <AtModalHeader>上传附件</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={submit}>
-          {path !== '' && (
+          {isShowFileName && (
             <View
               style={{
                 display: isShowUploadFile ? 'block' : 'none',

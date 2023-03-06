@@ -108,6 +108,8 @@ const SonProjectProgress = () => {
     '核准要件' | '核准批复' | '初设批复'
   >('核准要件');
 
+  const [isShowFileName, setIsShowFileName] = useState(false);
+
   // 点击项目名称事件
   const onClickProName = (params: IonClickName) => {
     const { type, startTime, endTime, id, name, attachment } = params;
@@ -118,6 +120,7 @@ const SonProjectProgress = () => {
       setDownloadModalFileTitle(name);
       setFileUrl(attachment);
       setIsDolShow(true);
+      setIsShowFileName(true);
       return;
     } else if (
       (name === '核准要件' || name === '核准批复') &&
@@ -132,6 +135,7 @@ const SonProjectProgress = () => {
       (name === '核准要件' || name === '核准批复') &&
       permission === 'manager'
     ) {
+      setIsShowFileName(false);
       setDownProgressId(String(id));
       return setIsOpenLoadFile(true);
     }
@@ -420,6 +424,8 @@ const SonProjectProgress = () => {
             getData={getData}
             progressId={Number(downProgressId)}
             projectId={Number(projectId)}
+            isShowFileName={isShowFileName}
+            setIsShowFileName={setIsShowFileName}
           />
         </>
       )}
