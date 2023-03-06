@@ -199,7 +199,6 @@ const TypicalExperienceAppend: React.FC = () => {
               placeholder='请描述问题的注意要点'
             />
             <View className={styles.title}>相关资料:</View>
-
             <></>
             <View
               style={{
@@ -207,7 +206,6 @@ const TypicalExperienceAppend: React.FC = () => {
               }}>
               当前上传文件为: {Path}
             </View>
-            {/* <Upload> */}
             <Button onClick={upLoadImg} className={styles.uploadBtn}>
               选择附件
             </Button>

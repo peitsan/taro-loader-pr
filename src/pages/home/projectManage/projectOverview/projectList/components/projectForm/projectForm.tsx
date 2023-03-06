@@ -56,6 +56,16 @@ export const ProjectForm: React.FC<IProps> = ({
       if (items.length === 0) {
         return message(`请至少增加一条${selectList}`, 'warning');
       }
+      let flag = false;
+      if (!itemTitle) flag = true;
+      for (let i = 0; i < items.length; i++)
+        if (items[i].name == '') {
+          flag = true;
+          break;
+        }
+      if (flag) {
+        return message(`填写内容不能为空!`, 'warning');
+      }
       message('请求中', 'warning');
       try {
         const res = await httpUtil.addNewList({
@@ -77,18 +87,18 @@ export const ProjectForm: React.FC<IProps> = ({
   };
   const formAppend = () => {
     setListSum(listSum + 1);
-    let tmp = items;
+    const tmp = items;
     tmp.push({ name: '' });
     setItems(tmp);
   };
   const formDelete = (id: number) => {
     setListSum(listSum - 1);
-    let tmp = items;
+    const tmp = items;
     tmp.splice(id, 1);
     setItems(tmp);
   };
   const formRefInput = (val, id) => {
-    let tmp = items;
+    const tmp = items;
     tmp[id].name = val.detail.value;
     setItems(tmp);
   };

@@ -243,6 +243,7 @@ function ProjectList() {
   //关闭查看清单回复模态框
   const okCheckModal = () => {
     setIsCheckModal(false);
+    setIsDolShow(false);
   };
   // 查看清单模态框
   const CheckModal: React.FC = () => {

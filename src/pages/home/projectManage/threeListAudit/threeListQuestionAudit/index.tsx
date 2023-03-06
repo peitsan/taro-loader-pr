@@ -65,7 +65,6 @@ const Index: React.FC = () => {
 
   // 拒绝三个问题的清单
   const onConfirmReject = () => {
-    console.log(selectRecord);
     message('请求中', 'warning');
     httpUtil
       .backThreeListItem({
@@ -76,6 +75,7 @@ const Index: React.FC = () => {
       .then(res => {
         message('驳回成功', 'success');
         getThreeList();
+        okRejectModal();
       });
   };
   const getThreeList = () => {
@@ -129,7 +129,7 @@ const Index: React.FC = () => {
             current={selectTab}
             index={tabList.findIndex(val => val.title === '问题清单')}>
             <ThreeListQuestionAuditTable
-              problemsItem={dataArr ? dataArr.problems : []}
+              problemsItem={dataArr.problems}
               setIsAssignResponsibilities={setIsAssignResponsibilities}
               setIsRejectModal={setIsRejectModal}
               setSelectRecord={setSelectRecord}
@@ -142,7 +142,7 @@ const Index: React.FC = () => {
             current={selectTab}
             index={tabList.findIndex(val => val.title === '协议清单')}>
             <ThreeListQuestionAuditTable
-              protocolsItem={dataArr ? dataArr.problems : []}
+              protocolsItem={dataArr.protocols}
               setIsAssignResponsibilities={setIsAssignResponsibilities}
               setIsRejectModal={setIsRejectModal}
               setSelectRecord={setSelectRecord}
@@ -155,7 +155,7 @@ const Index: React.FC = () => {
             current={selectTab}
             index={tabList.findIndex(val => val.title === '手续清单')}>
             <ThreeListQuestionAuditTable
-              proceduresItem={dataArr ? dataArr.procedures : []}
+              proceduresItem={dataArr.procedures}
               setIsAssignResponsibilities={setIsAssignResponsibilities}
               setIsRejectModal={setIsRejectModal}
               setSelectRecord={setSelectRecord}

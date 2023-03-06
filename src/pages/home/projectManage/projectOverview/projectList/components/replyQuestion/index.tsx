@@ -85,7 +85,12 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
     setConfirm(true);
   }, []);
   return (
-    <AtModal isOpened={isReplyModal} onClose={okReplyModal}>
+    <AtModal
+      isOpened={isReplyModal}
+      onClose={() => {
+        setIsOpenLoadFile(false);
+        okReplyModal();
+      }}>
       <AtModalHeader>回复清单</AtModalHeader>
       <AtModalContent>
         {selectIndex === 7 ? (
@@ -101,7 +106,6 @@ const ReplyQuestion: React.FC<ReplyQuestionProps> = selfProps => {
             {isReplyModal ? (
               <Input
                 style={{ zIndex: 101 }}
-                focus
                 placeholder='请输入回复内容'
                 onInput={e => setReplyText(e.detail.value)}
                 value={replyText}></Input>

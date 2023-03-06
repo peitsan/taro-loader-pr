@@ -32,6 +32,7 @@ const ThreeListQuestionAuditTable: React.FC<
   });
   const Table: React.FC<tableProps> = tableProp => {
     const { dataSource } = tableProp;
+    console.log(dataSource);
     return (
       <>
         {dataSource ? (
