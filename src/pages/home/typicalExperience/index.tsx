@@ -192,6 +192,7 @@ const TypicalExperience: React.FC = () => {
                 confirmDelete();
                 onClose();
               }}
+              onClose={onClose}
               onCancel={onClose}
               confirmText='确认'
               cancelText='取消'
