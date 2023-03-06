@@ -67,7 +67,7 @@ const TypicalExperienceDetail: React.FC<
               无附件
             </View>
           ) : (
-            data.files.ap((item, tyid) => {
+            data.files.map((item, tyid) => {
               return (
                 <>
                   <View
