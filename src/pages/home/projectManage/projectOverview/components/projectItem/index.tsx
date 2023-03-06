@@ -362,6 +362,7 @@ const ProjectItem = (data: IData) => {
                 <AtInput
                   name='remark'
                   title='备注'
+                  style={{ zIndex: 101 }}
                   placeholder='请输入备注'
                   onChange={e => {
                     setRemark(String(e));

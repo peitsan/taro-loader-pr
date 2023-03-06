@@ -17,11 +17,7 @@ const ApplyAudit: React.FC = () => {
   );
   useEffect(() => {
     // 首次加载因为初始值为0，通过loading减少用户等待焦虑
-    if (questionApprovals.length === 0 || projectApprovals.length === 0) {
-      dispatch(getApplyListAC(true));
-    } else {
-      dispatch(getApplyListAC(false));
-    }
+    dispatch(getApplyListAC(false));
   }, []);
   const tablist = [
     { title: '问题完成时间调整' },

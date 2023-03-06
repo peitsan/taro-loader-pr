@@ -26,6 +26,10 @@ const UploadFile: FC<IType> = (props: IType) => {
   const [path, setPath] = useState('');
   const [isShowUploadFile, setIsShowUploadFile] = useState(false);
 
+  useEffect(() => {
+    console.log(path);
+  }, []);
+
   const submit = async () => {
     if (!isUpload) {
       console.log('还未上传文件');
@@ -97,13 +101,15 @@ const UploadFile: FC<IType> = (props: IType) => {
       <AtModalHeader>上传附件</AtModalHeader>
       <AtModalContent>
         <AtForm onSubmit={submit}>
-          <View
-            style={{
-              display: isShowUploadFile ? 'block' : 'none',
-              wordBreak: 'break-all',
-            }}>
-            当前上传文件为: {path}
-          </View>
+          {path !== '' && (
+            <View
+              style={{
+                display: isShowUploadFile ? 'block' : 'none',
+                wordBreak: 'break-all',
+              }}>
+              当前上传文件为: {path}
+            </View>
+          )}
           {/* <Upload> */}
           <Button onClick={chooseFile} className={styles.uploadBtn}>
             选择附件

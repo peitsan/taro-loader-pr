@@ -94,7 +94,7 @@ export default defineAppConfig({
     },
   ],
   // entryPagePath: 'pages/home/projectManage/projectOverview/index',
-  // entryPagePath: 'pages/home/projectManage/projectAudit/index',
+  // entryPagePath: 'pages/home/projectManage/index',
   entryPagePath: 'pages/login/index',
   // entryPagePath: entryPath,
   window: {
