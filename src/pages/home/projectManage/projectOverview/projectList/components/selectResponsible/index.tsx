@@ -1,5 +1,5 @@
 import { getStorageSync } from '@tarojs/taro';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   AtInputNumber,
   AtModal,
@@ -26,7 +26,7 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   } = selfProps;
   const ResponserVal = useRef<any>();
   const AlerterVal = useRef<any>();
-  const [AlertDeadline, setAlertDeadline] = useState<number>(0);
+  const [AlertDeadline, setAlertDeadline] = useState<number>(10);
 
   const onCreate = () => {
     message('请求中', 'warning');
@@ -134,16 +134,18 @@ const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
             multiple
           />
         </View>
-        <View className={styles['reply-title']}>
-          提前提醒天数:{' '}
-          <AtInputNumber
-            min={0}
-            max={10}
-            step={1}
-            value={AlertDeadline}
-            onChange={e => setAlertDeadline(e)}
-          />
-        </View>
+        {isManageModal ? (
+          <View className={styles['reply-title']}>
+            提前提醒天数:{' '}
+            <AtInputNumber
+              min={1}
+              max={30}
+              step={1}
+              value={AlertDeadline}
+              onChange={e => setAlertDeadline(e)}
+            />
+          </View>
+        ) : null}
       </AtModalContent>
       <AtModalAction>
         {' '}

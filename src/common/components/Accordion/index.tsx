@@ -2,11 +2,10 @@
 import Taro from '@tarojs/taro';
 import { useState } from 'react';
 import { View } from '@tarojs/components';
-import { AtIcon, AtButton, AtMessage } from 'taro-ui';
+import { AtIcon, AtMessage } from 'taro-ui';
 import { Item, AccordionProps } from './indexProps';
 import { canCheckOtherReply, message } from '../../functions/index';
 import httpUtil from '../../../utils/httpUtil';
-import PopConfirm from '../PopConfirm';
 import styles from './index.module.less';
 
 const Accordion: React.FC<AccordionProps> = selfProps => {
@@ -24,10 +23,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
     setIsApplyUpper,
   } = selfProps;
   const [active, setActive] = useState<Boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [reasonId, setReasonId] = useState<number>(0);
-  const [isAdjustTime, setIsAdjustTime] = useState<boolean>(false);
-  const [planTime, setPlanTime] = useState<string>('');
   const [attachmentUrl, setAttachmentUrl] = useState<string>('');
   const [replyText, setReplyText] = useState<string>('空');
   const ModalName = Taro.getStorageSync('ModalName');
@@ -380,7 +375,6 @@ const Accordion: React.FC<AccordionProps> = selfProps => {
               </View>
             </View>
           )}
-          {/* <CheckModal /> */}
           {/* 子列表 */}
           <View className={styles['board-list']}>
             <View

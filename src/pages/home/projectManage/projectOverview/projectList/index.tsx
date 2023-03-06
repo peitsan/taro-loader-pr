@@ -306,7 +306,6 @@ function ProjectList() {
     getTimeDetail();
     setIsManageModal(false);
     if (ZxpgRef.current) {
-      console.log("111");
       ZxpgRef.current.getSpecial();
     }
   };

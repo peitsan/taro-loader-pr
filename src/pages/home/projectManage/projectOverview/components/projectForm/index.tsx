@@ -71,18 +71,6 @@ export const ProjectForm: FC<IProps> = ({
         </AtList>
       </Picker>
       <View>
-        {/* {showOpen ? (
-          <AtInput
-            placeholder='请输入项目名称'
-            value={String(name)}
-            onChange={e => {
-              setName(String(e));
-            }}
-            name='name'
-            title='项目名称'
-            // focus
-          />
-        ) : null} */}
         {showOpen ? (
           <AtInput
             placeholder='请输入项目名称'

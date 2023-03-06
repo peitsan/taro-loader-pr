@@ -23,22 +23,13 @@ const threeArr = ['reasons', 'opinions', 'conditions']
 const SelectResponsible: React.FC<SelectResponsibleProps> = selfProps => {
   const { isManageModal, okManageModal, selectRecord, recordFlash, units, selectIndex } =
     selfProps;
-  // const ResponserVal = useRef<any[]>([]);\
   const ResponserVal = [];
   const AlerterVal  = [];
-  // const [AlerterVal, setAlerterVal] = useState<any>([]);
-  // const [ResponserVal, setResponserVal] = useState<any>([]);
   const [AlertDeadline, setAlertDeadline] = useState<any>([10]);
   const [Deadline, setDeadline] = useState<any[]>([]);
   const tabs = threeArr[selectIndex]
-  useEffect(()=>{
-    console.log('selectRecord', selectRecord)
-    
-  }, [selectRecord])
  
   const onCreate = () => {
-   
-    // console.log('111', ResponserVal[0]);
     const dataSend: SendDataType = {};
     selectRecord[tabs].map((rec, recid)=>{
       const id = rec.id;
