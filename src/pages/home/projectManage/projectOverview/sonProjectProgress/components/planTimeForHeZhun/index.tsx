@@ -49,8 +49,6 @@ export const PlanTimeForHeZhun = (props: IProps) => {
       }, 2000);
     } else {
       const planTime = new Date(time).valueOf();
-      console.log('checkData[index]', checkData[curIndex]);
-      console.log('checkData[index]', curIndex);
       httpUtil
         .selectProjectProgressPlanTime({
           project_id: Number(checkData[curIndex].projectId),

@@ -31,6 +31,7 @@ export interface INowProgressInfo {
   endTime: string | null;
   planTime: string | null;
   progressId: number;
+  name: string;
 }
 
 const SonProjectProgress = () => {
@@ -201,6 +202,9 @@ const SonProjectProgress = () => {
   // 获取该项目的过程数据
   const getData = () => {
     const specialData: ICheckData[] = [];
+    // 初始化操作
+    setCurIndexForHeZhunFini(0);
+    setCurIndexForHeZhunPlan(0);
     // 获取时间戳数据
     return httpUtil
       .getProjectProgress({ project_id: String(projectId) })
@@ -216,6 +220,7 @@ const SonProjectProgress = () => {
               endTime: item.endTime,
               planTime: item.planTime,
               progressId: item.progressId,
+              name: item.name,
             });
             if (item.type >= 1 && item.type < 20)
               setIsShowForAdjustChuShe(true);
@@ -242,19 +247,20 @@ const SonProjectProgress = () => {
     const startTime = curProgressInfo?.startTime;
     const planTime = curProgressInfo?.planTime;
     const endTime = curProgressInfo?.endTime;
-    if (!startTime)
+    const name = curProgressInfo?.name;
+    if (!startTime && name != '可研技术收口')
       Taro.showToast({
         title: '请先填写开始时间',
         icon: 'error',
         duration: 1000,
       });
-    if (!planTime)
+    if (!planTime && name != '可研技术收口')
       return Taro.showToast({
         title: '请先填写计划完成时间',
         icon: 'error',
         duration: 1000,
       });
-    if (!endTime)
+    if (!endTime && name != '可研技术收口')
       return Taro.showToast({
         title: '请先填写实际完成时间',
         icon: 'error',
@@ -309,6 +315,7 @@ const SonProjectProgress = () => {
         }}>
         <AtModalHeader>相关操作</AtModalHeader>
         <AtModalContent>
+          {/* 设置完时间按钮消失 */}
           {isShowForAdjustChuShe && (
             <Button
               className={styles.opeBtn}
@@ -320,22 +327,27 @@ const SonProjectProgress = () => {
               调整初步设计启动会的开始时间
             </Button>
           )}
-          <Button
-            className={styles.opeBtn}
-            onClick={() => {
-              setIsPlanTimeModalVisibleForHeZhun(true);
-              setIsOpenOperateModal(false);
-            }}>
-            填写核准计划完成时间
-          </Button>
-          <Button
-            className={styles.opeBtn}
-            onClick={() => {
-              setIsFinishTimeModalVisibleForHeZhun(true);
-              setIsOpenOperateModal(false);
-            }}>
-            填写核准实际完成时间
-          </Button>
+          {/* 设置完时间按钮消失 */}
+          {curIndexForHeZhunPlan <= 1 && (
+            <Button
+              className={styles.opeBtn}
+              onClick={() => {
+                setIsPlanTimeModalVisibleForHeZhun(true);
+                setIsOpenOperateModal(false);
+              }}>
+              填写核准计划完成时间
+            </Button>
+          )}
+          {curIndexForHeZhunFini <= 1 && (
+            <Button
+              className={styles.opeBtn}
+              onClick={() => {
+                setIsFinishTimeModalVisibleForHeZhun(true);
+                setIsOpenOperateModal(false);
+              }}>
+              填写核准实际完成时间
+            </Button>
+          )}
           <Button
             className={styles.opeBtn}
             onClick={() => {
