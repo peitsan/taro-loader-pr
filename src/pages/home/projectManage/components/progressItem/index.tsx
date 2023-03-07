@@ -195,7 +195,7 @@ const ProgressItem = (props: IProgressItem) => {
             {name}
           </View>
           <View className={styles.planTime}>
-            {planTime ? planTime : '未指定'}
+            {name !== '可研技术收口' ? (planTime ? planTime : '未指定') : ''}
           </View>
         </View>
         <View

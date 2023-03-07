@@ -61,7 +61,10 @@ export const EndTimeModal = (props: IProps) => {
         .then(() => {
           getData().then(() => {
             setIsEndTimeModalVisible(false);
-            console.log('成功');
+            Taro.showToast({
+              title: '填写完成',
+              icon: 'success',
+            });
           });
         });
     }
