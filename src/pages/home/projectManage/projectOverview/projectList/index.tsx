@@ -261,13 +261,15 @@ function ProjectList() {
         <AtModalContent>
           <View className='reply-wrapper'>
             <View className='reply-title'>文字内容：</View>
-            <AtTextarea
-              className='reply-text-area'
-              disabled
-              height={50}
-              value={selectRecord ? selectRecord.text : ''}
-              onChange={e => setReplyText(e)}
-            />
+            {isCheckModal ? (
+              <AtTextarea
+                className='reply-text-area'
+                disabled
+                height={50}
+                value={selectRecord ? selectRecord.text : ''}
+                onChange={e => setReplyText(e)}
+              />
+            ) : null}
             <View className='reply-title'>附件：</View>
             <View className='reply-files'>
               {URL == '' ? (
@@ -302,7 +304,7 @@ function ProjectList() {
   };
   //关闭指定负责人模态框
   const okManageModal = () => {
-    console.log("0000")
+    console.log('0000');
     getTimeDetail();
     setIsManageModal(false);
     if (ZxpgRef.current) {
