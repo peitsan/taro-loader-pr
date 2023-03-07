@@ -69,8 +69,8 @@ const ProjectAudit = () => {
     <>
       {permission === 'manager' ? (
         <>
-          <View className={styles.top}>
-            <AtTag className={styles.tag} circle>
+          <View className={styles['top']}>
+            <AtTag className={styles['tag']} circle>
               工程审核
             </AtTag>
           </View>

@@ -11,8 +11,8 @@ const ThreeListAudit = () => {
     <>
       {permission === 'manager' ? (
         <>
-          <View className={styles.top}>
-            <AtTag className={styles.tag} circle>
+          <View className={styles['top']}>
+            <AtTag className={styles['tag']} circle>
               清单审核
             </AtTag>
           </View>

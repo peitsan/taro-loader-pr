@@ -70,8 +70,8 @@ const Index: React.FC = () => {
   React.useEffect(() => {}, []);
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
+      <View className={styles['top']}>
+        <AtTag className={styles['tag']} circle>
           工程管理
         </AtTag>
       </View>

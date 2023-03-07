@@ -124,7 +124,7 @@ const FatherProjectProgress = () => {
     <>
       <View>
         <View className={styles['name-div']}>
-          <AtTag className={styles.tag} circle>
+          <AtTag className={styles['tag']} circle>
             项目详情
           </AtTag>
           <View className={styles.name}>{name}</View>

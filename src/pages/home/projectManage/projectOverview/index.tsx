@@ -31,8 +31,8 @@ const ProjectOverview = () => {
 
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
+      <View className={styles['top']}>
+        <AtTag className={styles['tag']} circle>
           项目总览
         </AtTag>
         <ProjectModel refresh={getOwnProjects} />

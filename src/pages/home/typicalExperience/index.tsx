@@ -138,8 +138,8 @@ const TypicalExperience: React.FC = () => {
   };
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
+      <View className={styles['top']}>
+        <AtTag className={styles['tag']} circle>
           典型经验
         </AtTag>
         <View

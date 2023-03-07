@@ -8,8 +8,8 @@ const projectTeamManage: React.FC = () => {
   const permission = Taro.getStorageSync('permission');
   return (
     <>
-      <View className={styles.top}>
-        <AtTag className={styles.tag} circle>
+      <View className={styles['top']}>
+        <AtTag className={styles['tag']} circle>
           团队管理
         </AtTag>
       </View>
