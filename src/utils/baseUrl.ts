@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://sgcc.torcher.team';
+export const BASE_URL = '';

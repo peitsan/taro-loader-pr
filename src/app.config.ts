@@ -1,5 +1,37 @@
 /* eslint-disable prettier/prettier */
 export default defineAppConfig({
+  window: {
+    backgroundTextStyle: 'dark',
+    navigationBarBackgroundColor: '#0EB295',
+    navigationBarTitleText: 'WeChat',
+    navigationBarTextStyle: 'black',
+  },
+  tabBar: {
+    color: '#8a8a8a',
+    selectedColor: '#18A456',
+    backgroundColor: '#FBFBFB',
+    borderStyle: 'black',
+    list: [
+      {
+        pagePath: 'pages/home/projectTeamManage/index',
+        text: '团队管理',
+        iconPath: './assets/icon/teamAdmin.png',
+        selectedIconPath: './assets/icon/teamAdmin-active.png',
+      },
+      {
+        pagePath: 'pages/home/projectManage/index',
+        text: '工程管理',
+        iconPath: './assets/icon/projectAdmin.png',
+        selectedIconPath: './assets/icon/projectAdmin-active.png',
+      },
+      {
+        pagePath: 'pages/home/typicalExperience/index',
+        text: '典型经验',
+        iconPath: './assets/icon/specialExperience.png',
+        selectedIconPath: './assets/icon/specialExperience-active.png',
+      },
+    ],
+  },
   pages: [
     /* 
     主页(可以不做)
@@ -97,36 +129,5 @@ export default defineAppConfig({
   // entryPagePath: 'pages/home/projectManage/index',
   entryPagePath: 'pages/login/index',
   // entryPagePath: entryPath,
-  window: {
-    backgroundTextStyle: 'dark',
-    navigationBarBackgroundColor: '#0EB295',
-    navigationBarTitleText: 'WeChat',
-    navigationBarTextStyle: 'black',
-  },
-  tabBar: {
-    color: '#8a8a8a',
-    selectedColor: '#18A456',
-    backgroundColor: '#FBFBFB',
-    borderStyle: 'black',
-    list: [
-      {
-        pagePath: 'pages/home/projectTeamManage/index',
-        text: '团队管理',
-        iconPath: './assets/icon/teamAdmin.png',
-        selectedIconPath: './assets/icon/teamAdmin-active.png',
-      },
-      {
-        pagePath: 'pages/home/projectManage/index',
-        text: '工程管理',
-        iconPath: './assets/icon/projectAdmin.png',
-        selectedIconPath: './assets/icon/projectAdmin-active.png',
-      },
-      {
-        pagePath: 'pages/home/typicalExperience/index',
-        text: '典型经验',
-        iconPath: './assets/icon/specialExperience.png',
-        selectedIconPath: './assets/icon/specialExperience-active.png',
-      },
-    ],
-  },
+  
 });

@@ -10,6 +10,7 @@ const config = {
     750: 1,
     828: 1.81 / 2,
   },
+  globalObject: 'this',
   sourceRoot: 'src',
   outputRoot: 'dist',
   plugins: ['taro-plugin-compiler-optimization'],
@@ -88,7 +89,7 @@ const config = {
     },
   },
   alias: {
-    '@': resolve(__dirname, '../src'),
+    '@': resolve(__dirname, '../src/'),
     '@styles': resolve(__dirname, '../src/styles'),
     '@interface': resolve(__dirname, '../src/interface'),
     '@hooks': resolve(__dirname, '../src/common/hooks'),
